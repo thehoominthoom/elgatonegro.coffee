@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "prisma.prisma",
+    "dsznajder.es7-react-js-snippets",
+    "ms-vscode.vscode-typescript-next",
+    "eamodio.gitlens",
+    "github.vscode-github-actions",
+    "sanity-io.vscode-sanity",
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+    "mikestead.dotenv",
+    "ms-vscode-remote.remote-wsl"
+  ]
+}
