@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Full-stack ecommerce + lead generation + resource hub website for a coffee cart company.
 
 **Four site purposes:**
+
 1. Informational hub (hours, locations, events)
 2. Lead generation (weddings, corporate, conventions, production sets, apartment pop-ups, partnerships)
 3. Ecommerce (merchandise, coffee beans, digital products: 3D models + paid resources)
@@ -17,20 +18,20 @@ Full-stack ecommerce + lead generation + resource hub website for a coffee cart 
 
 ## Confirmed Tech Stack
 
-| Concern | Tool |
-|---|---|
-| Framework | Next.js 14+ App Router, React, TypeScript |
-| Styling | Tailwind CSS + shadcn/ui |
-| Auth | Auth.js v5 (NextAuth) + Prisma Adapter |
-| Database | Neon (serverless PostgreSQL) via Prisma ORM |
-| Payments | Stripe + Stripe Tax |
-| CMS | Sanity (hours, locations, events, blog) |
-| Email | Resend + React Email |
-| Digital delivery | Cloudflare R2 + pre-signed URLs |
-| Lead forms | React Hook Form + Zod + Server Actions |
-| Image storage | Cloudinary (next-cloudinary) |
-| Spam protection | Cloudflare Turnstile |
-| Deployment | Vercel |
+| Concern          | Tool                                        |
+| ---------------- | ------------------------------------------- |
+| Framework        | Next.js 14+ App Router, React, TypeScript   |
+| Styling          | Tailwind CSS + shadcn/ui                    |
+| Auth             | Auth.js v5 (NextAuth) + Prisma Adapter      |
+| Database         | Neon (serverless PostgreSQL) via Prisma ORM |
+| Payments         | Stripe + Stripe Tax                         |
+| CMS              | Sanity (hours, locations, events, blog)     |
+| Email            | Resend + React Email                        |
+| Digital delivery | Cloudflare R2 + pre-signed URLs             |
+| Lead forms       | React Hook Form + Zod + Server Actions      |
+| Image storage    | Cloudinary (next-cloudinary)                |
+| Spam protection  | Cloudflare Turnstile                        |
+| Deployment       | Vercel                                      |
 
 ## Commands
 
@@ -88,6 +89,7 @@ These are two separate data sources deliberately — don't conflate them.
 ## Brand Design System
 
 **Colors (Tailwind tokens):**
+
 - `brand-orange` `#B43620` — primary CTAs, active states, prices
 - `brand-yellow` `#D09324` — hover states, highlights, sale badges
 - `brand-black` `#2A201D` — text, card borders, admin sidebar background
@@ -123,6 +125,7 @@ TURNSTILE_SECRET_KEY=
 ## Build Order
 
 Recommended implementation sequence:
+
 1. Tailwind config + globals + fonts + shadcn/ui setup
 2. Root layout, SiteHeader, SiteFooter, shared UI primitives (Button, Card, PolaroidCard)
 3. Homepage (establishes all visual patterns)
