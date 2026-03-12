@@ -84,9 +84,11 @@ app/
 ## Navigation Structure
 
 **Primary Nav (Desktop):**
+
 ```
 [Logo]    Find Us    Menu    Services▾    Shop▾    Resources▾    [Cart]  [Account]
 ```
+
 - Services → mega-menu with all 6 service cards
 - Shop → dropdown: Merch / Coffee Beans / Digital Products
 - Resources → dropdown: Blog / Build Guides / Product Lists / YouTube
@@ -137,14 +139,14 @@ Plugins: `@tailwindcss/typography`, `@tailwindcss/forms`, `@tailwindcss/aspect-r
 
 Each service page → its own `/inquiry/[service]` with service-specific fields:
 
-| Service | Key Unique Fields |
-|---|---|
-| weddings | date, venue, guest count, indoor/outdoor, bar setup |
-| corporate | company name, headcount, frequency, budget range |
-| conventions | convention name, setup days, daily traffic, power access |
-| production-sets | production company, crew size, call time, NDA required |
-| apartment-popups | property name, # of units, frequency |
-| partnerships | partnership type, co-branding ideas, decision-maker |
+| Service          | Key Unique Fields                                        |
+| ---------------- | -------------------------------------------------------- |
+| weddings         | date, venue, guest count, indoor/outdoor, bar setup      |
+| corporate        | company name, headcount, frequency, budget range         |
+| conventions      | convention name, setup days, daily traffic, power access |
+| production-sets  | production company, crew size, call time, NDA required   |
+| apartment-popups | property name, # of units, frequency                     |
+| partnerships     | partnership type, co-branding ideas, decision-maker      |
 
 Config lives in `lib/inquiry/config.ts` as `SERVICE_CONFIGS` — drives fields, email template, and success copy.
 
@@ -163,13 +165,13 @@ Config lives in `lib/inquiry/config.ts` as `SERVICE_CONFIGS` — drives fields, 
 
 ## Rendering Strategy
 
-| Route | Strategy |
-|---|---|
-| Homepage, /menu, /about, /services/* | SSG with ISR |
-| /locations, /events | ISR (revalidates via Sanity webhook) |
-| /shop/*, /resources/* | ISR (revalidates on content change) |
-| /checkout, /inquiry/* | Dynamic (no caching) |
-| /account/*, /admin/* | Dynamic (always fresh) |
+| Route                                 | Strategy                             |
+| ------------------------------------- | ------------------------------------ |
+| Homepage, /menu, /about, /services/\* | SSG with ISR                         |
+| /locations, /events                   | ISR (revalidates via Sanity webhook) |
+| /shop/_, /resources/_                 | ISR (revalidates on content change)  |
+| /checkout, /inquiry/\*                | Dynamic (no caching)                 |
+| /account/_, /admin/_                  | Dynamic (always fresh)               |
 
 ## Build Order
 

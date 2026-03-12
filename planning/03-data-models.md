@@ -567,11 +567,13 @@ model SiteSetting {
 ## Inventory Business Rules
 
 **Available quantity (computed, never stored):**
+
 ```
 quantityAvailable = quantityOnHand - quantityReserved
 ```
 
 **Two-phase reservation:**
+
 1. Reserve on payment confirmed: increment `quantityReserved` in a Prisma transaction
 2. Deduct on shipped: decrement both `quantityOnHand` and `quantityReserved`, write `InventoryAdjustment`
 3. Release on cancellation: decrement `quantityReserved` only

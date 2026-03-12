@@ -8,8 +8,8 @@
 
 ```ts
 // middleware.ts
-export { auth as middleware } from "@/auth"
-export const config = { matcher: ["/admin/:path*", "/account/:path*"] }
+export { auth as middleware } from "@/auth";
+export const config = { matcher: ["/admin/:path*", "/account/:path*"] };
 ```
 
 ## Database — Neon (serverless PostgreSQL)
@@ -69,14 +69,14 @@ https://res.cloudinary.com/elgatonegro/image/upload/w_800,f_auto,q_auto/product-
 
 ## Summary: Free Tier Costs at Launch
 
-| Service | Free Tier |
-|---|---|
-| Auth.js | Free (self-hosted) |
-| Neon | Free (compute auto-suspends) |
-| Stripe | 2.9% + $0.30/txn |
-| Sanity | Free (2 editors) |
-| Resend | 3,000 emails/month |
-| Cloudflare R2 | 10GB storage |
-| Cloudinary | 25GB storage + bandwidth |
-| Turnstile | Free |
-| Vercel | Free (Hobby) → Pro when needed |
+| Service       | Free Tier                      |
+| ------------- | ------------------------------ |
+| Auth.js       | Free (self-hosted)             |
+| Neon          | Free (compute auto-suspends)   |
+| Stripe        | 2.9% + $0.30/txn               |
+| Sanity        | Free (2 editors)               |
+| Resend        | 3,000 emails/month             |
+| Cloudflare R2 | 10GB storage                   |
+| Cloudinary    | 25GB storage + bandwidth       |
+| Turnstile     | Free                           |
+| Vercel        | Free (Hobby) → Pro when needed |
