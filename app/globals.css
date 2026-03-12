@@ -45,41 +45,48 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Brand colors */
+  --color-brand-orange: #B43620;
+  --color-brand-yellow: #D09324;
+  --color-brand-black: #2A201D;
+  --color-brand-grey: #FAF5F4;
+  --color-brand-green: #7B6838;
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --background: #FAF5F4;
+  --foreground: #2A201D;
+  --card: #FAF5F4;
+  --card-foreground: #2A201D;
+  --popover: #FAF5F4;
+  --popover-foreground: #2A201D;
+  --primary: #B43620;
+  --primary-foreground: #FAF5F4;
   --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: #2A201D;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #D09324;
+  --accent-foreground: #2A201D;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: #2A201D;
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
+  --ring: #B43620;
+  --chart-1: #B43620;
+  --chart-2: #D09324;
+  --chart-3: #7B6838;
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.25rem;
+  --sidebar: #2A201D;
+  --sidebar-foreground: #FAF5F4;
+  --sidebar-primary: #B43620;
+  --sidebar-primary-foreground: #FAF5F4;
+  --sidebar-accent: #D09324;
+  --sidebar-accent-foreground: #2A201D;
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: #B43620;
 }
 
 .dark {
@@ -126,4 +133,12 @@
   html {
     @apply font-sans;
   }
+}
+
+@utility shadow-polaroid {
+  box-shadow: 4px 4px 0px 0px #2A201D;
+}
+
+@utility shadow-polaroid-lg {
+  box-shadow: 6px 6px 0px 0px #2A201D;
 }
