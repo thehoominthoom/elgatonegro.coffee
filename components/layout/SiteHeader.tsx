@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, User, Menu } from "lucide-react";
 
@@ -14,11 +15,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 bg-brand-grey border-b border-brand-black">
       <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          href="/"
-          className="font-display text-2xl font-bold text-brand-orange uppercase tracking-widest"
-        >
-          El Gato Negro
+        <Link href="/" className="block">
+          <Image
+            src="/brand/wordmark-black.svg"
+            alt="El Gato Negro"
+            width={120}
+            height={65}
+            priority
+          />
         </Link>
 
         {/* Desktop nav links */}
