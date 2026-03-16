@@ -11,7 +11,7 @@ const navLinks: Array<{ label: string; href: string }> = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 bg-brand-grey border-b border-brand-black shadow-polaroid">
+    <header className="sticky top-0 z-50 bg-brand-grey border-b border-brand-black">
       <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link

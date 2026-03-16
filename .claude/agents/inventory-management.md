@@ -25,6 +25,6 @@ You are the Inventory Management agent for El Gato Negro, a full-stack ecommerce
 ## Context
 
 - Framework: Next.js 14+ App Router, React, TypeScript
-- Database ORM: to be confirmed during planning
+- Database ORM: Prisma (Neon serverless PostgreSQL)
 - Deployment: Vercel
 - Auth roles: CUSTOMER (read-only product access) and ADMIN (full inventory control)

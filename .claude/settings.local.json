@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.prisma.io)",
+      "WebFetch(domain:neon.com)",
+      "Bash(chmod +x \"C:\\\\Creative\\\\El Gato Negro\\\\website\\\\.git\\\\hooks\\\\pre-commit\")",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && npx tsc --noEmit 2>&1)",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && npm run lint 2>&1)",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && npm run lint 2>&1 && echo \"LINT OK\")",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && npx tsc --noEmit 2>&1 && echo \"TSC OK\")",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && npm run lint 2>&1 && npx tsc --noEmit 2>&1 && echo \"ALL CLEAN\")",
+      "Bash(cd \"C:/Creative/El Gato Negro/website\" && gh pr create --title \"feat: root layout, SiteHeader, SiteFooter, and UI primitives\" --body \"$\\(cat <<'EOF'\n## Summary\n- Replace Geist with Arya \\(display\\) + Open Sans \\(body\\) fonts; wire `--font-display` and `--font-sans` tokens in globals.css\n- Update root layout with brand metadata, font variables on `<html>`, and header/footer shell wrapping `{children}`\n- Remove dead dark mode styles from globals.css \\(brand is light-only\\)\n- Add custom `Card` primitive with `default` \\(shadow-polaroid\\) and `bordered` variants\n- Add `PolaroidCard` with rotation, aspect ratio, shadow, caption, and optional `href` support\n- Add `SiteHeader`: sticky nav, logo, 5 nav links, cart placeholder badge, account link, mobile hamburger stub\n- Add `SiteFooter`: dark 5-column grid using `FooterColumn` sub-component, social icons, copyright bar\n\n## Test plan\n- [ ] Dev server loads without errors \\(`npm run dev`\\)\n- [ ] Header is sticky, logo links to `/`, nav links render correctly\n- [ ] Footer renders dark with correct columns and legal links\n- [ ] Arya font visible on logo/headings, Open Sans on body text\n- [ ] `Card` renders with hard offset shadow; `bordered` variant renders with border only\n- [ ] `PolaroidCard` tilts on rest, snaps straight on hover\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")"
+    ]
+  }
+}
