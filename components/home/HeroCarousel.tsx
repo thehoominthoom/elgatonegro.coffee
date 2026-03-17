@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -10,10 +10,12 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 export interface HeroSlide {
   id: string;
   title: string;
-  date: string;
+  dateRange: string;
+  timeContext: string | null;
   location: string;
-  type: "hosting" | "attending";
+  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   isHappeningNow: boolean;
+  recurrenceLabel: string | null;
   image: string;
   href: string;
 }
@@ -26,6 +28,8 @@ interface HeroCarouselProps {
 
 export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
+  const paused = useRef(false);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const next = useCallback(
     () => setCurrent((c) => (c + 1) % slides.length),
@@ -38,16 +42,33 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   useEffect(() => {
     if (slides.length <= 1) return;
-    const timer = setInterval(next, 6000);
+    const timer = setInterval(() => {
+      if (!paused.current) next();
+    }, 6500);
     return () => clearInterval(timer);
   }, [next, slides.length]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    paused.current = true;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    resumeTimer.current = setTimeout(() => {
+      paused.current = false;
+    }, 2000);
+  }, []);
 
   if (slides.length === 0) return null;
 
   const slide = slides[current];
 
   return (
-    <section className="relative min-h-[90vh] bg-brand-black overflow-hidden">
+    <section
+      className="relative min-h-[90vh] bg-brand-black overflow-hidden"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Background images — crossfade */}
       {slides.map((s, i) => (
         <div
@@ -72,23 +93,23 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-brand-black/50 to-transparent" />
       <div className="absolute inset-0 grain-overlay opacity-30" />
 
-      {/* Happening Now badge */}
-      {slide.isHappeningNow && (
-        <div className="absolute top-6 left-6 md:left-12 z-20 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
-          <span className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-orange">
-            Happening Now
-          </span>
-        </div>
-      )}
-
       {/* Content */}
       <div className="relative z-10 h-full min-h-[90vh] flex flex-col justify-end pb-14 md:pb-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]">
           {/* Event type tag */}
-          <p className="font-display text-[10px] uppercase tracking-[0.35em] text-brand-orange/80 mb-4">
-            {slide.type === "hosting" ? "We're Serving" : "Attending"}
+          <p className="font-sans font-extrabold text-sm uppercase tracking-[0.35em] text-brand-orange mb-4">
+            {slide.type === "ticketed" ? "Ticketed Event" : slide.type === "private" ? "Private Event" : slide.type === "fundraiser" ? "Fundraiser" : slide.type === "sale" ? "Sale" : slide.type === "new-swag" ? "New Swag" : "We're Serving"}
           </p>
+
+          {/* Happening Now badge */}
+          {slide.isHappeningNow && (
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-brand-yellow animate-pulse" />
+              <span className="font-sans font-semibold text-sm uppercase tracking-[0.3em] text-brand-yellow">
+                Happening Now
+              </span>
+            </div>
+          )}
 
           {/* Title */}
           <h1
@@ -102,24 +123,32 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             ))}
           </h1>
 
-          {/* Date + location */}
-          <div className="flex items-center gap-4 mb-8">
-            <span className="font-display text-sm uppercase tracking-[0.15em] text-brand-grey/60">
-              {slide.date}
+          {/* Date + time + location */}
+          <div className="flex flex-col gap-1 mb-8">
+            <span className="font-sans font-extrabold text-base uppercase tracking-[0.15em] text-brand-grey/80">
+              {slide.recurrenceLabel
+                ? `${slide.recurrenceLabel} · ${slide.dateRange}`
+                : slide.dateRange}
             </span>
-            <span className="text-brand-grey/20">·</span>
-            <span className="font-display text-sm uppercase tracking-[0.15em] text-brand-grey/60">
-              {slide.location}
-            </span>
+            {slide.timeContext && (
+              <span className="font-sans font-semibold text-sm text-brand-grey/70 tracking-[0.05em] uppercase">
+                {slide.timeContext}
+              </span>
+            )}
+            {slide.location && (
+              <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
+                {slide.location}
+              </span>
+            )}
           </div>
 
           <Link
             href={slide.href}
-            className="group inline-flex items-center gap-2 font-display text-xs uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
+            className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
           >
             View Event
             <ArrowRight
-              size={12}
+              size={14}
               className="transition-transform group-hover:translate-x-1"
             />
           </Link>
@@ -135,7 +164,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             >
               <ArrowLeft size={13} className="text-brand-grey" />
             </button>
-            <span className="font-display text-[11px] text-brand-grey/40 tabular-nums w-10 text-center">
+            <span className="font-display text-xs text-brand-grey/60 tabular-nums w-10 text-center">
               {String(current + 1).padStart(2, "0")} /{" "}
               {String(slides.length).padStart(2, "0")}
             </span>

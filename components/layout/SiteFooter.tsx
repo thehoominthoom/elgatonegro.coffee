@@ -68,7 +68,6 @@ export function SiteFooter() {
         <FooterColumn
           title="Visit"
           links={[
-            { label: "Hours", href: "/locations" },
             { label: "Locations", href: "/locations" },
             { label: "Events", href: "/events" },
           ]}
@@ -108,26 +107,26 @@ export function SiteFooter() {
       {/* Bottom bar */}
       <div className="border-t border-brand-grey/20">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="text-xs text-brand-grey/50">
+          <p className="text-xs text-brand-grey/70">
             &copy; {new Date().getFullYear()} El Gato Negro Coffee. All rights
             reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link
               href="/privacy"
-              className="text-xs text-brand-grey/50 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="text-xs text-brand-grey/50 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
             >
               Terms
             </Link>
             <Link
               href="/refund-policy"
-              className="text-xs text-brand-grey/50 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
             >
               Refund Policy
             </Link>

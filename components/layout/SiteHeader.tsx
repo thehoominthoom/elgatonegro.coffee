@@ -13,14 +13,14 @@ const navLinks: Array<{ label: string; href: string }> = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-brand-grey border-b border-brand-black/10">
-      <nav className="max-w-7xl mx-auto px-4 md:px-6 h-14 relative flex items-center">
+      <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 relative flex items-center">
         {/* Logo — left */}
         <Link href="/" className="block shrink-0">
           <Image
-            src="/brand/wordmark-black.svg"
+            src="/brand/wordmark-orange-hori.svg"
             alt="El Gato Negro"
-            width={100}
-            height={55}
+            width={160}
+            height={20}
             priority
           />
         </Link>
@@ -31,7 +31,7 @@ export function SiteHeader() {
             <li key={href}>
               <Link
                 href={href}
-                className="font-display text-[11px] uppercase tracking-[0.2em] text-brand-black/60 hover:text-brand-black transition-colors"
+                className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/70 hover:text-brand-black transition-colors"
               >
                 {label}
               </Link>
@@ -42,14 +42,14 @@ export function SiteHeader() {
         {/* Actions — right */}
         <div className="ml-auto flex items-center gap-3">
           <button aria-label="Cart" className="relative">
-            <ShoppingBag size={18} className="text-brand-black/70" />
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-orange text-brand-grey text-[9px] font-bold flex items-center justify-center">
+            <ShoppingBag size={22} className="text-brand-black/70" />
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-orange text-brand-grey text-[10px] font-bold flex items-center justify-center">
               0
             </span>
           </button>
 
           <Link href="/login" aria-label="Account">
-            <User size={18} className="text-brand-black/70" />
+            <User size={23} className="text-brand-black/70" />
           </Link>
 
           <button aria-label="Open menu" className="md:hidden">
