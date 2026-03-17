@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServiceConfig, ALL_SERVICES, type ServiceSlug } from "@/lib/inquiry/config";
-import { InquiryForm } from "./inquiry-form";
+import { InquiryForm } from "@/app/inquiry/[service]/inquiry-form";
 
 export function generateStaticParams() {
   return ALL_SERVICES.map((s) => ({ service: s.slug }));
