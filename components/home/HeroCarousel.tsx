@@ -53,7 +53,6 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   // Progress bar — reset on slide change
   useEffect(() => {
-    // Defer state updates to avoid synchronous setState inside effect body
     const raf = requestAnimationFrame(() => {
       setIsAnimating(false);
       setProgress(0);
@@ -95,11 +94,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
   const slide = slides[current];
 
   return (
-    <section
-      className="relative min-h-[100svh] bg-brand-black overflow-hidden"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <section className="relative min-h-[100svh] bg-brand-black overflow-hidden">
       {/* Background images — crossfade */}
       {slides.map((s, i) => (
         <div
@@ -126,7 +121,11 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
       {/* Content */}
       <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]">
+        <div
+          className="w-full [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           {/* Event type tag */}
           <p className="font-sans font-extrabold text-sm uppercase tracking-[0.35em] text-brand-orange mb-4">
             {slide.type === "ticketed" ? "Ticketed Event" : slide.type === "private" ? "Private Event" : slide.type === "fundraiser" ? "Fundraiser" : slide.type === "sale" ? "Sale" : slide.type === "new-swag" ? "New Swag" : "We're Serving"}
@@ -173,22 +172,42 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             )}
           </div>
 
-          <Link
-            href={slide.href}
-            className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
-          >
-            View Event
-            <ArrowRight
-              size={14}
-              className="transition-transform group-hover:translate-x-1"
-            />
-          </Link>
+          {/* Bottom row: View Event (left) + Progress bar (right) */}
+          <div className="flex items-center justify-between w-full">
+            <Link
+              href={slide.href}
+              className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
+            >
+              View Event
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </Link>
+
+            {/* Progress bar */}
+            {slides.length > 1 && (
+              <div className="w-48 h-[2px] bg-brand-grey/10">
+                <div
+                  className="h-full bg-brand-orange rounded-none"
+                  style={{
+                    width: `${progress}%`,
+                    transition: isAnimating ? "width 50ms linear" : "none",
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Centered dot + arrow control strip */}
       {slides.length > 1 && (
-        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-4 z-10">
+        <div
+          className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-4 z-10"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <button
             onClick={prev}
             aria-label="Previous slide"
@@ -220,17 +239,6 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           </button>
         </div>
       )}
-
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-grey/10 z-10">
-        <div
-          className="h-full bg-brand-orange"
-          style={{
-            width: `${progress}%`,
-            transition: isAnimating ? "width 50ms linear" : "none",
-          }}
-        />
-      </div>
     </section>
   );
 }

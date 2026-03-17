@@ -54,21 +54,24 @@ export function SiteHeader() {
             {/* Desktop CTA */}
             <Link
               href="/inquiry"
-              className="hidden lg:inline-flex ml-4 bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-4 py-2 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
+              className="hidden lg:inline-flex mr-6 bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-4 py-2 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
             >
               Book the Cart
             </Link>
 
-            <button aria-label="Cart" className="relative">
-              <ShoppingBag size={22} className="text-brand-black/70" />
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-orange text-brand-grey text-[10px] font-bold flex items-center justify-center">
-                0
-              </span>
-            </button>
+            {/* Cart + account icons */}
+            <div className="flex items-center gap-2">
+              <button aria-label="Cart" className="relative">
+                <ShoppingBag size={22} className="text-brand-black/70" />
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-orange text-brand-grey text-[10px] font-bold flex items-center justify-center">
+                  0
+                </span>
+              </button>
 
-            <Link href="/login" aria-label="Account">
-              <User size={23} className="text-brand-black/70" />
-            </Link>
+              <Link href="/login" aria-label="Account">
+                <User size={23} className="text-brand-black/70" />
+              </Link>
+            </div>
 
             <button
               aria-label={drawerOpen ? "Close menu" : "Open menu"}

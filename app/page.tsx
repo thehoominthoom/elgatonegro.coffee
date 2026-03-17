@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
-import { CartStatusBar } from "@/components/home/CartStatusBar";
 import { type SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
@@ -198,10 +197,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* ── 1. Utility — Cart Status ──────────────────────────────────────── */}
-      <CartStatusBar />
-
-      {/* ── 2. Culture — Hero Carousel ────────────────────────────────────── */}
+      {/* ── 1. Culture — Hero Carousel ────────────────────────────────────── */}
       <HeroCarousel slides={heroSlides} />
 
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}

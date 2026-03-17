@@ -70,18 +70,19 @@ export async function CartStatusBar() {
         hasOpen ? "bg-brand-yellow" : "bg-brand-black"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-wrap items-center gap-x-6 gap-y-1">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row md:flex-wrap md:items-center gap-x-6 gap-y-2">
         {/* Status label */}
         <span
           className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 text-right ${
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >
-          Serving<br />Coffee
+          <span className="md:hidden">Serving Coffee</span>
+          <span className="hidden md:block">Serving<br />Coffee</span>
         </span>
 
-        {/* Divider */}
-        <span className={`self-stretch w-0.5 ${hasOpen ? "bg-brand-grey/30" : "bg-brand-grey/20"}`} />
+        {/* Divider — desktop only */}
+        <span className={`hidden md:block self-stretch w-0.5 ${hasOpen ? "bg-brand-grey/30" : "bg-brand-grey/20"}`} />
 
         {hasOpen ? (
           <>

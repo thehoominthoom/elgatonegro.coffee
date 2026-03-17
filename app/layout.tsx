@@ -3,6 +3,7 @@ import { Arya, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { CartStatusBar } from "@/components/home/CartStatusBar";
 
 const arya = Arya({
   subsets: ["latin"],
@@ -34,7 +35,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${arya.variable} ${openSans.variable}`}>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
-        <SiteHeader />
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <SiteHeader />
+          <CartStatusBar />
+        </div>
         <main className="flex-1">{children}</main>
         <SiteFooter />
       </body>
