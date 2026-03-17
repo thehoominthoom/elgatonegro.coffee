@@ -73,7 +73,7 @@ export async function CartStatusBar() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row md:flex-wrap md:items-center gap-x-6 gap-y-2">
         {/* Status label */}
         <span
-          className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 text-right ${
+          className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 text-left md:text-right ${
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >

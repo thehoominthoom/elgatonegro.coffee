@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,66 +28,28 @@ interface HeroCarouselProps {
 
 export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const paused = useRef(false);
-  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // pillKey forces pill animation to restart when the same slide is navigated to again
+  const [pillKey, setPillKey] = useState(0);
+
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrent(index);
+      setPillKey((k) => k + 1);
+    },
+    []
+  );
 
   const next = useCallback(
-    () => setCurrent((c) => (c + 1) % slides.length),
-    [slides.length]
-  );
-  const prev = useCallback(
-    () => setCurrent((c) => (c - 1 + slides.length) % slides.length),
-    [slides.length]
+    () => goTo((current + 1) % slides.length),
+    [current, slides.length, goTo]
   );
 
   // Auto-advance
   useEffect(() => {
     if (slides.length <= 1) return;
-    const timer = setInterval(() => {
-      if (!paused.current) next();
-    }, 6500);
+    const timer = setInterval(next, 6500);
     return () => clearInterval(timer);
   }, [next, slides.length]);
-
-  // Progress bar — reset on slide change
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      setIsAnimating(false);
-      setProgress(0);
-      requestAnimationFrame(() => {
-        setIsAnimating(true);
-      });
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [current]);
-
-  // Progress bar — increment
-  useEffect(() => {
-    if (slides.length <= 1) return;
-    const interval = setInterval(() => {
-      if (!paused.current) {
-        setProgress((p) => {
-          if (p >= 100) return 100;
-          return p + 100 / (6500 / 50);
-        });
-      }
-    }, 50);
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
-  const handleMouseEnter = useCallback(() => {
-    if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    paused.current = true;
-    setIsAnimating(false);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    paused.current = false;
-    setIsAnimating(true);
-  }, []);
 
   if (slides.length === 0) return null;
 
@@ -95,24 +57,36 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   return (
     <section className="relative min-h-[100svh] bg-brand-black overflow-hidden">
-      {/* Background images — crossfade */}
-      {slides.map((s, i) => (
-        <div
-          key={s.id}
-          aria-hidden
-          className="absolute inset-0 transition-opacity duration-1000"
-          style={{ opacity: i === current ? 1 : 0 }}
-        >
-          <Image
-            src={s.image}
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-            priority={i === 0}
-          />
-        </div>
-      ))}
+      {/* Background images — Ken Burns crossfade */}
+      {slides.map((s, i) => {
+        const isActive = i === current;
+        return (
+          <div
+            key={s.id}
+            aria-hidden
+            className="absolute inset-0 [transform-origin:center_right]"
+            style={{
+              opacity: isActive ? 1 : 0,
+              zIndex: isActive ? 0 : -10,
+              transition: "opacity 0.3s cubic-bezier(0.32,0,1,0.32) 0.3s",
+            }}
+          >
+            <Image
+              src={s.image}
+              alt=""
+              fill
+              sizes="100vw"
+              className={[
+                "object-cover object-center",
+                isActive
+                  ? "[animation:ken-burns_6.5s_cubic-bezier(0.01,0.04,0.05,0.95)_forwards]"
+                  : "",
+              ].join(" ")}
+              priority={i === 0}
+            />
+          </div>
+        );
+      })}
 
       {/* Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/30 to-transparent" />
@@ -121,14 +95,24 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
       {/* Content */}
       <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto w-full">
+        {/* Content block — stagger in from right on slide change */}
         <div
-          className="w-full [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          key={current}
+          className="w-full [text-shadow:0_2px_12px_rgba(0,0,0,0.5)] [animation:slide-in-right_0.3s_ease-out_0.35s_both]"
         >
           {/* Event type tag */}
           <p className="font-sans font-extrabold text-sm uppercase tracking-[0.35em] text-brand-orange mb-4">
-            {slide.type === "ticketed" ? "Ticketed Event" : slide.type === "private" ? "Private Event" : slide.type === "fundraiser" ? "Fundraiser" : slide.type === "sale" ? "Sale" : slide.type === "new-swag" ? "New Swag" : "We're Serving"}
+            {slide.type === "ticketed"
+              ? "Ticketed Event"
+              : slide.type === "private"
+                ? "Private Event"
+                : slide.type === "fundraiser"
+                  ? "Fundraiser"
+                  : slide.type === "sale"
+                    ? "Sale"
+                    : slide.type === "new-swag"
+                      ? "New Swag"
+                      : "We're Serving"}
           </p>
 
           {/* Happening Now badge */}
@@ -172,71 +156,50 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             )}
           </div>
 
-          {/* Bottom row: View Event (left) + Progress bar (right) */}
-          <div className="flex items-center justify-between w-full">
-            <Link
-              href={slide.href}
-              className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
-            >
-              View Event
-              <ArrowRight
-                size={14}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </Link>
-
-            {/* Progress bar */}
-            {slides.length > 1 && (
-              <div className="w-48 h-[2px] bg-brand-grey/10">
-                <div
-                  className="h-full bg-brand-orange rounded-none"
-                  style={{
-                    width: `${progress}%`,
-                    transition: isAnimating ? "width 50ms linear" : "none",
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          {/* View Event */}
+          <Link
+            href={slide.href}
+            className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
+          >
+            View Event
+            <ArrowRight
+              size={14}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
         </div>
       </div>
 
-      {/* Centered dot + arrow control strip */}
+      {/* Segmented pill indicators */}
       {slides.length > 1 && (
-        <div
-          className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-4 z-10"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <button
-            onClick={prev}
-            aria-label="Previous slide"
-            className="flex items-center justify-center"
-          >
-            <ArrowLeft size={13} className="text-brand-grey/70 hover:text-brand-grey transition-colors" />
-          </button>
-
-          <div className="flex items-center gap-2">
-            {slides.map((_, i) => (
+        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-[3px] z-10">
+          {slides.map((_, i) => {
+            const isActive = i === current;
+            return (
               <button
                 key={i}
-                onClick={() => setCurrent(i)}
+                onClick={() => goTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
                 className={[
-                  "w-2 h-2 rounded-full transition-colors duration-300",
-                  i === current ? "bg-brand-orange" : "bg-brand-grey/30",
+                  "overflow-hidden transition-all duration-500 [transition-timing-function:cubic-bezier(0.35,0.15,0.02,0.99)]",
+                  isActive
+                    ? "w-8 h-2 rounded-full bg-brand-grey/30"
+                    : "w-2 h-2 rounded-full bg-brand-grey/20",
                 ].join(" ")}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={next}
-            aria-label="Next slide"
-            className="flex items-center justify-center"
-          >
-            <ArrowRight size={13} className="text-brand-grey/70 hover:text-brand-grey transition-colors" />
-          </button>
+              >
+                <span
+                  key={isActive ? pillKey : i}
+                  className={[
+                    "block h-full w-full bg-brand-orange [transform-origin:left]",
+                    isActive
+                      ? "[animation:pill-fill_6.5s_linear_0.46s_forwards]"
+                      : "",
+                  ].join(" ")}
+                  style={isActive ? undefined : { transform: "scaleX(0)" }}
+                />
+              </button>
+            );
+          })}
         </div>
       )}
     </section>
