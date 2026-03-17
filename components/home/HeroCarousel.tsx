@@ -48,11 +48,11 @@ function textAnim(transitioning: boolean, delayKey: keyof typeof OUT_DELAYS, mou
   if (!mounted) return {}; // first render — show text immediately, no animation
   if (transitioning) {
     return {
-      animation: `text-out-right 250ms ease-in forwards ${OUT_DELAYS[delayKey]}ms`,
+      animation: `text-out-left 250ms ease-in forwards ${OUT_DELAYS[delayKey]}ms`,
     };
   }
   return {
-    animation: `text-in-right 300ms ease-out both ${IN_DELAYS[delayKey]}ms`,
+    animation: `text-in-left 300ms ease-out both ${IN_DELAYS[delayKey]}ms`,
   };
 }
 
@@ -159,22 +159,17 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               alt=""
               fill
               sizes="100vw"
-              className={[
-                "object-cover object-center",
-                isCurrent
-                  ? "[animation:ken-burns_6.5s_cubic-bezier(0.01,0.04,0.05,0.95)_forwards]"
-                  : "",
-              ].join(" ")}
+              className="object-cover object-center"
               priority={i === 0}
             />
           </div>
         );
       })}
 
-      {/* Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/30 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-black/50 to-transparent" />
-      <div className="absolute inset-0 grain-overlay opacity-30" />
+      {/* Overlays — z-[2] sits above images (max z:1) and below content (z-10) */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/30 to-transparent" />
+      <div className="absolute inset-0 z-[2] bg-gradient-to-r from-brand-black/50 to-transparent" />
+      <div className="absolute inset-0 z-[2] grain-overlay opacity-30" />
 
       {/* Content */}
       <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto w-full">
