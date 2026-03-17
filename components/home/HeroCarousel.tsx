@@ -167,12 +167,10 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               className="transition-transform group-hover:translate-x-1"
             />
           </Link>
-        </div>
-      </div>
 
-      {/* Segmented pill indicators */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-[3px] z-10">
+          {/* Segmented pill indicators — tucked under View Event */}
+          {slides.length > 1 && (
+          <div className="flex items-center gap-[3px] mt-4">
           {slides.map((_, i) => {
             const isActive = i === current;
             return (
@@ -200,8 +198,10 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               </button>
             );
           })}
+          </div>
+          )}
         </div>
-      )}
+      </div>
     </section>
   );
 }
