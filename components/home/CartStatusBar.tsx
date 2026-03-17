@@ -85,8 +85,80 @@ export async function CartStatusBar() {
         <span className={`hidden md:block self-stretch w-0.5 ${hasOpen ? "bg-brand-grey/30" : "bg-brand-grey/20"}`} />
 
         {hasOpen ? (
-          <>
-            {openEvents.map(({ event, schedule }) => (
+          openEvents.length >= 2 ? (
+            <>
+              {/* Mobile: horizontal scroll-snap carousel with right-edge peek */}
+              <div className="md:hidden h-[72px] min-w-0 flex-1">
+                <div className="snap-x snap-mandatory overflow-x-scroll scrollbar-hide flex gap-3 h-full items-center">
+                  {openEvents.map(({ event, schedule }) => (
+                    <div
+                      key={event._id}
+                      className="shrink-0 w-[calc(100%-40px)] snap-start pr-3 flex flex-col gap-1"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
+                        <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey">
+                          {schedule!.openTime} – {schedule!.closeTime} CT
+                        </span>
+                      </div>
+                      {(event.locationName || event.displayAddress || event.mapLink) && (
+                        <div className="flex items-center gap-3 pl-[18px]">
+                          {event.mapLink ? (
+                            <Link
+                              href={event.mapLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
+                            >
+                              {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
+                            </Link>
+                          ) : (event.locationName || event.displayAddress) ? (
+                            <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em]">
+                              {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
+                            </span>
+                          ) : null}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop: existing inline layout */}
+              <div className="hidden md:contents">
+                {openEvents.map(({ event, schedule }) => (
+                  <div key={event._id} className="flex flex-col gap-1">
+                    <div className="flex items-center gap-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
+                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey">
+                        {schedule!.openTime} – {schedule!.closeTime} CT
+                      </span>
+                    </div>
+                    {(event.locationName || event.displayAddress || event.mapLink) && (
+                      <div className="flex items-center gap-3 pl-[18px]">
+                        {event.mapLink ? (
+                          <Link
+                            href={event.mapLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
+                          >
+                            {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
+                          </Link>
+                        ) : (event.locationName || event.displayAddress) ? (
+                          <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em]">
+                            {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            /* Single cart — full-width, no carousel, both breakpoints */
+            openEvents.map(({ event, schedule }) => (
               <div key={event._id} className="flex flex-col gap-1">
                 <div className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
@@ -113,8 +185,8 @@ export async function CartStatusBar() {
                   </div>
                 )}
               </div>
-            ))}
-          </>
+            ))
+          )
         ) : (
           <span className="font-sans font-semibold text-xs uppercase tracking-[0.2em] text-brand-grey/80">
             No carts in operation today
