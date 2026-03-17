@@ -50,11 +50,11 @@ export function SiteHeader() {
           </ul>
 
           {/* Actions — right */}
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-5">
             {/* Desktop CTA */}
             <Link
               href="/inquiry"
-              className="hidden lg:inline-flex bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-4 py-2 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
+              className="hidden lg:inline-flex ml-4 bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-4 py-2 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
             >
               Book the Cart
             </Link>
@@ -71,11 +71,15 @@ export function SiteHeader() {
             </Link>
 
             <button
-              aria-label="Open menu"
+              aria-label={drawerOpen ? "Close menu" : "Open menu"}
               className="md:hidden"
-              onClick={() => setDrawerOpen(true)}
+              onClick={() => setDrawerOpen((prev) => !prev)}
             >
-              <Menu size={22} className="text-brand-black" />
+              {drawerOpen ? (
+                <X size={22} className="text-brand-black" />
+              ) : (
+                <Menu size={22} className="text-brand-black" />
+              )}
             </button>
           </div>
         </nav>

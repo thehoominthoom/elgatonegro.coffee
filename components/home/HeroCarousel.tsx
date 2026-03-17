@@ -28,6 +28,8 @@ interface HeroCarouselProps {
 
 export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
   const paused = useRef(false);
   const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -40,6 +42,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
     [slides.length]
   );
 
+  // Auto-advance
   useEffect(() => {
     if (slides.length <= 1) return;
     const timer = setInterval(() => {
@@ -48,15 +51,43 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
     return () => clearInterval(timer);
   }, [next, slides.length]);
 
+  // Progress bar — reset on slide change
+  useEffect(() => {
+    // Defer state updates to avoid synchronous setState inside effect body
+    const raf = requestAnimationFrame(() => {
+      setIsAnimating(false);
+      setProgress(0);
+      requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [current]);
+
+  // Progress bar — increment
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const interval = setInterval(() => {
+      if (!paused.current) {
+        setProgress((p) => {
+          if (p >= 100) return 100;
+          return p + 100 / (6500 / 50);
+        });
+      }
+    }, 50);
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
   const handleMouseEnter = useCallback(() => {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     paused.current = true;
+    setIsAnimating(false);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    resumeTimer.current = setTimeout(() => {
-      paused.current = false;
-    }, 2000);
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    paused.current = false;
+    setIsAnimating(true);
   }, []);
 
   if (slides.length === 0) return null;
@@ -65,7 +96,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   return (
     <section
-      className="relative min-h-[90vh] bg-brand-black overflow-hidden"
+      className="relative min-h-[100svh] bg-brand-black overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -94,7 +125,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       <div className="absolute inset-0 grain-overlay opacity-30" />
 
       {/* Content */}
-      <div className="relative z-10 h-full min-h-[90vh] flex flex-col justify-end pb-14 md:pb-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
+      <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto w-full">
         <div className="max-w-2xl [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]">
           {/* Event type tag */}
           <p className="font-sans font-extrabold text-sm uppercase tracking-[0.35em] text-brand-orange mb-4">
@@ -153,30 +184,52 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             />
           </Link>
         </div>
+      </div>
 
-        {/* Slide controls */}
-        {slides.length > 1 && (
-          <div className="absolute right-6 md:right-12 bottom-14 md:bottom-20 flex items-center gap-3">
-            <button
-              onClick={prev}
-              aria-label="Previous slide"
-              className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
-            >
-              <ArrowLeft size={13} className="text-brand-grey" />
-            </button>
-            <span className="font-display text-xs text-brand-grey/60 tabular-nums w-10 text-center">
-              {String(current + 1).padStart(2, "0")} /{" "}
-              {String(slides.length).padStart(2, "0")}
-            </span>
-            <button
-              onClick={next}
-              aria-label="Next slide"
-              className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
-            >
-              <ArrowRight size={13} className="text-brand-grey" />
-            </button>
+      {/* Centered dot + arrow control strip */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-4 z-10">
+          <button
+            onClick={prev}
+            aria-label="Previous slide"
+            className="flex items-center justify-center"
+          >
+            <ArrowLeft size={13} className="text-brand-grey/70 hover:text-brand-grey transition-colors" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={[
+                  "w-2 h-2 rounded-full transition-colors duration-300",
+                  i === current ? "bg-brand-orange" : "bg-brand-grey/30",
+                ].join(" ")}
+              />
+            ))}
           </div>
-        )}
+
+          <button
+            onClick={next}
+            aria-label="Next slide"
+            className="flex items-center justify-center"
+          >
+            <ArrowRight size={13} className="text-brand-grey/70 hover:text-brand-grey transition-colors" />
+          </button>
+        </div>
+      )}
+
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-grey/10 z-10">
+        <div
+          className="h-full bg-brand-orange"
+          style={{
+            width: `${progress}%`,
+            transition: isAnimating ? "width 50ms linear" : "none",
+          }}
+        />
       </div>
     </section>
   );
