@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { client } from "@/sanity/lib/client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Cart {
+  _id: string;
   name: string;
   isOpen: boolean;
   hours: string | null;
@@ -11,35 +13,22 @@ interface Cart {
   mapLink: string | null;
 }
 
-// ─── Static placeholder data (replace with Sanity `CartStatus` query) ─────────
+// ─── Query ────────────────────────────────────────────────────────────────────
 
-const carts: Cart[] = [
-  {
-    name: "East Nashville",
-    isOpen: true,
-    hours: "7am – 2pm",
-    address: "5 Points, Nashville TN",
-    mapLink: "https://maps.google.com",
-  },
-  {
-    name: "Midtown",
-    isOpen: false,
-    hours: null,
-    address: null,
-    mapLink: null,
-  },
-  {
-    name: "The Gulch",
-    isOpen: false,
-    hours: null,
-    address: null,
-    mapLink: null,
-  },
-];
+const CARTS_QUERY = `*[_type == "cartStatus"] | order(name asc) {
+  _id,
+  name,
+  isOpen,
+  address,
+  "hours": openUntil,
+  mapLink
+}`;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function CartStatusBar() {
+export async function CartStatusBar() {
+  const carts = await client.fetch<Cart[]>(CARTS_QUERY, {}, { next: { revalidate: 60 } });
+
   const openCarts = carts.filter((c) => c.isOpen);
   const hasOpen = openCarts.length > 0;
 
@@ -62,17 +51,21 @@ export function CartStatusBar() {
         {hasOpen ? (
           <>
             {openCarts.map((cart) => (
-              <div key={cart.name} className="flex items-center gap-3">
+              <div key={cart._id} className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-black/40" />
                 <span className="font-display text-[11px] uppercase tracking-[0.2em] text-brand-black font-bold">
                   {cart.name}
                 </span>
-                <span className="font-display text-[11px] text-brand-black/60 uppercase tracking-[0.15em]">
-                  {cart.hours}
-                </span>
-                <span className="font-display text-[11px] text-brand-black/50 uppercase tracking-[0.1em] hidden sm:block">
-                  {cart.address}
-                </span>
+                {cart.hours && (
+                  <span className="font-display text-[11px] text-brand-black/60 uppercase tracking-[0.15em]">
+                    {cart.hours}
+                  </span>
+                )}
+                {cart.address && (
+                  <span className="font-display text-[11px] text-brand-black/50 uppercase tracking-[0.1em] hidden sm:block">
+                    {cart.address}
+                  </span>
+                )}
                 {cart.mapLink && (
                   <Link
                     href={cart.mapLink}

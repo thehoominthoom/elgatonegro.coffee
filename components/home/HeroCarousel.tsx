@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface HeroSlide {
+export interface HeroSlide {
   id: string;
   title: string;
   date: string;
@@ -17,59 +18,31 @@ interface HeroSlide {
   href: string;
 }
 
-// ─── Static placeholder data (replace with Sanity `Event` query) ──────────────
-
-const slides: HeroSlide[] = [
-  {
-    id: "1",
-    title: "Spring Markets\nNashville",
-    date: "March 22–24",
-    location: "The Fairgrounds",
-    type: "hosting",
-    isHappeningNow: false,
-    image: "https://placehold.co/1440x900/2A201D/B43620",
-    href: "/events/spring-markets",
-  },
-  {
-    id: "2",
-    title: "Bar Hop\nDowntown",
-    date: "April 5",
-    location: "Broadway District",
-    type: "hosting",
-    isHappeningNow: true,
-    image: "https://placehold.co/1440x900/B43620/FAF5F4",
-    href: "/events/bar-hop",
-  },
-  {
-    id: "3",
-    title: "Nashville SC\nKickoff Party",
-    date: "April 12",
-    location: "GEODIS Park",
-    type: "attending",
-    isHappeningNow: false,
-    image: "https://placehold.co/1440x900/3D3426/FAF5F4",
-    href: "/events/nashville-sc",
-  },
-];
+interface HeroCarouselProps {
+  slides: HeroSlide[];
+}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function HeroCarousel() {
+export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(
     () => setCurrent((c) => (c + 1) % slides.length),
-    []
+    [slides.length]
   );
   const prev = useCallback(
     () => setCurrent((c) => (c - 1 + slides.length) % slides.length),
-    []
+    [slides.length]
   );
 
   useEffect(() => {
+    if (slides.length <= 1) return;
     const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [next, slides.length]);
+
+  if (slides.length === 0) return null;
 
   const slide = slides[current];
 
@@ -81,13 +54,17 @@ export function HeroCarousel() {
           key={s.id}
           aria-hidden
           className="absolute inset-0 transition-opacity duration-1000"
-          style={{
-            opacity: i === current ? 1 : 0,
-            backgroundImage: `url("${s.image}")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
+          style={{ opacity: i === current ? 1 : 0 }}
+        >
+          <Image
+            src={s.image}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority={i === 0}
+          />
+        </div>
       ))}
 
       {/* Overlays */}
@@ -149,26 +126,28 @@ export function HeroCarousel() {
         </div>
 
         {/* Slide controls */}
-        <div className="absolute right-6 md:right-12 bottom-14 md:bottom-20 flex items-center gap-3">
-          <button
-            onClick={prev}
-            aria-label="Previous slide"
-            className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
-          >
-            <ArrowLeft size={13} className="text-brand-grey" />
-          </button>
-          <span className="font-display text-[11px] text-brand-grey/40 tabular-nums w-10 text-center">
-            {String(current + 1).padStart(2, "0")} /{" "}
-            {String(slides.length).padStart(2, "0")}
-          </span>
-          <button
-            onClick={next}
-            aria-label="Next slide"
-            className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
-          >
-            <ArrowRight size={13} className="text-brand-grey" />
-          </button>
-        </div>
+        {slides.length > 1 && (
+          <div className="absolute right-6 md:right-12 bottom-14 md:bottom-20 flex items-center gap-3">
+            <button
+              onClick={prev}
+              aria-label="Previous slide"
+              className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
+            >
+              <ArrowLeft size={13} className="text-brand-grey" />
+            </button>
+            <span className="font-display text-[11px] text-brand-grey/40 tabular-nums w-10 text-center">
+              {String(current + 1).padStart(2, "0")} /{" "}
+              {String(slides.length).padStart(2, "0")}
+            </span>
+            <button
+              onClick={next}
+              aria-label="Next slide"
+              className="w-9 h-9 border border-brand-grey/20 flex items-center justify-center hover:border-brand-grey/60 transition-colors"
+            >
+              <ArrowRight size={13} className="text-brand-grey" />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,10 +1,8 @@
 export type ServiceSlug =
-  | "weddings"
-  | "corporate"
-  | "conventions"
-  | "production-sets"
-  | "apartment-popups"
-  | "partnerships";
+  | "brand-activations"
+  | "community-conventions"
+  | "weddings-celebrations"
+  | "private-events";
 
 export interface ServiceConfig {
   slug: ServiceSlug;
@@ -31,130 +29,107 @@ export interface ServiceConfig {
 }
 
 export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
-  weddings: {
-    slug: "weddings",
-    label: "Weddings & Celebrations",
-    eyebrow: "Private Events",
-    tagline: "Craft coffee for the most important day.",
+  "brand-activations": {
+    slug: "brand-activations",
+    label: "Brand Activations",
+    eyebrow: "Corporate & Brand",
+    tagline: "Coffee that earns a second look.",
     description:
-      "Full-service espresso bar for ceremonies, receptions, and rehearsal dinners. We handle setup, breakdown, and everything in between so you can be present.",
+      "Shoe releases, apartment pop-ups, corporate all-hands, production sets, and everything in between. If you're activating a space, we make sure the coffee is part of the story.",
     features: [
-      "Full espresso bar setup + breakdown",
-      "Up to 4 hours of service",
-      "Signature drink menu with your name on it",
-      "Barista uniforms match your palette",
-      "Custom cups & branded packaging available",
-      "Drip, cold brew, and non-coffee options",
-    ],
-    formFields: { eventDate: true, guestCount: true, venue: true },
-    successHeading: "We'll be in touch within 24 hours.",
-    successBody:
-      "We review every inquiry personally. Expect a response with availability and a custom quote shortly.",
-  },
-
-  corporate: {
-    slug: "corporate",
-    label: "Corporate & Office",
-    eyebrow: "Professional",
-    tagline: "The best meeting perk you've ever had.",
-    description:
-      "Pop-up espresso service for team meetings, all-hands, offsites, and company retreats. Gives your team something to look forward to.",
-    features: [
-      "Flexible scheduling — half day or full day",
-      "Drip stations, espresso, and cold brew",
-      "Fully self-contained — no kitchen required",
-      "Company branding on cups available",
-      "Recurring contract pricing available",
+      "Fully branded setup — your colors, your logo",
+      "Flexible footprint — lobby, courtyard, trade floor",
+      "High-volume capability with trained crew",
+      "On-set and production-friendly scheduling",
+      "Recurring and contract pricing available",
       "Setup in under 30 minutes",
     ],
-    formFields: { eventDate: true, attendeeCount: true, company: true, industry: true },
+    formFields: {
+      eventDate: true,
+      attendeeCount: true,
+      company: true,
+      industry: true,
+      duration: true,
+    },
     successHeading: "We'll reach out within 1 business day.",
     successBody:
-      "We'll review your inquiry and follow up with availability, pricing, and next steps.",
+      "We'll review your activation details and follow up with availability, pricing, and next steps.",
   },
 
-  conventions: {
-    slug: "conventions",
-    label: "Conventions & Production",
+  "community-conventions": {
+    slug: "community-conventions",
+    label: "Community & Conventions",
     eyebrow: "Large Scale",
-    tagline: "High-volume service at convention scale.",
+    tagline: "Built for volume. Built for community.",
     description:
-      "Trade floors, fan conventions, industry events. We're built for volume — multiple stations, high throughput, no line that doesn't move.",
+      "Multi-day conventions, fan gatherings, club meetups, and large-scale community events. We're built for throughput — multiple stations, trained crew, no line that doesn't move.",
     features: [
-      "Multi-station setup for high volume",
-      "Trained crew for fast-paced environments",
+      "Multi-station setup for high-volume service",
+      "Event-long coverage — up to 3 days",
       "Sponsor branding on cups and signage",
-      "Event-long service (up to 3 days)",
-      "Customizable menu for dietary needs",
+      "Customizable menu including non-coffee options",
+      "Trained crew for fast-paced environments",
       "Pre-event logistics coordination",
     ],
-    formFields: { eventDate: true, attendeeCount: true, venue: true, duration: true },
+    formFields: {
+      eventDate: true,
+      attendeeCount: true,
+      venue: true,
+      duration: true,
+    },
     successHeading: "We'll be in touch within 48 hours.",
     successBody:
       "Convention-scale events require coordination. We'll reach out to discuss logistics, crew, and custom pricing.",
   },
 
-  "production-sets": {
-    slug: "production-sets",
-    label: "Production Sets",
-    eyebrow: "Film & TV",
-    tagline: "Craft services, elevated.",
+  "weddings-celebrations": {
+    slug: "weddings-celebrations",
+    label: "Weddings & Celebrations",
+    eyebrow: "Private Milestones",
+    tagline: "Craft coffee for the most important days.",
     description:
-      "On-set espresso and drip service for film, TV, commercial, and music video productions. We know call times. We know how sets run.",
+      "Full-service espresso for ceremonies, receptions, rehearsal dinners, anniversaries, and milestone celebrations. We handle setup and breakdown so you can be present.",
     features: [
-      "Pre-dawn and overnight availability",
-      "Quiet equipment — set-friendly",
-      "Crew and cast pricing available",
-      "Consistent quality across long shoot days",
-      "Weekly + multi-week contracts",
-      "Coordinated with AD and production office",
+      "Full espresso bar setup + breakdown",
+      "Up to 4 hours of service",
+      "Signature drink menu with your name on it",
+      "Barista uniforms to match your palette",
+      "Custom cups & branded packaging available",
+      "Drip, cold brew, and non-coffee options",
     ],
-    formFields: { eventDate: true, attendeeCount: true, productionType: true, duration: true },
-    successHeading: "We'll follow up within 24 hours.",
+    formFields: {
+      eventDate: true,
+      guestCount: true,
+      venue: true,
+    },
+    successHeading: "We'll be in touch within 24 hours.",
     successBody:
-      "We'll review your production details and reach out with availability and a custom quote.",
+      "We review every inquiry personally. Expect a response with availability and a custom quote shortly.",
   },
 
-  "apartment-popups": {
-    slug: "apartment-popups",
-    label: "Apartment Pop-ups",
-    eyebrow: "Residential",
-    tagline: "Turn move-in weekend into a moment.",
+  "private-events": {
+    slug: "private-events",
+    label: "Private Events",
+    eyebrow: "Intimate Gatherings",
+    tagline: "Small group. Big impression.",
     description:
-      "Pop-up coffee service for apartment communities — resident events, move-in weekends, lease renewals, open houses, and property launches.",
+      "Bachelorette parties, birthday dinners, house parties, and intimate gatherings. We bring the full espresso bar experience to any space, any size.",
     features: [
-      "Compact setup for lobbies and courtyards",
-      "2–4 hour service windows",
-      "Resident-friendly pricing tiers",
-      "Great for retention and referral events",
-      "Property branding available",
-      "Available on recurring schedule",
+      "Compact setup for homes, rooftops, and venues",
+      "2–3 hour service windows",
+      "Custom drink menus and signature shots",
+      "Flexible guest counts — no minimums",
+      "Available on short notice (subject to availability)",
+      "Non-coffee and seasonal options included",
     ],
-    formFields: { eventDate: true, attendeeCount: true, propertyName: true, unitCount: true },
-    successHeading: "We'll reach out within 24 hours.",
+    formFields: {
+      eventDate: true,
+      guestCount: true,
+      venue: true,
+    },
+    successHeading: "We'll be in touch within 24 hours.",
     successBody:
-      "We'll confirm availability for your property and follow up with pricing and logistics.",
-  },
-
-  partnerships: {
-    slug: "partnerships",
-    label: "Partnerships",
-    eyebrow: "Collaborate",
-    tagline: "Built for people who build things.",
-    description:
-      "Brand collaborations, wholesale accounts, co-branded merchandise, content partnerships, and sponsorship opportunities. We're open to interesting conversations.",
-    features: [
-      "Co-branded merchandise",
-      "Wholesale coffee and merch accounts",
-      "Content and media partnerships",
-      "Sponsorship of events and resources",
-      "Affiliate and referral programs",
-      "Custom engagements — just ask",
-    ],
-    formFields: { company: true, industry: true, partnershipType: true },
-    successHeading: "We'll be in touch.",
-    successBody:
-      "We review partnership inquiries personally. If it's a fit, you'll hear from us within a few days.",
+      "We keep private event bookings personal. Expect a reply with availability and a quote within a day.",
   },
 };
 

@@ -1,15 +1,45 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { HeroCarousel } from "@/components/home/HeroCarousel";
+import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
 import { CartStatusBar } from "@/components/home/CartStatusBar";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const upcomingEvents = [
-  { date: "Mar 22–24", title: "Spring Markets Nashville", location: "The Fairgrounds", href: "/events/spring-markets" },
-  { date: "Apr 5", title: "Bar Hop Downtown", location: "Broadway District", href: "/events/bar-hop" },
-  { date: "Apr 12", title: "Nashville SC Kickoff", location: "GEODIS Park", href: "/events/nashville-sc" },
-];
+interface SanityEvent {
+  _id: string;
+  title: string;
+  date: string;
+  location: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  image: any;
+  type: "hosting" | "attending";
+  isHappeningNow: boolean;
+  slug: string | null;
+}
+
+// ─── Query ────────────────────────────────────────────────────────────────────
+
+const EVENTS_QUERY = `*[_type == "event"] | order(date asc) {
+  _id,
+  title,
+  date,
+  location,
+  image,
+  type,
+  isHappeningNow,
+  "slug": slug.current
+}`;
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function formatEventDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
 
 const products = [
   { name: "El Gato Negro Tee", category: "Merch", price: "$35", img: "https://placehold.co/400x500/2A201D/FAF5F4", href: "/shop/product/egn-tee" },
@@ -53,14 +83,33 @@ const services = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function Home() {
+export default async function Home() {
+  const sanityEvents = await client.fetch<SanityEvent[]>(
+    EVENTS_QUERY,
+    {},
+    { next: { revalidate: 60 } }
+  );
+
+  const heroSlides: HeroSlide[] = sanityEvents.map((e) => ({
+    id: e._id,
+    title: e.title,
+    date: formatEventDate(e.date),
+    location: e.location ?? "",
+    type: e.type ?? "hosting",
+    isHappeningNow: e.isHappeningNow ?? false,
+    image: e.image
+      ? urlFor(e.image).width(1440).height(900).url()
+      : "/images/hero/hero-barista_roasting.jpg",
+    href: e.slug ? `/events/${e.slug}` : "/events",
+  }));
+
   return (
     <>
       {/* ── 1. Utility — Cart Status ──────────────────────────────────────── */}
       <CartStatusBar />
 
       {/* ── 2. Culture — Hero Carousel ────────────────────────────────────── */}
-      <HeroCarousel />
+      <HeroCarousel slides={heroSlides} />
 
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
       <section className="bg-brand-black border-t border-brand-grey/10">
@@ -77,14 +126,14 @@ export default function Home() {
             </Link>
           </div>
 
-          {upcomingEvents.map((event, i) => (
+          {sanityEvents.map((event) => (
             <Link
-              key={i}
-              href={event.href}
+              key={event._id}
+              href={event.slug ? `/events/${event.slug}` : "/events"}
               className="group grid grid-cols-[5rem_1fr_auto] md:grid-cols-[7rem_1fr_auto] items-center gap-4 md:gap-8 py-4 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors"
             >
               <span className="font-display text-[10px] uppercase tracking-[0.15em] text-brand-grey/40 tabular-nums">
-                {event.date}
+                {formatEventDate(event.date)}
               </span>
               <span className="font-display text-sm uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors">
                 {event.title}

@@ -21,9 +21,9 @@ export default function ServicesPage() {
             Services
           </h1>
           <p className="mt-6 max-w-xl font-sans text-lg leading-relaxed text-brand-grey/70">
-            Mobile espresso, wherever it needs to be. Six ways we show up — from
-            wedding receptions to film sets to the lobby of your apartment
-            building.
+            Mobile espresso, wherever it needs to be. Four ways we show up —
+            brand activations, community events, weddings, and private
+            gatherings.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function ServicesPage() {
             </h2>
           </div>
           <Link
-            href="/inquiry/weddings"
+            href="/inquiry/weddings-celebrations"
             className="inline-flex items-center gap-3 border border-brand-grey px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-all duration-200 hover:bg-brand-grey hover:text-brand-orange"
           >
             Get in Touch
