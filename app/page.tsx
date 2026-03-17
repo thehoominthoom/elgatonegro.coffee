@@ -39,8 +39,30 @@ interface SanityEvent {
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
+  defined(image) &&
   count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6 && dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*((7*24)+6)]) > 0
-] | order(schedule[0].date asc) {
+] | order(schedule[0].date asc) [0...6] {
+  _id,
+  title,
+  "locationName": location.locationName,
+  "location": location.displayAddress,
+  schedule,
+  type,
+  eventPageType,
+  externalUrl,
+  "description": description,
+  "ctaLabel": cta.ctaLabel,
+  "ctaUrl": cta.ctaUrl,
+  image,
+  "slug": slug.current,
+  recurrenceLabel
+}`;
+
+const STRIP_EVENTS_QUERY = `*[
+  _type == "event" &&
+  isPublic == true &&
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6 && dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*((7*24)+6)]) > 0
+] | order(schedule[0].date asc) [0...10] {
   _id,
   title,
   "locationName": location.locationName,
@@ -155,12 +177,12 @@ const services = [
 
 export default async function Home() {
   let sanityEvents: SanityEvent[] = [];
+  let stripEvents: SanityEvent[] = [];
   try {
-    sanityEvents = await client.fetch<SanityEvent[]>(
-      EVENTS_QUERY,
-      {},
-      { next: { revalidate: 60 } }
-    );
+    [sanityEvents, stripEvents] = await Promise.all([
+      client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
+      client.fetch<SanityEvent[]>(STRIP_EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
+    ]);
   } catch {
     // Sanity unavailable — page renders without events
   }
@@ -227,7 +249,7 @@ export default async function Home() {
             type StripRow = { key: string; event: SanityEvent; displayDate: string; sortDate: string };
             const rows: StripRow[] = [];
 
-            for (const event of sanityEvents) {
+            for (const event of stripEvents) {
               const schedule = event.schedule ?? [];
               if (!schedule.length) continue;
 
