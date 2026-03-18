@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
@@ -172,6 +173,35 @@ const services = [
     href: "/services/private-events",
   },
 ];
+
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+  description:
+    "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events. Find us, book the cart, or shop the brand.",
+  openGraph: {
+    title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+    description:
+      "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events.",
+    type: "website",
+    images: [
+      {
+        url: "/images/hero/hero-barista_roasting.jpg",
+        width: 1200,
+        height: 630,
+        alt: "El Gato Negro Coffee — barista roasting",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+    description:
+      "Nashville mobile espresso cart. Pop-ups, weddings, brand activations, and private events.",
+    images: ["/images/hero/hero-barista_roasting.jpg"],
+  },
+};
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 

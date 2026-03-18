@@ -23,7 +23,13 @@ interface Event {
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-const EVENTS_QUERY = `*[_type == "event"] {
+// Only fetch events that are public and have a schedule entry on or after today (CT).
+// GROQ dateTime() runs in UTC; subtract 6h to safely cover CT (CST worst-case).
+const EVENTS_QUERY = `*[
+  _type == "event" &&
+  isPublic == true &&
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
+] {
   _id,
   title,
   "locationName": location.locationName,

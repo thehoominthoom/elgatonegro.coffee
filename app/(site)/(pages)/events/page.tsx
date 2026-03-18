@@ -1,6 +1,36 @@
+import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { EventCalendar } from "@/components/events/EventCalendar";
 import type { CalendarEvent } from "@/components/events/EventCalendar";
+
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: "Events | El Gato Negro Coffee",
+  description:
+    "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities for Nashville's mobile espresso cart.",
+  openGraph: {
+    title: "Events | El Gato Negro Coffee",
+    description:
+      "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities.",
+    type: "website",
+    images: [
+      {
+        url: "/images/hero/hero-barista_roasting.jpg",
+        width: 1200,
+        height: 630,
+        alt: "El Gato Negro Coffee — barista roasting",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Events | El Gato Negro Coffee",
+    description:
+      "See where El Gato Negro is serving next. Nashville mobile espresso cart.",
+    images: ["/images/hero/hero-barista_roasting.jpg"],
+  },
+};
 
 // ─── ISR ──────────────────────────────────────────────────────────────────────
 

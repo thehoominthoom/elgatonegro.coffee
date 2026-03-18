@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { set, unset, PatchEvent, useClient, useFormValue, type ArrayOfObjectsInputProps } from "sanity";
+import { set, unset, PatchEvent, useDocumentOperation, useFormValue, type ArrayOfObjectsInputProps } from "sanity";
 import { Stack, Text, Card, Button, Label } from "@sanity/ui";
 import { generateTimeOptions } from "../schemaTypes/event";
 
@@ -262,8 +262,11 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
   const { value = [], onChange } = props;
   const rows = value as unknown as ScheduleDay[];
 
-  const client = useClient({ apiVersion: "2024-01-01" });
   const documentId = useFormValue(["_id"]) as string | undefined;
+  const documentType = useFormValue(["_type"]) as string | undefined;
+  // useDocumentOperation requires a stable non-undefined id + type.
+  // Fall back to empty strings — the patch calls below are guarded by the documentId check.
+  const { patch } = useDocumentOperation(documentId ?? "", documentType ?? "event");
 
   const [mode, setMode] = useState<Mode>("single");
 
@@ -346,13 +349,13 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
     );
     if (documentId) {
       const label = deriveRecurrenceLabel(recurPattern, recurWeekday);
-      client.patch(documentId).set({ recurrenceLabel: label }).commit();
+      patch.execute([{ set: { recurrenceLabel: label } }]);
     }
   }
 
   function clearRecurrenceLabel() {
     if (documentId) {
-      client.patch(documentId).unset(["recurrenceLabel"]).commit();
+      patch.execute([{ unset: ["recurrenceLabel"] }]);
     }
   }
 
