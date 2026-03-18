@@ -38,17 +38,17 @@ export const revalidate = 60;
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-// All public events with at least one schedule date within the next ~6 months (CT).
+// All public events with at least one schedule date within the next ~12 months (CT).
 // GROQ dateTime() runs in UTC.
 // Lower bound: subtract 30h to cover the full CT calendar day —
 //   event remains visible until midnight CT (30h covers CST worst-case end of day).
-// Upper bound: add 183 days (≈6 months) to cap the forward window.
+// Upper bound: add 365 days (≈12 months) to cap the forward window.
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
   count(schedule[
     dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30 &&
-    dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*24*183
+    dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*24*365
   ]) > 0
 ] | order(schedule[0].date asc) {
   _id,
