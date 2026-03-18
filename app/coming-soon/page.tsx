@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { Instagram } from "lucide-react";
 
+export const metadata = {
+  title: "Coming Soon | El Gato Negro Coffee",
+};
+
 function TikTokIcon({ size = 24 }: { size?: number }) {
   return (
     <svg
@@ -17,28 +21,31 @@ function TikTokIcon({ size = 24 }: { size?: number }) {
 
 export default function ComingSoonPage() {
   return (
-    <div className="flex flex-col items-center gap-8 px-4">
-      {/* Logo */}
-      <Image
-        src="/brand/hellcat-color.svg"
-        alt="El Gato Negro Coffee"
-        width={220}
-        height={255}
-        priority
-      />
+    <div className="flex flex-col items-center gap-6 px-4">
+      {/* Logo + wordmark */}
+      <div className="flex flex-col items-center gap-4">
+        <Image
+          src="/brand/hellcat-color.svg"
+          alt="El Gato Negro Coffee"
+          width={220}
+          height={255}
+          className="w-[180px] sm:w-[220px] h-auto"
+          priority
+        />
 
-      {/* Wordmark details */}
-      <div className="flex flex-col items-center gap-1">
-        {(["COFFEE CART", "NASHVILLE, TN", "EST. 2025"] as const).map(
-          (line) => (
-            <p
-              key={line}
-              className="font-sans font-extrabold text-brand-black text-xs tracking-[0.2em] uppercase"
-            >
-              {line}
-            </p>
-          )
-        )}
+        {/* Wordmark details */}
+        <div className="flex flex-col items-center gap-1">
+          {(["COFFEE CART", "NASHVILLE, TN", "EST. 2025"] as const).map(
+            (line) => (
+              <p
+                key={line}
+                className="font-sans font-extrabold text-brand-black text-xs tracking-[0.2em] uppercase"
+              >
+                {line}
+              </p>
+            )
+          )}
+        </div>
       </div>
 
       {/* Social links */}
@@ -50,7 +57,7 @@ export default function ComingSoonPage() {
           aria-label="El Gato Negro on Instagram"
           className="text-brand-black hover:text-brand-orange transition-colors"
         >
-          <Instagram size={22} strokeWidth={1.75} />
+          <Instagram size={24} strokeWidth={1.75} />
         </a>
         <a
           href="https://www.tiktok.com/@el.gato.negro.coffee"
@@ -59,7 +66,7 @@ export default function ComingSoonPage() {
           aria-label="El Gato Negro on TikTok"
           className="text-brand-black hover:text-brand-orange transition-colors"
         >
-          <TikTokIcon size={20} />
+          <TikTokIcon size={22} />
         </a>
       </div>
     </div>

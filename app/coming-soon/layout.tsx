@@ -4,7 +4,7 @@ export default function ComingSoonLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-brand-yellow flex items-center justify-center">
+    <div className="min-h-screen bg-brand-yellow grain-overlay flex items-center justify-center">
       {children}
     </div>
   );
