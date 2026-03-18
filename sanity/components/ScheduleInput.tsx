@@ -265,8 +265,10 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
   const documentId = useFormValue(["_id"]) as string | undefined;
   const documentType = useFormValue(["_type"]) as string | undefined;
   // useDocumentOperation requires a stable non-undefined id + type.
+  // Strip the drafts. prefix — the hook expects the published document ID.
   // Fall back to empty strings — the patch calls below are guarded by the documentId check.
-  const { patch } = useDocumentOperation(documentId ?? "", documentType ?? "event");
+  const publishedId = (documentId ?? "").replace(/^drafts\./, "");
+  const { patch } = useDocumentOperation(publishedId || "", documentType ?? "event");
 
   const [mode, setMode] = useState<Mode>("single");
 
