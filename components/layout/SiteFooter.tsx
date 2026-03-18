@@ -77,9 +77,10 @@ export function SiteFooter() {
           title="Work With Us"
           links={[
             { label: "Services", href: "/services" },
-            { label: "Weddings", href: "/services/weddings" },
-            { label: "Corporate", href: "/services/corporate" },
-            { label: "Conventions", href: "/services/conventions" },
+            { label: "Brand Activations", href: "/services/brand-activations" },
+            { label: "Community & Conventions", href: "/services/community-conventions" },
+            { label: "Weddings & Celebrations", href: "/services/weddings-celebrations" },
+            { label: "Private Events", href: "/services/private-events" },
           ]}
         />
 

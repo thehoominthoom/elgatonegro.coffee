@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PlacesInput } from "@/components/ui/PlacesInput";
@@ -89,6 +90,10 @@ export function InquiryForm({
   });
 
   const venue = watch("venue");
+
+  function handleTurnstileSuccess(token: string) {
+    setValue("turnstileToken", token, { shouldValidate: true });
+  }
 
   function onSubmit(data: GeneralInquiryValues) {
     setServerError(null);
@@ -193,6 +198,20 @@ export function InquiryForm({
           className={cn(inputClass, "resize-none")}
         />
       </Field>
+
+      {/* Turnstile */}
+      <div>
+        <input type="hidden" {...register("turnstileToken")} />
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          onSuccess={handleTurnstileSuccess}
+        />
+        {errors.turnstileToken && (
+          <p className="mt-1.5 font-sans text-xs text-brand-orange">
+            {errors.turnstileToken.message}
+          </p>
+        )}
+      </div>
 
       {/* Server error */}
       {serverError && (

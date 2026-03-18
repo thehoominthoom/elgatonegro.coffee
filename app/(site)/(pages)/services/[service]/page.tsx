@@ -61,7 +61,7 @@ export default async function ServicePage({
           </p>
 
           <Link
-            href={`/inquiry/${config.slug}`}
+            href={`/inquiry?service=${config.slug}`}
             className="mt-10 inline-flex items-center gap-3 bg-brand-orange px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black"
           >
             Request a Quote
@@ -115,7 +115,7 @@ export default async function ServicePage({
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
-                href={`/inquiry/${config.slug}`}
+                href={`/inquiry?service=${config.slug}`}
                 className="inline-flex items-center gap-3 bg-brand-orange px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black"
               >
                 Start Your Inquiry

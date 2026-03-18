@@ -51,11 +51,18 @@ function getTodaySchedule(event: Event): ScheduleDay | null {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export async function CartStatusBar() {
-  const events = await client.fetch<Event[]>(
-    EVENTS_QUERY,
-    {},
-    { next: { revalidate: 60 } }
-  );
+  let events: Event[] = [];
+  try {
+    events = await client.fetch<Event[]>(
+      EVENTS_QUERY,
+      {},
+      { next: { revalidate: 60 } }
+    );
+  } catch (err) {
+    console.error("[CartStatusBar] Sanity fetch failed:", err);
+    // Fallback: render "no carts" state — never crash the layout
+    events = [];
+  }
 
   // Any event type (open, ticketed, private) means the cart is serving
   const openEvents = events
