@@ -17,17 +17,15 @@ function TikTokIcon({ size = 24 }: { size?: number }) {
 
 export default function ComingSoonPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-8 px-4">
+    <div className="flex flex-col items-center gap-8 px-4">
       {/* Logo */}
-      <div className="flex flex-col items-center">
-        <Image
-          src="/brand/hellcat-color.svg"
-          alt="El Gato Negro Coffee"
-          width={220}
-          height={255}
-          priority
-        />
-      </div>
+      <Image
+        src="/brand/hellcat-color.svg"
+        alt="El Gato Negro Coffee"
+        width={220}
+        height={255}
+        priority
+      />
 
       {/* Wordmark details */}
       <div className="flex flex-col items-center gap-1">
