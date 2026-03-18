@@ -96,7 +96,7 @@ export async function submitGeneralInquiry(
 
   const [notification, confirmation] = await Promise.all([
     resend.emails.send({
-      from: "EGN Website <sales@elgatonegro.coffee>",
+      from: "EGN Website <no-reply@elgatonegro.coffee>",
       to: ["sales@elgatonegro.coffee"],
       subject: `New Inquiry — ${name} · ${serviceLabel}`,
       react: InquiryNotification({
@@ -113,7 +113,7 @@ export async function submitGeneralInquiry(
       }),
     }),
     resend.emails.send({
-      from: "EGN Website <sales@elgatonegro.coffee>",
+      from: "EGN Website <no-reply@elgatonegro.coffee>",
       to: [email],
       subject: `We got your inquiry, ${firstName}.`,
       react: InquiryConfirmation({

@@ -35,32 +35,11 @@ interface SanityEvent {
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-// Returns events that have at least one schedule date on or after today (CT).
+// Returns upcoming public events ordered by first schedule date.
 // GROQ dateTime() operates in UTC; subtract 30h to cover the full CT calendar day —
 // event remains visible until midnight CT (30h covers CST worst-case end of day).
+// Cap at 8 (strip max). heroSlides derives from this set via JS filter + slice(0,6).
 const EVENTS_QUERY = `*[
-  _type == "event" &&
-  isPublic == true &&
-  defined(image) &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
-] | order(schedule[0].date asc) [0...6] {
-  _id,
-  title,
-  "locationName": location.locationName,
-  "location": location.displayAddress,
-  schedule,
-  type,
-  eventPageType,
-  externalUrl,
-  "description": description,
-  "ctaLabel": cta.ctaLabel,
-  "ctaUrl": cta.ctaUrl,
-  image,
-  "slug": slug.current,
-  recurrenceLabel
-}`;
-
-const STRIP_EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
   count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
@@ -209,19 +188,17 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   let sanityEvents: SanityEvent[] = [];
-  let stripEvents: SanityEvent[] = [];
   try {
-    [sanityEvents, stripEvents] = await Promise.all([
-      client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
-      client.fetch<SanityEvent[]>(STRIP_EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
-    ]);
+    sanityEvents = await client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } });
   } catch {
     // Sanity unavailable — page renders without events
   }
 
+  const stripEvents = sanityEvents;
+
   const today = todayInCT();
 
-  const heroSlides: HeroSlide[] = sanityEvents.map((e) => {
+  const heroSlides: HeroSlide[] = sanityEvents.filter((e) => e.image).slice(0, 6).map((e) => {
     const schedule = e.schedule ?? [];
     const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
     const isHappeningNow = sorted.some((d) => d.date === today);

@@ -97,7 +97,7 @@ export function InquiryConfirmation({
   return (
     <Html lang="en">
       <Head />
-      <Preview>We got your inquiry, {firstName}. We&apos;ll be in touch within 1–2 business days.</Preview>
+      <Preview>We got your inquiry, {firstName}. We'll be in touch within 1–2 business days.</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
@@ -129,7 +129,7 @@ export function InquiryConfirmation({
               }}
             >
               Your inquiry landed. We review every request personally and
-              we&apos;ll be in touch within 1–2 business days with availability
+              we'll be in touch within 1–2 business days with availability
               and next steps.
             </Text>
 
