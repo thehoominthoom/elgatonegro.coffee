@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
         source: '/',
         destination: '/coming-soon',
         permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: '(elgatonegro\\.coffee|www\\.elgatonegro\\.coffee)',
+          },
+        ],
       },
     ];
   },
