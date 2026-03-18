@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero/hero-barista_roasting.jpg",
+        url: "/images/hero/hero-barista_roasting.webp",
         width: 1200,
         height: 630,
         alt: "El Gato Negro Coffee — barista roasting",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Events | El Gato Negro Coffee",
     description:
       "See where El Gato Negro is serving next. Nashville mobile espresso cart.",
-    images: ["/images/hero/hero-barista_roasting.jpg"],
+    images: ["/images/hero/hero-barista_roasting.webp"],
   },
 };
 
