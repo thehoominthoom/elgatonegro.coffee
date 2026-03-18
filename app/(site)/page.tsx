@@ -35,13 +35,13 @@ interface SanityEvent {
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-// Returns events that have at least one schedule date within today→today+7 (CT).
-// GROQ dateTime() operates in UTC; we offset the CT window by +6h (CST worst-case).
+// Returns events that have at least one schedule date on or after today (CT).
+// GROQ dateTime() operates in UTC; we subtract 6h to safely cover CT (CST worst-case).
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
   defined(image) &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6 && dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*((7*24)+6)]) > 0
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
 ] | order(schedule[0].date asc) [0...6] {
   _id,
   title,
@@ -62,8 +62,8 @@ const EVENTS_QUERY = `*[
 const STRIP_EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6 && dateTime(date + "T00:00:00Z") <= dateTime(now()) + 60*60*((7*24)+6)]) > 0
-] | order(schedule[0].date asc) [0...10] {
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
+] | order(schedule[0].date asc) [0...8] {
   _id,
   title,
   "locationName": location.locationName,
@@ -269,13 +269,7 @@ export default async function Home() {
 
           {(() => {
             // Build strip rows: multi-day consecutive → one card via formatEventDateRange;
-            // recurring (non-consecutive) → one card per occurrence within the 7-day window.
-            const sevenDaysOut = new Date(
-              new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" })
-            );
-            sevenDaysOut.setDate(sevenDaysOut.getDate() + 7);
-            const windowEnd = sevenDaysOut.toISOString().slice(0, 10);
-
+            // recurring (non-consecutive) → one card per occurrence.
             type StripRow = { key: string; event: SanityEvent; displayDate: string; sortDate: string };
             const rows: StripRow[] = [];
 
@@ -284,13 +278,15 @@ export default async function Home() {
               if (!schedule.length) continue;
 
               const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-              const windowDates = sorted.filter((d) => d.date >= today && d.date <= windowEnd);
+              const windowDates = sorted.filter((d) => d.date >= today);
               if (!windowDates.length) continue;
 
-              // Detect consecutive (multi-day) vs recurring (gaps between dates)
-              const isConsecutive = sorted.every((d, i) => {
+              // Detect consecutive (multi-day) vs recurring (gaps between dates).
+              // Both checks operate on windowDates only — past dates must not
+              // influence the consecutive test or the displayed range.
+              const isConsecutive = windowDates.every((d, i) => {
                 if (i === 0) return true;
-                const prev = new Date(sorted[i - 1].date);
+                const prev = new Date(windowDates[i - 1].date);
                 const curr = new Date(d.date);
                 return (curr.getTime() - prev.getTime()) === 86400000;
               });
@@ -299,7 +295,7 @@ export default async function Home() {
                 rows.push({
                   key: event._id,
                   event,
-                  displayDate: formatEventDateRange(sorted),
+                  displayDate: formatEventDateRange(windowDates),
                   sortDate: windowDates[0].date,
                 });
               } else {

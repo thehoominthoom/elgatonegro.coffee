@@ -90,8 +90,12 @@ export async function CartStatusBar() {
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >
-          <span className="md:hidden">Serving Coffee</span>
-          <span className="hidden md:block">Serving<br />Coffee</span>
+          <span className="md:hidden">
+            {openEvents.length >= 2 ? `${openEvents.length} Serving Coffee` : "Serving Coffee"}
+          </span>
+          <span className="hidden md:block">
+            {openEvents.length >= 2 ? `${openEvents.length} Serving` : "Serving"}<br />Coffee
+          </span>
         </span>
 
         {/* Divider — desktop only */}
@@ -106,7 +110,7 @@ export async function CartStatusBar() {
                   {openEvents.map(({ event, schedule }) => (
                     <div
                       key={event._id}
-                      className="shrink-0 w-[calc(100%-40px)] snap-start pr-3 flex flex-col gap-1"
+                      className="shrink-0 w-[calc(75%-12px)] snap-start pr-3 flex flex-col gap-1"
                     >
                       <div className="flex items-center gap-3">
                         <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />

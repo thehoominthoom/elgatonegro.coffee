@@ -276,7 +276,33 @@ export const event = defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        source: "title",
+        maxLength: 96,
+        slugify: async (input: string, _type: unknown, context: { getClient: (opts: { apiVersion: string }) => { fetch: (query: string, params: Record<string, string>) => Promise<string[]> } }) => {
+          const baseSlug = input
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "")
+            .slice(0, 96);
+
+          const client = context.getClient({ apiVersion: "2024-01-01" });
+
+          const existingSlugs: string[] = await client.fetch(
+            `*[_type == "event" && slug.current match $pattern].slug.current`,
+            { pattern: `${baseSlug}*` }
+          );
+
+          if (!existingSlugs.includes(baseSlug)) return baseSlug;
+
+          let suffix = 2;
+          while (existingSlugs.includes(`${baseSlug}-${suffix}`)) {
+            suffix++;
+          }
+          return `${baseSlug}-${suffix}`;
+        },
+      },
     }),
   ],
 
