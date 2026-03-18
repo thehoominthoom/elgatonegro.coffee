@@ -63,9 +63,6 @@ export function SiteHeader() {
             <div className="flex items-center gap-2">
               <button aria-label="Cart" className="relative">
                 <ShoppingBag size={22} className="text-brand-black/70" />
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-orange text-brand-grey text-[10px] font-bold flex items-center justify-center">
-                  0
-                </span>
               </button>
 
               <Link href="/login" aria-label="Account">

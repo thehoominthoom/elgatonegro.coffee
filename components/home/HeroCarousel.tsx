@@ -161,6 +161,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               sizes="100vw"
               className="object-cover object-center"
               priority={i === 0}
+              loading={i === 0 ? undefined : "lazy"}
             />
           </div>
         );
