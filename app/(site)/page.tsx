@@ -114,12 +114,13 @@ function formatEventDateRange(schedule: ScheduleDay[]): string {
   return `${formatEventDate(first)} – ${formatEventDate(last)}`;
 }
 
-function getHeroTimeContext(schedule: ScheduleDay[], today: string): string | null {
+function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRecurring: boolean): string | null {
   const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
   const todayEntry = sorted.find((d) => d.date === today);
   if (todayEntry) {
     return `Today: ${todayEntry.openTime} – ${todayEntry.closeTime} CT`;
   }
+  if (!isRecurring) return null;
   const future = sorted.filter((d) => d.date > today);
   if (!future.length) return null;
   const next = future[0];
@@ -225,7 +226,7 @@ export default async function Home() {
     const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
     const isHappeningNow = sorted.some((d) => d.date === today);
     const dateRange = sorted.length ? formatEventDateRange(sorted) : "";
-    const timeContext = sorted.length ? getHeroTimeContext(sorted, today) : null;
+    const timeContext = sorted.length ? getHeroTimeContext(sorted, today, !!e.recurrenceLabel) : null;
     const href =
       e.eventPageType === "external" && e.externalUrl
         ? e.externalUrl
