@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
@@ -79,7 +79,7 @@ export function InquiryForm({
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<GeneralInquiryValues>({
     resolver: zodResolver(generalInquirySchema),
@@ -89,7 +89,7 @@ export function InquiryForm({
     },
   });
 
-  const venue = watch("venue");
+  const venue = useWatch({ control, name: "venue" });
 
   function handleTurnstileSuccess(token: string) {
     setValue("turnstileToken", token, { shouldValidate: true });
