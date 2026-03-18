@@ -102,8 +102,8 @@ export async function CartStatusBar() {
             </>
           ) : (
             <>
-              <span className="md:hidden">No Coffee</span>
-              <span className="hidden md:block">No<br />Coffee</span>
+              <span className="md:hidden">No Coffee Today</span>
+              <span className="hidden md:block">No Coffee<br />Today</span>
             </>
           )}
         </span>
