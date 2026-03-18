@@ -104,7 +104,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
   // Auto-advance
   useEffect(() => {
     if (slides.length <= 1) return;
-    const timer = setInterval(next, 6500);
+    const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
   }, [next, slides.length]);
 
@@ -280,7 +280,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                       className={[
                         "block h-full w-full bg-brand-orange [transform-origin:left]",
                         isActive
-                          ? "[animation:pill-fill_6.5s_linear_0.46s_forwards]"
+                          ? "[animation:pill-fill_6s_linear_0.46s_forwards]"
                           : "",
                       ].join(" ")}
                       style={isActive ? undefined : { transform: "scaleX(0)" }}
