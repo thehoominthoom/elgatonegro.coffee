@@ -93,11 +93,9 @@ export function PlacesInput({
       disabled={disabled}
       className={cn(className)}
       autoComplete="off"
-      // Prevent Sanity Studio / any parent from intercepting keystrokes
+      // Prevent any parent from intercepting keystrokes
       onKeyDown={(e) => e.stopPropagation()}
       onKeyUp={(e) => e.stopPropagation()}
-      // onKeyPress is deprecated but kept for legacy browser compat (matches Sanity component)
-      onKeyPress={(e) => e.stopPropagation()}
     />
   );
 }

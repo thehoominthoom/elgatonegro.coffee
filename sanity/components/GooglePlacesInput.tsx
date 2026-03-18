@@ -163,7 +163,6 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
           autoComplete="off"
           onKeyDown={(e) => e.stopPropagation()}
           onKeyUp={(e) => e.stopPropagation()}
-          onKeyPress={(e) => e.stopPropagation()}
           style={{
             width: "100%",
             padding: "8px",
