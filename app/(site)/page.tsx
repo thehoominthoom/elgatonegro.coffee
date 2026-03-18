@@ -241,7 +241,7 @@ export default async function Home() {
       isHappeningNow,
       recurrenceLabel: e.recurrenceLabel ?? null,
       image: e.image
-        ? urlFor(e.image).width(1440).height(900).url()
+        ? urlFor(e.image).width(1440).url()
         : "/images/hero/hero-barista_roasting.webp",
       href,
     };
