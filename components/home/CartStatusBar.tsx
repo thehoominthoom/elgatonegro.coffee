@@ -91,12 +91,21 @@ export async function CartStatusBar() {
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >
-          <span className="md:hidden">
-            {openEvents.length >= 2 ? `${openEvents.length} Serving Coffee` : "Serving Coffee"}
-          </span>
-          <span className="hidden md:block">
-            {openEvents.length >= 2 ? `${openEvents.length} Serving` : "Serving"}<br />Coffee
-          </span>
+          {hasOpen ? (
+            <>
+              <span className="md:hidden">
+                {openEvents.length >= 2 ? `${openEvents.length} Serving Coffee` : "Serving Coffee"}
+              </span>
+              <span className="hidden md:block">
+                {openEvents.length >= 2 ? `${openEvents.length} Serving` : "Serving"}<br />Coffee
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="md:hidden">No Coffee</span>
+              <span className="hidden md:block">No<br />Coffee</span>
+            </>
+          )}
         </span>
 
         {/* Divider — desktop only */}
@@ -205,11 +214,7 @@ export async function CartStatusBar() {
               </div>
             ))
           )
-        ) : (
-          <span className="font-sans font-semibold text-xs uppercase tracking-[0.2em] text-brand-grey/80">
-            No carts in operation today
-          </span>
-        )}
+        ) : null}
       </div>
     </div>
   );
