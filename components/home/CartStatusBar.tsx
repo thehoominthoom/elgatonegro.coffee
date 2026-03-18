@@ -24,11 +24,12 @@ interface Event {
 // ─── Query ────────────────────────────────────────────────────────────────────
 
 // Only fetch events that are public and have a schedule entry on or after today (CT).
-// GROQ dateTime() runs in UTC; subtract 6h to safely cover CT (CST worst-case).
+// GROQ dateTime() runs in UTC; subtract 30h to cover the full CT calendar day —
+// event remains visible until midnight CT (30h covers CST worst-case end of day).
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
 ] {
   _id,
   title,

@@ -36,12 +36,13 @@ interface SanityEvent {
 // ─── Query ────────────────────────────────────────────────────────────────────
 
 // Returns events that have at least one schedule date on or after today (CT).
-// GROQ dateTime() operates in UTC; we subtract 6h to safely cover CT (CST worst-case).
+// GROQ dateTime() operates in UTC; subtract 30h to cover the full CT calendar day —
+// event remains visible until midnight CT (30h covers CST worst-case end of day).
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
   defined(image) &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
 ] | order(schedule[0].date asc) [0...6] {
   _id,
   title,
@@ -62,7 +63,7 @@ const EVENTS_QUERY = `*[
 const STRIP_EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
-  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*6]) > 0
+  count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
 ] | order(schedule[0].date asc) [0...8] {
   _id,
   title,
