@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { UserButton } from '@clerk/nextjs';
 
@@ -15,7 +16,8 @@ const tiles = [
   {
     label: 'Sanity Studio',
     description: 'CMS — events, content',
-    href: 'https://elgatonegro.coffee/studio',
+    href: '/studio',
+    internal: true,
   },
   {
     label: 'GitHub',
@@ -61,28 +63,41 @@ export default function AdminDashboardPage() {
       {/* Tile grid */}
       <main className="max-w-5xl mx-auto px-4 md:px-6 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tiles.map((tile) => (
-            <a
-              key={tile.label}
-              href={tile.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block bg-brand-black border border-brand-grey/10 hover:border-brand-orange/50 p-6 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <span className="font-sans font-extrabold text-sm uppercase tracking-[0.1em] text-brand-grey">
-                  {tile.label}
-                </span>
-                <ExternalLink
-                  size={14}
-                  className="text-brand-grey/30 group-hover:text-brand-orange/70 transition-colors shrink-0 mt-0.5"
-                />
-              </div>
-              <p className="font-sans text-xs text-brand-grey/50">
-                {tile.description}
-              </p>
-            </a>
-          ))}
+          {tiles.map((tile) => {
+            const className = "group block bg-brand-black border border-brand-grey/10 hover:border-brand-orange/50 p-6 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange";
+            const content = (
+              <>
+                <div className="flex items-start justify-between mb-3">
+                  <span className="font-sans font-extrabold text-sm uppercase tracking-[0.1em] text-brand-grey">
+                    {tile.label}
+                  </span>
+                  {'internal' in tile ? null : (
+                    <ExternalLink
+                      size={14}
+                      className="text-brand-grey/30 group-hover:text-brand-orange/70 transition-colors shrink-0 mt-0.5"
+                    />
+                  )}
+                </div>
+                <p className="font-sans text-xs text-brand-grey/50">
+                  {tile.description}
+                </p>
+              </>
+            );
+
+            if ('internal' in tile) {
+              return (
+                <Link key={tile.label} href={tile.href} className={className}>
+                  {content}
+                </Link>
+              );
+            }
+
+            return (
+              <a key={tile.label} href={tile.href} target="_blank" rel="noopener noreferrer" className={className}>
+                {content}
+              </a>
+            );
+          })}
         </div>
       </main>
     </div>
