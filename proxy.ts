@@ -1,4 +1,4 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import type { NextFetchEvent } from 'next/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 const isAdminHost = (hostname: string) => {
@@ -9,37 +9,55 @@ const isAdminHost = (hostname: string) => {
   );
 };
 
-const handler = clerkMiddleware(async (auth, req: NextRequest) => {
+async function handleAdminRequest(
+  req: NextRequest,
+  event: NextFetchEvent,
+): Promise<NextResponse> {
+  let clerkMiddleware: typeof import('@clerk/nextjs/server').clerkMiddleware;
+
+  try {
+    const clerk = await import('@clerk/nextjs/server');
+    clerkMiddleware = clerk.clerkMiddleware;
+  } catch {
+    return new NextResponse('Admin unavailable', { status: 503 });
+  }
+
+  const handler = clerkMiddleware(async (auth, clerkReq: NextRequest) => {
+    // Allow Clerk auth routes through without protection
+    if (
+      clerkReq.nextUrl.pathname.startsWith('/sign-in') ||
+      clerkReq.nextUrl.pathname.startsWith('/sign-up')
+    ) {
+      return NextResponse.next();
+    }
+
+    // Protect all other admin routes
+    const { userId } = await auth();
+
+    if (!userId) {
+      const signInUrl = new URL('/sign-in', clerkReq.url);
+      return NextResponse.redirect(signInUrl);
+    }
+
+    // Rewrite admin subdomain to the (admin) route group
+    const url = clerkReq.nextUrl.clone();
+    url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+    return NextResponse.rewrite(url);
+  });
+
+  return handler(req, event) as Promise<NextResponse>;
+}
+
+export async function proxy(req: NextRequest, event: NextFetchEvent) {
   const hostname = req.headers.get('host') ?? '';
 
+  // Non-admin hosts pass through immediately — no Clerk involvement
   if (!isAdminHost(hostname)) {
     return NextResponse.next();
   }
 
-  // Allow Clerk auth routes through without protection
-  if (
-    req.nextUrl.pathname.startsWith('/sign-in') ||
-    req.nextUrl.pathname.startsWith('/sign-up')
-  ) {
-    return NextResponse.next();
-  }
-
-  // Protect all other admin routes
-  const { userId } = await auth();
-
-  if (!userId) {
-    const signInUrl = new URL('/sign-in', req.url);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  // Rewrite admin subdomain to the (admin) route group
-  const url = req.nextUrl.clone();
-  url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
-  return NextResponse.rewrite(url);
-});
-
-// Re-export as named `proxy` for Next.js 16 proxy.ts convention
-export const proxy = handler;
+  return handleAdminRequest(req, event);
+}
 
 export const config = {
   matcher: [
