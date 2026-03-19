@@ -50,3 +50,42 @@ export const ADMIN_CUSTOMER_EMAIL_MARKETING_CONSENT_UPDATE_MUTATION = `
     }
   }
 `;
+
+// ─── Inventory (Helcim POS sync) ────────────────────────────────────────────
+
+export const ADMIN_VARIANT_BY_SKU_QUERY = `
+  query VariantBySku($query: String!) {
+    productVariants(first: 1, query: $query) {
+      edges {
+        node {
+          id
+          sku
+          inventoryItem {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const ADMIN_INVENTORY_ADJUST_MUTATION = `
+  mutation InventoryAdjust($input: InventoryAdjustQuantitiesInput!) {
+    inventoryAdjustQuantities(input: $input) {
+      inventoryAdjustmentGroup {
+        reason
+        changes(first: 10) {
+          nodes {
+            name
+            delta
+            quantityAfterChange
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
