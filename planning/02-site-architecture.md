@@ -75,7 +75,7 @@ app/
 │       └── settings/page.tsx
 │
 └── api/
-    ├── webhooks/stripe/route.ts
+    ├── webhooks/helcim/route.ts
     ├── inquiry/route.ts
     ├── newsletter/route.ts
     └── revalidate/route.ts
@@ -105,7 +105,7 @@ app/
 
 **Inquiry:** `InquiryFormWrapper` (client, multi-step), `InquiryFormStep1` (dynamic fields), `InquiryProgressBar`
 
-**Shop:** `ProductGrid`, `ProductCard`, `ProductImageGallery` (client), `VariantSelector` (client), `AddToCartButton` (client), `CartDrawer` (client), `CheckoutForm` (client, Stripe Elements)
+**Shop:** `ProductGrid`, `ProductCard`, `ProductImageGallery` (client), `VariantSelector` (client), `AddToCartButton` (client), `CartDrawer` (client) — checkout handled by Shopify hosted checkout
 
 **Resources:** `BlogCard`, `PostBody` (MDX renderer), `GuideTableOfContents` (client), `GatedContent`
 
@@ -179,7 +179,7 @@ Config lives in `lib/inquiry/config.ts` as `SERVICE_CONFIGS` — drives fields, 
 2. Root layout, SiteHeader, SiteFooter, shared UI primitives
 3. Homepage (establishes all visual patterns)
 4. `/services/*` + inquiry flow
-5. `/shop/*` + cart + Stripe checkout
+5. `/shop/*` + cart + Shopify hosted checkout
 6. Auth + `/account/*`
 7. `/admin/*`
 8. `/resources/*`

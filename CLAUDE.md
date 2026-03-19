@@ -89,9 +89,9 @@ Full-stack ecommerce + lead generation + resource hub website for a coffee cart 
 | ---------------- | ------------------------------------------- |
 | Framework        | Next.js 14+ App Router, React, TypeScript   |
 | Styling          | Tailwind CSS + shadcn/ui                    |
-| Auth             | Auth.js v5 (NextAuth) + Prisma Adapter      |
+| Auth             | Clerk (admin) + Shopify Customer Account API (customers) |
 | Database         | Neon (serverless PostgreSQL) via Prisma ORM |
-| Payments         | Stripe + Stripe Tax                         |
+| Payments         | Shopify Payments (online) + Helcim (in-person POS) |
 | CMS              | Sanity (hours, locations, events, blog)     |
 | Email            | Resend + React Email                        |
 | Digital delivery | Cloudflare R2 + pre-signed URLs             |
@@ -113,8 +113,6 @@ npx prisma generate       # Regenerate Prisma client after schema changes
 npx prisma db push        # Push schema to dev database
 npx prisma migrate deploy # Run migrations in production
 npx prisma studio         # Open database GUI
-
-stripe listen --forward-to localhost:3000/api/webhooks/stripe  # Local webhook testing
 ```
 
 ## Screenshot Workflow
@@ -147,12 +145,12 @@ app/
 ├── (auth)/            → /login, /register, /forgot-password, /reset-password
 ├── (account)/         → /account, /orders, /downloads, /profile, /inquiries
 ├── (admin)/           → /admin + orders, products, inventory, inquiries, customers, settings
-└── api/               → /api/webhooks/stripe, /api/inquiry, /api/revalidate
+└── api/               → /api/webhooks/helcim, /api/inquiry, /api/revalidate
 ```
 
 ## Key Architecture Decisions
 
-**Server Components by default.** Add `"use client"` only for interactivity, browser APIs, Stripe Elements, or context consumers (cart, auth).
+**Server Components by default.** Add `"use client"` only for interactivity, browser APIs, Shopify cart hooks, or context consumers.
 
 **Admin route protection** is enforced in `middleware.ts` via session role check — never rely on client-side role checks alone.
 
@@ -160,9 +158,9 @@ app/
 **Postgres (Prisma) manages:** users, orders, cart, inventory, leads, digital download tokens, discount codes.
 These are two separate data sources deliberately — don't conflate them.
 
-**Checkout flow:** Stripe Checkout → webhook at `/api/webhooks/stripe` is the authoritative trigger for all order status transitions. Never trust client-side confirmation.
+**Checkout flow:** Shopify hosted checkout handles all payment processing. Shopify webhooks are the authoritative trigger for order status transitions.
 
-**Digital product delivery:** Cloudflare R2 stores files privately. On `payment_intent.succeeded`, generate `DownloadToken` rows, create pre-signed R2 URLs (15-min TTL), and send via Resend. Customer can re-request from `/account/downloads`.
+**Digital product delivery:** Cloudflare R2 stores files privately. On order confirmation, generate `DownloadToken` rows, create pre-signed R2 URLs (15-min TTL), and send via Resend. Customer can re-request from `/account/downloads`.
 
 **Inventory:** Physical only — digital products skip stock checks entirely. Two-phase reservation: reserve on payment confirmed, deduct on shipped. All mutations inside Prisma transactions.
 
@@ -200,11 +198,6 @@ NEXT_PUBLIC_POLAROID_STYLE=true
 ```
 DATABASE_URL=                           # Neon pooled URL
 DIRECT_URL=                             # Neon direct URL (migrations only)
-AUTH_SECRET=                            # Auth.js secret
-NEXTAUTH_URL=                           # https://elgatonegro.coffee
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 RESEND_API_KEY=
 NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
@@ -227,7 +220,7 @@ Recommended implementation sequence:
 2. Root layout, SiteHeader, SiteFooter, shared UI primitives (Button, Card, PolaroidCard)
 3. Homepage (establishes all visual patterns)
 4. `/services/*` + inquiry flow (primary revenue driver)
-5. `/shop/*` + cart + Stripe checkout
+5. `/shop/*` + cart + Shopify hosted checkout
 6. Auth + `/account/*`
 7. `/admin/*` dashboard
 8. `/resources/*` content hub

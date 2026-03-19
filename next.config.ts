@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "cdn.sanity.io" },
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/elgatonegro/**" },
+      // Shopify product images
+      { protocol: "https", hostname: "cdn.shopify.com" },
     ],
   },
 };

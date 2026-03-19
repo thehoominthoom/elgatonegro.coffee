@@ -545,7 +545,7 @@ model Subscription {
   planId               String
   status               SubscriptionStatus @default(ACTIVE)
   shippingAddressId    String?
-  stripeSubscriptionId String?            @unique
+  externalSubscriptionId String?           @unique
   currentPeriodStart   DateTime?
   currentPeriodEnd     DateTime?
   cancelledAt          DateTime?
@@ -601,6 +601,6 @@ Any state → REFUNDED / PARTIALLY_REFUNDED
 
 - `orderNumber` must be human-readable (`EGN-2026-00042`) — use DB sequence, not cuid
 - `OrderItem` stores price/name/SKU **snapshots at purchase time** — never re-query live price for order display
-- `Order.paymentIntentId` is the Stripe link — webhook is authoritative for status transitions
+- `Order.paymentIntentId` stores the external payment reference — Shopify webhook is authoritative for status transitions
 - `SubscriptionPlan.isActive = false` keeps subscription tables inert until the feature is built
 - `Guest checkout`: `Order.userId` nullable; link to account post-checkout by email match

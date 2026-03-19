@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, User, Menu, X } from "lucide-react";
+import { useCart } from "@/components/shop/CartProvider";
 
 const navLinks: Array<{ label: string; href: string }> = [
   { label: "Find Us", href: "/events" },
@@ -15,6 +16,7 @@ const navLinks: Array<{ label: string; href: string }> = [
 
 export function SiteHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { itemCount, openCart } = useCart();
 
   function closeDrawer() {
     setDrawerOpen(false);
@@ -61,8 +63,17 @@ export function SiteHeader() {
 
             {/* Cart + account icons */}
             <div className="flex items-center gap-2">
-              <button aria-label="Cart" className="relative">
+              <button
+                aria-label={`Cart${itemCount > 0 ? ` — ${itemCount} item${itemCount === 1 ? "" : "s"}` : ""}`}
+                onClick={openCart}
+                className="relative"
+              >
                 <ShoppingBag size={22} className="text-brand-black/70" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-brand-orange text-brand-grey text-[10px] font-sans font-extrabold rounded-full flex items-center justify-center leading-none">
+                    {itemCount > 9 ? "9+" : itemCount}
+                  </span>
+                )}
               </button>
 
               <Link href="/login" aria-label="Account">
