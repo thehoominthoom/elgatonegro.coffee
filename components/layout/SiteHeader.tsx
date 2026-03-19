@@ -76,7 +76,7 @@ export function SiteHeader() {
                 )}
               </button>
 
-              <Link href="/login" aria-label="Account">
+              <Link href="/account" aria-label="Account">
                 <User size={23} className="text-brand-black/70" />
               </Link>
             </div>
