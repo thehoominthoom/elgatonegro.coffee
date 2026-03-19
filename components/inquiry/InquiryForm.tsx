@@ -11,7 +11,7 @@ import {
   generalInquirySchema,
   type GeneralInquiryValues,
 } from "@/lib/inquiry/general-schema";
-import { submitGeneralInquiry } from "./actions";
+import { submitGeneralInquiry } from "@/app/inquiry/actions";
 
 // ─── Field wrapper ─────────────────────────────────────────────────────────────
 

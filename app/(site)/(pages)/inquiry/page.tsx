@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { type GeneralInquiryValues } from "@/lib/inquiry/general-schema";
-import { InquiryForm } from "@/app/inquiry/InquiryForm";
+import { InquiryForm } from "@/components/inquiry/InquiryForm";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 

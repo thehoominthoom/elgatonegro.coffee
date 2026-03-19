@@ -115,17 +115,71 @@ function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRecurring:
   return `Next: ${dayLabel} ${next.openTime}–${next.closeTime} CT`;
 }
 
+// ─── Strip rows ───────────────────────────────────────────────────────────────
+
+type StripRow = { key: string; event: SanityEvent; displayDate: string; sortDate: string };
+
+function buildStripRows(events: SanityEvent[], today: string): StripRow[] {
+  const rows: StripRow[] = [];
+
+  for (const event of events) {
+    const schedule = event.schedule ?? [];
+    if (!schedule.length) continue;
+
+    const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
+    const windowDates = sorted.filter((d) => d.date >= today);
+    if (!windowDates.length) continue;
+
+    // Detect consecutive (multi-day) vs recurring (gaps between dates).
+    // Both checks operate on windowDates only — past dates must not
+    // influence the consecutive test or the displayed range.
+    const isConsecutive = windowDates.every((d, i) => {
+      if (i === 0) return true;
+      const prev = new Date(windowDates[i - 1].date);
+      const curr = new Date(d.date);
+      return (curr.getTime() - prev.getTime()) === 86400000;
+    });
+
+    if (isConsecutive) {
+      rows.push({
+        key: event._id,
+        event,
+        displayDate: formatEventDateRange(windowDates),
+        sortDate: windowDates[0].date,
+      });
+    } else {
+      for (const d of windowDates) {
+        rows.push({
+          key: `${event._id}-${d._key}`,
+          event,
+          displayDate: formatEventDate(d.date),
+          sortDate: d.date,
+        });
+      }
+    }
+  }
+
+  rows.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
+  return rows;
+}
+
 const products = [
   { name: "El Gato Negro Tee", category: "Merch", price: "$35", img: "https://placehold.co/400x500/2A201D/FAF5F4", href: "/shop/product/egn-tee" },
   { name: "House Blend — 12oz", category: "Coffee", price: "$22", img: "https://placehold.co/400x500/B43620/FAF5F4", href: "/shop/product/house-blend" },
   { name: "Cart Build Guide", category: "Digital", price: "$49", img: "https://placehold.co/400x500/7B6838/FAF5F4", href: "/shop/product/cart-build-guide" },
 ];
 
-// Placeholder — replace with scraped logos from client list
 const clients = [
-  "Nashville SC", "The Void", "Compound Events", "Heritage",
-  "Creed Bar", "ACE Hotel", "Third & Lindsley", "Dierks Bentley's",
-  "Biltmore Estate", "Marathon Village",
+  { name: "Nike", src: "/images/clients/nike.svg", h: 32 },
+  { name: "Asics", src: "/images/clients/asics.svg", h: 36 },
+  { name: "On Running", src: "/images/clients/on-running.svg", h: 48 },
+  { name: "RAD", src: "/images/clients/rad.svg", h: 28 },
+  { name: "Panda Performance", src: "/images/clients/panda-performance.svg", h: 46 },
+  { name: "The Exchange Running Collective", src: "/images/clients/exchange-running-collective.svg", h: 50 },
+  { name: "Nashville Production Week", src: "/images/clients/nashville-production-week.svg", h: 128 },
+  { name: "Good People Only", src: "/images/clients/good-people-only.svg", h: 76 },
+  { name: "Big Fluffy Dog Rescue", src: "/images/clients/big-fluffy-dog.svg", h: 39 },
+  { name: "1111 Church Apartments", src: "/images/clients/1111-church.svg", h: 46 },
 ];
 
 const services = [
@@ -194,8 +248,6 @@ export default async function Home() {
     // Sanity unavailable — page renders without events
   }
 
-  const stripEvents = sanityEvents;
-
   const today = todayInCT();
 
   const heroSlides: HeroSlide[] = sanityEvents.filter((e) => e.image).slice(0, 6).map((e) => {
@@ -246,52 +298,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          {(() => {
-            // Build strip rows: multi-day consecutive → one card via formatEventDateRange;
-            // recurring (non-consecutive) → one card per occurrence.
-            type StripRow = { key: string; event: SanityEvent; displayDate: string; sortDate: string };
-            const rows: StripRow[] = [];
-
-            for (const event of stripEvents) {
-              const schedule = event.schedule ?? [];
-              if (!schedule.length) continue;
-
-              const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-              const windowDates = sorted.filter((d) => d.date >= today);
-              if (!windowDates.length) continue;
-
-              // Detect consecutive (multi-day) vs recurring (gaps between dates).
-              // Both checks operate on windowDates only — past dates must not
-              // influence the consecutive test or the displayed range.
-              const isConsecutive = windowDates.every((d, i) => {
-                if (i === 0) return true;
-                const prev = new Date(windowDates[i - 1].date);
-                const curr = new Date(d.date);
-                return (curr.getTime() - prev.getTime()) === 86400000;
-              });
-
-              if (isConsecutive) {
-                rows.push({
-                  key: event._id,
-                  event,
-                  displayDate: formatEventDateRange(windowDates),
-                  sortDate: windowDates[0].date,
-                });
-              } else {
-                for (const d of windowDates) {
-                  rows.push({
-                    key: `${event._id}-${d._key}`,
-                    event,
-                    displayDate: formatEventDate(d.date),
-                    sortDate: d.date,
-                  });
-                }
-              }
-            }
-
-            rows.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
-
-            return rows.map(({ key, event, displayDate }) => (
+          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate }) => (
               <Link
                 key={key}
                 href={
@@ -330,8 +337,7 @@ export default async function Home() {
                   {event.locationName || (event.location ? trimAddress(event.location) : "")}
                 </span>
               </Link>
-            ));
-          })()}
+          ))}
         </div>
       </section>
 
@@ -340,7 +346,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex items-end justify-between mb-10 pb-5 border-b border-brand-grey/10">
             <div>
-              <p className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-yellow mb-2">
+              <p className="font-display text-[20px] uppercase tracking-[0.3em] text-brand-yellow mb-2">
                 The Store
               </p>
               <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-grey tracking-tight">
@@ -401,17 +407,22 @@ export default async function Home() {
 
           {/* 4a. Who We've Worked With — flat list */}
           <div className="mb-20 md:mb-28">
-            <p className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-black/60 mb-10">
+            <p className="font-display text-[20px] uppercase tracking-[0.3em] text-brand-black/60 mb-10">
               Who We&apos;ve Worked With
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-4">
-              {clients.map((clientName) => (
-                <span
-                  key={clientName}
-                  className="font-display text-sm uppercase tracking-[0.1em] text-brand-black/70"
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {clients.map((c) => (
+                <div
+                  key={c.name}
+                  className="flex items-center justify-center aspect-[8/5] rounded-xl bg-brand-black/[0.03] px-6 py-4 overflow-hidden"
                 >
-                  {clientName}
-                </span>
+                  <img
+                    src={c.src}
+                    alt={c.name}
+                    className="w-auto max-h-full"
+                    style={{ height: c.h }}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -419,7 +430,7 @@ export default async function Home() {
           {/* 4b. Services — section header */}
           <div className="flex items-end justify-between mb-10 pb-5 border-b-2 border-brand-black">
             <div>
-              <p className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-green mb-2">
+              <p className="font-display text-[20px] uppercase tracking-[0.3em] text-brand-green mb-2">
                 What We Do
               </p>
               <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-black tracking-tight">
@@ -444,7 +455,7 @@ export default async function Home() {
                   i % 2 === 0 ? "md:border-r-2" : ""
                 } ${i < 2 ? "border-b-2" : ""}`}
               >
-                <p className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-green group-hover:text-brand-yellow transition-colors mb-4">
+                <p className="font-display text-[20px] uppercase tracking-[0.3em] text-brand-green group-hover:text-brand-yellow transition-colors mb-4">
                   {service.eyebrow}
                 </p>
                 <h3 className="font-display font-bold text-2xl uppercase text-brand-black group-hover:text-brand-grey tracking-tight mb-4 transition-colors">
@@ -473,7 +484,7 @@ export default async function Home() {
       <section className="bg-brand-orange py-16 md:py-20 border-t-2 border-brand-black">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <p className="font-display text-[10px] uppercase tracking-[0.3em] text-brand-black/70 mb-2">
+            <p className="font-display text-[20px] uppercase tracking-[0.3em] text-brand-black/70 mb-2">
               Ready to Book?
             </p>
             <h2 className="font-display font-bold text-3xl md:text-4xl uppercase text-brand-black tracking-tight">
