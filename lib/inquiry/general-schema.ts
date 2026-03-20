@@ -20,12 +20,12 @@ export const generalInquirySchema = z.object({
   phone: z.string().optional(),
   serviceType: z.enum(
     ["brand-activations", "community-conventions", "weddings-celebrations", "private-events"],
-    { error: "Please select a service type" }
+    { message: "Please select a service type" }
   ),
   eventDate: z.string().min(1, "Event date is required"),
   venue: z.string().min(2, "Venue or location is required"),
   headcount: z.enum(["under-50", "50-150", "150-300", "300-plus"], {
-    error: "Please select a headcount range",
+    message: "Please select a headcount range",
   }),
   message: z.string().optional(),
   turnstileToken: z.string().min(1, "Please complete the security check"),
