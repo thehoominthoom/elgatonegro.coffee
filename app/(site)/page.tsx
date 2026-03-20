@@ -246,6 +246,20 @@ export default async function Home() {
                       featuredProducts[0].priceRange.minVariantPrice.currencyCode
                     )}
                   </p>
+                  {(featuredProducts[0].roastLevel || featuredProducts[0].flavorNotes) && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {featuredProducts[0].roastLevel && (
+                        <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1.5 py-0.5">
+                          {featuredProducts[0].roastLevel.value}
+                        </span>
+                      )}
+                      {featuredProducts[0].flavorNotes && (
+                        <span className="font-sans text-[10px] text-brand-grey/50 px-1.5 py-0.5">
+                          {featuredProducts[0].flavorNotes.value}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Link>
 
@@ -272,6 +286,11 @@ export default async function Home() {
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent" />
                     </div>
                     <div className="p-4 border border-brand-grey/10 group-hover:border-brand-orange/30 transition-colors">
+                      {product.vendor && (
+                        <p className="font-sans text-[9px] uppercase tracking-[0.2em] text-brand-grey/40 mb-1">
+                          {product.vendor}
+                        </p>
+                      )}
                       <h3 className="font-display font-bold uppercase tracking-tight text-brand-grey text-sm leading-tight mb-1">
                         {product.title}
                       </h3>
@@ -281,6 +300,20 @@ export default async function Home() {
                           product.priceRange.minVariantPrice.currencyCode
                         )}
                       </p>
+                      {(product.roastLevel || product.flavorNotes) && (
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                          {product.roastLevel && (
+                            <span className="font-sans text-[9px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1 py-0.5">
+                              {product.roastLevel.value}
+                            </span>
+                          )}
+                          {product.flavorNotes && (
+                            <span className="font-sans text-[9px] text-brand-grey/50 px-1 py-0.5 line-clamp-1">
+                              {product.flavorNotes.value}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </Link>
                 ))}

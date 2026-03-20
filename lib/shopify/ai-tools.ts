@@ -735,10 +735,11 @@ export const searchCategories = tool({
 
 export const updateProduct = tool({
   description:
-    "Update a product's title, description, status, tags, product type, or taxonomy category. Only the fields you provide will be changed.",
+    "Update a product's title, handle (URL slug), description, status, tags, vendor, product type, or taxonomy category. Only the fields you provide will be changed.",
   inputSchema: z.object({
     productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
     title: z.string().optional().describe("New product title"),
+    handle: z.string().optional().describe("New URL slug/handle (e.g. 'moongoat-sareni-decaf')"),
     descriptionHtml: z.string().optional().describe("New product description (HTML)"),
     status: z
       .enum(["ACTIVE", "DRAFT", "ARCHIVED"])
@@ -757,6 +758,7 @@ export const updateProduct = tool({
   execute: async ({
     productId,
     title,
+    handle,
     descriptionHtml,
     status,
     tags,
@@ -767,6 +769,7 @@ export const updateProduct = tool({
     try {
       const input: Record<string, unknown> = { id: productId };
       if (title !== undefined) input.title = title;
+      if (handle !== undefined) input.handle = handle;
       if (descriptionHtml !== undefined) input.descriptionHtml = descriptionHtml;
       if (status !== undefined) input.status = status;
       if (tags !== undefined) input.tags = tags;
@@ -833,8 +836,9 @@ export const updateProduct = tool({
 
 export const updateVariant = tool({
   description:
-    "Update a product variant's price, compare-at price, weight, or weight unit. Only the fields you provide will be changed.",
+    "Update a product variant's price, compare-at price, weight, or weight unit. Requires both the product GID and variant GID. Only the fields you provide will be changed.",
   inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
     variantId: z.string().describe("Shopify variant GID (e.g. gid://shopify/ProductVariant/123)"),
     price: z.string().optional().describe('New price as a decimal string (e.g. "19.99")'),
     compareAtPrice: z
@@ -845,34 +849,33 @@ export const updateVariant = tool({
     weightUnit: z
       .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
       .optional()
-      .default("OUNCES")
       .describe("Weight unit"),
   }),
-  execute: async ({ variantId, price, compareAtPrice, weight, weightUnit }) => {
+  execute: async ({ productId, variantId, price, compareAtPrice, weight, weightUnit }) => {
     try {
-      const input: Record<string, unknown> = { id: variantId };
-      if (price !== undefined) input.price = price;
-      if (compareAtPrice !== undefined) input.compareAtPrice = compareAtPrice;
-      if (weight !== undefined) input.weight = weight;
-      if (weightUnit !== undefined) input.weightUnit = weightUnit;
+      const variant: Record<string, unknown> = { id: variantId };
+      if (price !== undefined) variant.price = price;
+      if (compareAtPrice !== undefined) variant.compareAtPrice = compareAtPrice;
+      if (weight !== undefined) variant.weight = weight;
+      if (weightUnit !== undefined) variant.weightUnit = weightUnit;
 
       const data = await adminFetch<{
-        productVariantUpdate: {
-          productVariant: {
+        productVariantsBulkUpdate: {
+          productVariants: Array<{
             id: string;
             title: string;
             price: string;
             compareAtPrice: string | null;
             weight: number | null;
             weightUnit: string;
-          } | null;
+          }>;
           userErrors: Array<{ field: string[]; message: string }>;
         };
       }>({
         query: `
-          mutation ProductVariantUpdate($input: ProductVariantInput!) {
-            productVariantUpdate(input: $input) {
-              productVariant {
+          mutation ProductVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+            productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+              productVariants {
                 id
                 title
                 price
@@ -884,26 +887,27 @@ export const updateVariant = tool({
             }
           }
         `,
-        variables: { input },
+        variables: { productId, variants: [variant] },
       });
 
-      const { productVariant, userErrors } = data.productVariantUpdate;
+      const { productVariants, userErrors } = data.productVariantsBulkUpdate;
       if (userErrors.length > 0) {
         return { error: userErrors.map((e) => e.message).join(", ") };
       }
-      if (!productVariant) {
+      const updated = productVariants[0];
+      if (!updated) {
         return { error: "Variant update returned no variant" };
       }
 
       return {
-        id: productVariant.id,
-        title: productVariant.title,
-        price: `$${productVariant.price}`,
-        compareAtPrice: productVariant.compareAtPrice
-          ? `$${productVariant.compareAtPrice}`
+        id: updated.id,
+        title: updated.title,
+        price: `$${updated.price}`,
+        compareAtPrice: updated.compareAtPrice
+          ? `$${updated.compareAtPrice}`
           : null,
-        weight: productVariant.weight,
-        weightUnit: productVariant.weightUnit,
+        weight: updated.weight,
+        weightUnit: updated.weightUnit,
       };
     } catch (error) {
       return { error: error instanceof Error ? error.message : "Failed to update variant" };

@@ -8,7 +8,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { handle, title, featuredImage, priceRange } = product;
+  const { handle, title, featuredImage, priceRange, vendor, roastLevel, flavorNotes } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
   const showRange = hasPriceRange(minVariantPrice, maxVariantPrice);
 
@@ -34,6 +34,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Meta */}
       <div className="px-4 py-4 border-t border-brand-black/10">
+        {vendor && (
+          <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40 mb-1">
+            {vendor}
+          </p>
+        )}
         <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black line-clamp-1">
           {title}
         </p>
@@ -46,6 +51,20 @@ export function ProductCard({ product }: ProductCardProps) {
             formatMoney(minVariantPrice)
           )}
         </p>
+        {(roastLevel || flavorNotes) && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {roastLevel && (
+              <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-black/50 border border-brand-black/10 px-1.5 py-0.5">
+                {roastLevel.value}
+              </span>
+            )}
+            {flavorNotes && (
+              <span className="font-sans text-[10px] text-brand-black/50 px-1.5 py-0.5 line-clamp-1">
+                {flavorNotes.value}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </Link>
   );

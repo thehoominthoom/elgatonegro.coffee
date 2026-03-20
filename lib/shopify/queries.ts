@@ -75,6 +75,18 @@ const PRODUCT_FRAGMENT = `
     }
     tags
     vendor
+    roastLevel: metafield(namespace: "custom", key: "roast_level") {
+      value
+      type
+    }
+    flavorNotes: metafield(namespace: "custom", key: "flavor_notes") {
+      value
+      type
+    }
+    country: metafield(namespace: "custom", key: "country") {
+      value
+      type
+    }
   }
 `;
 

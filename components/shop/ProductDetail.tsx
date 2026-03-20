@@ -106,6 +106,30 @@ export function ProductDetail({ product }: ProductDetailProps) {
           availableForSale={selectedVariant?.availableForSale ?? false}
         />
 
+        {/* Coffee specs */}
+        {(product.roastLevel || product.flavorNotes || product.country) && (
+          <div className="border border-brand-black/10 divide-y divide-brand-black/10">
+            {product.roastLevel && (
+              <div className="flex justify-between px-4 py-3">
+                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Roast</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{product.roastLevel.value}</span>
+              </div>
+            )}
+            {product.flavorNotes && (
+              <div className="flex justify-between px-4 py-3">
+                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Flavor Notes</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{product.flavorNotes.value}</span>
+              </div>
+            )}
+            {product.country && (
+              <div className="flex justify-between px-4 py-3">
+                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Origin</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{product.country.value}</span>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Description */}
         {product.descriptionHtml ? (
           <div

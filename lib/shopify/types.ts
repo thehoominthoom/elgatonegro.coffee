@@ -31,6 +31,13 @@ export interface ProductVariant {
   image: ShopifyImage | null;
 }
 
+// ─── Metafield ───────────────────────────────────────────────────────────────
+
+export interface Metafield {
+  value: string;
+  type: string;
+}
+
 // ─── Product ──────────────────────────────────────────────────────────────────
 
 export interface Product {
@@ -53,6 +60,9 @@ export interface Product {
   }>;
   tags: string[];
   vendor: string;
+  roastLevel: Metafield | null;
+  flavorNotes: Metafield | null;
+  country: Metafield | null;
 }
 
 // ─── Collection ───────────────────────────────────────────────────────────────
