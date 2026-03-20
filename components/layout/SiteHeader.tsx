@@ -66,7 +66,7 @@ export function SiteHeader() {
               <button
                 aria-label={`Cart${itemCount > 0 ? ` — ${itemCount} item${itemCount === 1 ? "" : "s"}` : ""}`}
                 onClick={openCart}
-                className="relative"
+                className="relative cursor-pointer transition-transform duration-200 hover:scale-110"
               >
                 <ShoppingBag size={22} className="text-brand-black/70" />
                 {itemCount > 0 && (
@@ -76,7 +76,7 @@ export function SiteHeader() {
                 )}
               </button>
 
-              <Link href="/account" aria-label="Account">
+              <Link href="/account" aria-label="Account" className="transition-transform duration-200 hover:scale-110 inline-flex">
                 <User size={23} className="text-brand-black/70" />
               </Link>
             </div>

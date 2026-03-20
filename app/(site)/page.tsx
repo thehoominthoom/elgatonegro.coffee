@@ -187,7 +187,7 @@ export default async function Home() {
       </section>
 
       {/* ── 3. Ecommerce — Shop Preview ───────────────────────────────────── */}
-      <section className="bg-brand-black grain-overlay py-20 md:py-28">
+      <section className="bg-brand-grey grain-overlay py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="flex items-end justify-between mb-10 pb-5 border-b border-brand-grey/10">
             <div>
@@ -217,7 +217,7 @@ export default async function Home() {
                 href={`/shop/products/${featuredProducts[0].handle}`}
                 className="group block bg-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
               >
-                <div className="relative overflow-hidden aspect-[4/5]">
+                <div className="relative overflow-hidden aspect-square">
                   {featuredProducts[0].featuredImage ? (
                     <Image
                       src={featuredProducts[0].featuredImage.url}
@@ -257,7 +257,7 @@ export default async function Home() {
                     href={`/shop/products/${product.handle}`}
                     className="group block bg-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
                   >
-                    <div className="relative overflow-hidden aspect-[4/5]">
+                    <div className="relative overflow-hidden aspect-square">
                       {product.featuredImage ? (
                         <Image
                           src={product.featuredImage.url}
