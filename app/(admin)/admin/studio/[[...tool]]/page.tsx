@@ -3,7 +3,7 @@ import { metadata as studioMetadata, viewport } from 'next-sanity/studio'
 import type { Metadata } from 'next'
 import config from '../../../../../sanity.config'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export { viewport }
 
