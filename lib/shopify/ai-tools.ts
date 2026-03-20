@@ -2388,7 +2388,7 @@ export const deleteDiscountCode = tool({
 
 export const createVariants = tool({
   description:
-    "Create new variants on an existing product. Each variant needs option values that match or extend the product's options.",
+    "Create new variants on an existing product. Each variant needs option values that match or extend the product's options. To set weight after creating, use updateInventoryItemWeight.",
   inputSchema: z.object({
     productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
     variants: z
@@ -2404,11 +2404,6 @@ export const createVariants = tool({
             .describe("Option values for this variant"),
           price: z.string().optional().describe('Price as a decimal string (e.g. "19.99")'),
           sku: z.string().optional().describe("SKU code"),
-          weight: z.number().optional().describe("Weight value"),
-          weightUnit: z
-            .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
-            .optional()
-            .describe("Weight unit"),
         }),
       )
       .describe("Array of variants to create"),
@@ -2422,8 +2417,6 @@ export const createVariants = tool({
             title: string;
             price: string;
             sku: string | null;
-            weight: number | null;
-            weightUnit: string;
             selectedOptions: Array<{ name: string; value: string }>;
             availableForSale: boolean;
           }>;
@@ -2438,8 +2431,6 @@ export const createVariants = tool({
                 title
                 price
                 sku
-                weight
-                weightUnit
                 selectedOptions { name value }
                 availableForSale
               }
@@ -2460,8 +2451,6 @@ export const createVariants = tool({
         title: v.title,
         price: `$${v.price}`,
         sku: v.sku,
-        weight: v.weight,
-        weightUnit: v.weightUnit,
         options: v.selectedOptions,
         availableForSale: v.availableForSale,
       }));
