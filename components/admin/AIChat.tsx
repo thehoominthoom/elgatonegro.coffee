@@ -1,7 +1,6 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { useChat, DefaultChatTransport } from "@ai-sdk/react";
 import { useRef, useEffect, useState } from "react";
 import { SendHorizonal, Loader2, Bot, User } from "lucide-react";
 import DOMPurify from "isomorphic-dompurify";
