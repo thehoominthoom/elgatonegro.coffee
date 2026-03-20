@@ -1,4 +1,4 @@
-import { streamText, gateway, stepCountIs } from "ai";
+import { streamText, gateway, stepCountIs, convertToModelMessages } from "ai";
 import { auth } from "@clerk/nextjs/server";
 import {
   listProducts,
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: gateway("anthropic/claude-sonnet-4.6"),
     system: SYSTEM_PROMPT,
-    messages,
+    messages: await convertToModelMessages(messages),
     tools: {
       listProducts,
       getProduct,
