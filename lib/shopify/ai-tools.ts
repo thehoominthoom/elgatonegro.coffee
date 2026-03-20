@@ -2301,3 +2301,216 @@ export const deleteDiscountCode = tool({
     }
   },
 });
+
+// ─── Variants & Options ──────────────────────────────────────────────────────
+
+export const createVariants = tool({
+  description:
+    "Create new variants on an existing product. Each variant needs option values that match or extend the product's options.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
+    variants: z
+      .array(
+        z.object({
+          optionValues: z
+            .array(
+              z.object({
+                optionName: z.string().describe("Option name (e.g. Size, Color)"),
+                name: z.string().describe("Option value (e.g. 12oz, Red)"),
+              }),
+            )
+            .describe("Option values for this variant"),
+          price: z.string().optional().describe('Price as a decimal string (e.g. "19.99")'),
+          sku: z.string().optional().describe("SKU code"),
+          weight: z.number().optional().describe("Weight value"),
+          weightUnit: z
+            .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
+            .optional()
+            .describe("Weight unit"),
+        }),
+      )
+      .describe("Array of variants to create"),
+  }),
+  execute: async ({ productId, variants }) => {
+    try {
+      const data = await adminFetch<{
+        productVariantsBulkCreate: {
+          productVariants: Array<{
+            id: string;
+            title: string;
+            price: string;
+            sku: string | null;
+            weight: number | null;
+            weightUnit: string;
+            selectedOptions: Array<{ name: string; value: string }>;
+            availableForSale: boolean;
+          }>;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+            productVariantsBulkCreate(productId: $productId, variants: $variants) {
+              productVariants {
+                id
+                title
+                price
+                sku
+                weight
+                weightUnit
+                selectedOptions { name value }
+                availableForSale
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { productId, variants },
+      });
+
+      const { productVariants, userErrors } = data.productVariantsBulkCreate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return productVariants.map((v) => ({
+        id: v.id,
+        title: v.title,
+        price: `$${v.price}`,
+        sku: v.sku,
+        weight: v.weight,
+        weightUnit: v.weightUnit,
+        options: v.selectedOptions,
+        availableForSale: v.availableForSale,
+      }));
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to create variants" };
+    }
+  },
+});
+
+export const deleteVariants = tool({
+  description:
+    "Delete variants from a product. Cannot delete the last remaining variant — a product must always have at least one.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
+    variantIds: z
+      .array(z.string())
+      .describe("Array of variant GIDs to delete (e.g. gid://shopify/ProductVariant/123)"),
+  }),
+  execute: async ({ productId, variantIds }) => {
+    try {
+      const data = await adminFetch<{
+        productVariantsBulkDelete: {
+          product: {
+            id: string;
+            title: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductVariantsBulkDelete($productId: ID!, $variantsIds: [ID!]!) {
+            productVariantsBulkDelete(productId: $productId, variantsIds: $variantsIds) {
+              product {
+                id
+                title
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { productId, variantsIds: variantIds },
+      });
+
+      const { product, userErrors } = data.productVariantsBulkDelete;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        deleted: true,
+        variantsDeleted: variantIds.length,
+        product: product?.title ?? productId,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to delete variants" };
+    }
+  },
+});
+
+export const updateProductOption = tool({
+  description:
+    "Update a product option's name or its values. Use getProduct first to find option and option value IDs.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
+    optionId: z
+      .string()
+      .describe("Option GID to update (e.g. gid://shopify/ProductOption/123)"),
+    name: z.string().optional().describe('New name for the option (e.g. rename "Size" to "Weight")'),
+    optionValuesToUpdate: z
+      .array(
+        z.object({
+          id: z.string().describe("Option value GID"),
+          name: z.string().describe("New name for this value"),
+        }),
+      )
+      .optional()
+      .describe("Array of option values to rename"),
+  }),
+  execute: async ({ productId, optionId, name, optionValuesToUpdate }) => {
+    try {
+      const option: Record<string, unknown> = { id: optionId };
+      if (name !== undefined) option.name = name;
+
+      const data = await adminFetch<{
+        productOptionUpdate: {
+          product: {
+            id: string;
+            title: string;
+            options: Array<{
+              id: string;
+              name: string;
+              values: string[];
+            }>;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductOptionUpdate($productId: ID!, $option: OptionUpdateInput!, $optionValuesToUpdate: [OptionValueUpdateInput!]) {
+            productOptionUpdate(productId: $productId, option: $option, optionValuesToUpdate: $optionValuesToUpdate) {
+              product {
+                id
+                title
+                options {
+                  id
+                  name
+                  values
+                }
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { productId, option, optionValuesToUpdate: optionValuesToUpdate ?? null },
+      });
+
+      const { product, userErrors } = data.productOptionUpdate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!product) {
+        return { error: "Option update returned no product" };
+      }
+
+      return {
+        id: product.id,
+        title: product.title,
+        options: product.options,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to update product option" };
+    }
+  },
+});

@@ -31,6 +31,9 @@ import {
   listDiscountCodes,
   deactivateDiscountCode,
   deleteDiscountCode,
+  createVariants,
+  deleteVariants,
+  updateProductOption,
 } from "@/lib/shopify/ai-tools";
 
 const SYSTEM_PROMPT = `You are an internal business assistant for El Gato Negro, a mobile coffee cart business in San Antonio, TX.
@@ -49,7 +52,7 @@ Rules:
 - When showing multiple items, use markdown tables for readability.
 - Format currency values consistently.
 - If a query is ambiguous, ask for clarification rather than guessing.
-- Write operations are available: you can update products, search and set product taxonomy categories, update variant weight/price/compare-at price, adjust inventory, create new products, manage product images, set/read/delete metafields, create metafield definitions, list existing metafield definitions, manage collections (create, update, add/remove products), add/remove tags, and create/list/deactivate/delete discount codes.
+- Write operations are available: you can update products, search and set product taxonomy categories, update variant weight/price/compare-at price, create/delete variants, update product option names and values, adjust inventory, create new products, manage product images, set/read/delete metafields, create metafield definitions, list existing metafield definitions, manage collections (create, update, add/remove products), add/remove tags, and create/list/deactivate/delete discount codes.
 - When making changes, confirm what you are about to do before executing the write operation. Summarize what changed after completing it.`;
 
 export async function POST(req: Request) {
@@ -95,6 +98,9 @@ export async function POST(req: Request) {
       listDiscountCodes,
       deactivateDiscountCode,
       deleteDiscountCode,
+      createVariants,
+      deleteVariants,
+      updateProductOption,
     },
     stopWhen: stepCountIs(12),
   });
