@@ -147,7 +147,7 @@ const menuDivider = defineArrayMember({
   type: "object",
   fields: [
     defineField({
-      name: "_placeholder",
+      name: "placeholder",
       title: "Divider",
       type: "string",
       readOnly: true,
@@ -167,7 +167,7 @@ const menuColumnBreak = defineArrayMember({
   type: "object",
   fields: [
     defineField({
-      name: "_placeholder",
+      name: "placeholder",
       title: "Column Break",
       type: "string",
       readOnly: true,
