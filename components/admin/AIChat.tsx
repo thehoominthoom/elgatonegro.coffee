@@ -17,7 +17,7 @@ export default function AIChat() {
 
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isLoading = status === "submitted" || status === "streaming";
 
@@ -33,12 +33,27 @@ export default function AIChat() {
     inputRef.current?.focus();
   }, []);
 
+  // Auto-resize textarea as content changes
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [input]);
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
     sendMessage({ text: trimmed });
     setInput("");
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
   }
 
   return (
@@ -146,15 +161,16 @@ export default function AIChat() {
         onSubmit={handleSubmit}
         className="border-t border-brand-grey/10 px-4 py-3"
       >
-        <div className="flex items-center gap-3">
-          <input
+        <div className="flex items-end gap-3">
+          <textarea
             ref={inputRef}
-            type="text"
+            rows={1}
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Ask about products, orders, inventory..."
             disabled={isLoading}
-            className="flex-1 bg-brand-grey/5 border border-brand-grey/10 rounded px-4 py-2.5 font-sans text-sm text-brand-grey placeholder:text-brand-grey/30 focus:outline-none focus:border-brand-orange/50 disabled:opacity-50 transition-colors"
+            className="flex-1 resize-none overflow-y-auto max-h-36 bg-brand-grey/5 border border-brand-grey/10 rounded px-4 py-2.5 font-sans text-sm text-brand-grey placeholder:text-brand-grey/30 focus:outline-none focus:border-brand-orange/50 disabled:opacity-50 transition-colors"
           />
           <button
             type="submit"
