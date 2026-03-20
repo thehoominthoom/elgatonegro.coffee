@@ -12,6 +12,18 @@ import {
   updateVariantPrice,
   adjustInventory,
   createProduct,
+  addProductImage,
+  removeProductImage,
+  reorderProductImages,
+  setMetafields,
+  getMetafields,
+  deleteMetafield,
+  createCollection,
+  updateCollection,
+  addProductsToCollection,
+  removeProductsFromCollection,
+  listCollections,
+  updateProductTags,
 } from "@/lib/shopify/ai-tools";
 
 const SYSTEM_PROMPT = `You are an internal business assistant for El Gato Negro, a mobile coffee cart business in San Antonio, TX.
@@ -30,7 +42,7 @@ Rules:
 - When showing multiple items, use markdown tables for readability.
 - Format currency values consistently.
 - If a query is ambiguous, ask for clarification rather than guessing.
-- Write operations are available: you can update products, change prices, adjust inventory, and create new products.
+- Write operations are available: you can update products, change prices, adjust inventory, create new products, manage product images, set/read/delete metafields, manage collections (create, update, add/remove products), and add/remove tags.
 - When making changes, confirm what you are about to do before executing the write operation. Summarize what changed after completing it.`;
 
 export async function POST(req: Request) {
@@ -57,8 +69,20 @@ export async function POST(req: Request) {
       updateVariantPrice,
       adjustInventory,
       createProduct,
+      addProductImage,
+      removeProductImage,
+      reorderProductImages,
+      setMetafields,
+      getMetafields,
+      deleteMetafield,
+      createCollection,
+      updateCollection,
+      addProductsToCollection,
+      removeProductsFromCollection,
+      listCollections,
+      updateProductTags,
     },
-    stopWhen: stepCountIs(5),
+    stopWhen: stepCountIs(8),
   });
 
   return result.toUIMessageStreamResponse();

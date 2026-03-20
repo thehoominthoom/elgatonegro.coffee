@@ -952,6 +952,698 @@ export const createProduct = tool({
   },
 });
 
+// ─── Product Images ──────────────────────────────────────────────────────────
+
+export const addProductImage = tool({
+  description:
+    "Add an image to a product by providing an external URL. Optionally set alt text.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
+    url: z.string().url().describe("External image URL to attach to the product"),
+    altText: z.string().optional().describe("Alt text for the image"),
+  }),
+  execute: async ({ productId, url, altText }) => {
+    try {
+      const data = await adminFetch<{
+        productCreateMedia: {
+          media: Array<{
+            id: string;
+            status: string;
+          }> | null;
+          mediaUserErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductCreateMedia($productId: ID!, $media: [CreateMediaInput!]!) {
+            productCreateMedia(productId: $productId, media: $media) {
+              media {
+                ... on MediaImage {
+                  id
+                  status
+                }
+              }
+              mediaUserErrors { field message }
+            }
+          }
+        `,
+        variables: {
+          productId,
+          media: [
+            {
+              originalSource: url,
+              alt: altText ?? "",
+              mediaContentType: "IMAGE",
+            },
+          ],
+        },
+      });
+
+      const { media, mediaUserErrors } = data.productCreateMedia;
+      if (mediaUserErrors.length > 0) {
+        return { error: mediaUserErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        added: true,
+        mediaId: media?.[0]?.id ?? null,
+        status: media?.[0]?.status ?? "unknown",
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to add product image" };
+    }
+  },
+});
+
+export const removeProductImage = tool({
+  description: "Remove an image (media) from a product.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID"),
+    mediaId: z.string().describe("Shopify media GID to remove (e.g. gid://shopify/MediaImage/123)"),
+  }),
+  execute: async ({ productId, mediaId }) => {
+    try {
+      const data = await adminFetch<{
+        productDeleteMedia: {
+          deletedMediaIds: string[] | null;
+          mediaUserErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductDeleteMedia($productId: ID!, $mediaIds: [ID!]!) {
+            productDeleteMedia(productId: $productId, mediaIds: $mediaIds) {
+              deletedMediaIds
+              mediaUserErrors { field message }
+            }
+          }
+        `,
+        variables: { productId, mediaIds: [mediaId] },
+      });
+
+      const { deletedMediaIds, mediaUserErrors } = data.productDeleteMedia;
+      if (mediaUserErrors.length > 0) {
+        return { error: mediaUserErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        removed: true,
+        deletedMediaIds: deletedMediaIds ?? [],
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to remove product image" };
+    }
+  },
+});
+
+export const reorderProductImages = tool({
+  description: "Reorder product media by providing the media IDs in the desired order.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID"),
+    mediaIds: z
+      .array(z.string())
+      .describe("Array of media GIDs in the desired display order"),
+  }),
+  execute: async ({ productId, mediaIds }) => {
+    try {
+      const moves = mediaIds.map((id, index) => ({
+        id,
+        newPosition: `${index}`,
+      }));
+
+      const data = await adminFetch<{
+        productReorderMedia: {
+          job: { id: string } | null;
+          mediaUserErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductReorderMedia($productId: ID!, $moves: [MoveInput!]!) {
+            productReorderMedia(productId: $productId, moves: $moves) {
+              job { id }
+              mediaUserErrors { field message }
+            }
+          }
+        `,
+        variables: { productId, moves },
+      });
+
+      const { job, mediaUserErrors } = data.productReorderMedia;
+      if (mediaUserErrors.length > 0) {
+        return { error: mediaUserErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        reordered: true,
+        jobId: job?.id ?? null,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to reorder product images" };
+    }
+  },
+});
+
+// ─── Metafields ──────────────────────────────────────────────────────────────
+
+export const setMetafields = tool({
+  description:
+    "Set metafields on any resource (product, variant, collection, etc.). Creates or updates metafields by namespace and key.",
+  inputSchema: z.object({
+    metafields: z
+      .array(
+        z.object({
+          ownerId: z.string().describe("GID of the resource that owns this metafield"),
+          namespace: z.string().describe("Metafield namespace (e.g. 'custom')"),
+          key: z.string().describe("Metafield key"),
+          value: z.string().describe("Metafield value (as string — JSON for complex types)"),
+          type: z
+            .string()
+            .describe(
+              "Metafield type (e.g. single_line_text_field, number_integer, json, boolean, list.single_line_text_field)",
+            ),
+        }),
+      )
+      .describe("Array of metafields to set"),
+  }),
+  execute: async ({ metafields }) => {
+    try {
+      const data = await adminFetch<{
+        metafieldsSet: {
+          metafields: Array<{
+            id: string;
+            namespace: string;
+            key: string;
+            value: string;
+          }> | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
+            metafieldsSet(metafields: $metafields) {
+              metafields {
+                id
+                namespace
+                key
+                value
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { metafields },
+      });
+
+      const { metafields: result, userErrors } = data.metafieldsSet;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        set: true,
+        metafields:
+          result?.map((m) => ({
+            id: m.id,
+            namespace: m.namespace,
+            key: m.key,
+            value: m.value,
+          })) ?? [],
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to set metafields" };
+    }
+  },
+});
+
+export const getMetafields = tool({
+  description:
+    "Read metafields on a resource. Optionally filter by namespace.",
+  inputSchema: z.object({
+    ownerId: z.string().describe("GID of the resource (e.g. gid://shopify/Product/123)"),
+    namespace: z.string().optional().describe("Filter to a specific namespace"),
+  }),
+  execute: async ({ ownerId, namespace }) => {
+    try {
+      const namespaceFilter = namespace ? `, namespace: "${namespace}"` : "";
+
+      const data = await adminFetch<{
+        node: {
+          metafields: {
+            edges: Array<{
+              node: {
+                id: string;
+                namespace: string;
+                key: string;
+                value: string;
+                type: string;
+              };
+            }>;
+          };
+        } | null;
+      }>({
+        query: `
+          query GetMetafields($id: ID!) {
+            node(id: $id) {
+              ... on HasMetafields {
+                metafields(first: 50${namespaceFilter}) {
+                  edges {
+                    node {
+                      id
+                      namespace
+                      key
+                      value
+                      type
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { id: ownerId },
+      });
+
+      if (!data.node) {
+        return { error: `Resource not found: ${ownerId}` };
+      }
+
+      return {
+        ownerId,
+        metafields: data.node.metafields.edges.map(({ node }) => ({
+          id: node.id,
+          namespace: node.namespace,
+          key: node.key,
+          value: node.value,
+          type: node.type,
+        })),
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to get metafields" };
+    }
+  },
+});
+
+export const deleteMetafield = tool({
+  description: "Delete a specific metafield by its GID.",
+  inputSchema: z.object({
+    metafieldId: z
+      .string()
+      .describe("Shopify metafield GID (e.g. gid://shopify/Metafield/123)"),
+  }),
+  execute: async ({ metafieldId }) => {
+    try {
+      const data = await adminFetch<{
+        metafieldDelete: {
+          deletedId: string | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation MetafieldDelete($input: MetafieldDeleteInput!) {
+            metafieldDelete(input: $input) {
+              deletedId
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input: { id: metafieldId } },
+      });
+
+      const { deletedId, userErrors } = data.metafieldDelete;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return { deleted: true, deletedId };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to delete metafield" };
+    }
+  },
+});
+
+// ─── Collections ─────────────────────────────────────────────────────────────
+
+export const createCollection = tool({
+  description: "Create a new manual collection.",
+  inputSchema: z.object({
+    title: z.string().describe("Collection title"),
+    descriptionHtml: z.string().optional().describe("Collection description (HTML)"),
+    imageUrl: z.string().url().optional().describe("Collection image URL"),
+    sortOrder: z
+      .enum([
+        "ALPHA_ASC",
+        "ALPHA_DESC",
+        "BEST_SELLING",
+        "CREATED",
+        "CREATED_DESC",
+        "MANUAL",
+        "PRICE_ASC",
+        "PRICE_DESC",
+      ])
+      .optional()
+      .describe("Product sort order within the collection"),
+  }),
+  execute: async ({ title, descriptionHtml, imageUrl, sortOrder }) => {
+    try {
+      const input: Record<string, unknown> = { title };
+      if (descriptionHtml) input.descriptionHtml = descriptionHtml;
+      if (imageUrl) input.image = { src: imageUrl };
+      if (sortOrder) input.sortOrder = sortOrder;
+
+      const data = await adminFetch<{
+        collectionCreate: {
+          collection: {
+            id: string;
+            title: string;
+            handle: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation CollectionCreate($input: CollectionInput!) {
+            collectionCreate(input: $input) {
+              collection {
+                id
+                title
+                handle
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input },
+      });
+
+      const { collection, userErrors } = data.collectionCreate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!collection) {
+        return { error: "Collection creation returned no collection" };
+      }
+
+      return {
+        id: collection.id,
+        title: collection.title,
+        handle: collection.handle,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to create collection" };
+    }
+  },
+});
+
+export const updateCollection = tool({
+  description: "Update a collection's title, description, image, or sort order.",
+  inputSchema: z.object({
+    collectionId: z.string().describe("Shopify collection GID"),
+    title: z.string().optional().describe("New collection title"),
+    descriptionHtml: z.string().optional().describe("New collection description (HTML)"),
+    imageUrl: z.string().url().optional().describe("New collection image URL"),
+    sortOrder: z
+      .enum([
+        "ALPHA_ASC",
+        "ALPHA_DESC",
+        "BEST_SELLING",
+        "CREATED",
+        "CREATED_DESC",
+        "MANUAL",
+        "PRICE_ASC",
+        "PRICE_DESC",
+      ])
+      .optional()
+      .describe("Product sort order within the collection"),
+  }),
+  execute: async ({ collectionId, title, descriptionHtml, imageUrl, sortOrder }) => {
+    try {
+      const input: Record<string, unknown> = { id: collectionId };
+      if (title !== undefined) input.title = title;
+      if (descriptionHtml !== undefined) input.descriptionHtml = descriptionHtml;
+      if (imageUrl !== undefined) input.image = { src: imageUrl };
+      if (sortOrder !== undefined) input.sortOrder = sortOrder;
+
+      const data = await adminFetch<{
+        collectionUpdate: {
+          collection: {
+            id: string;
+            title: string;
+            handle: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation CollectionUpdate($input: CollectionInput!) {
+            collectionUpdate(input: $input) {
+              collection {
+                id
+                title
+                handle
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input },
+      });
+
+      const { collection, userErrors } = data.collectionUpdate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!collection) {
+        return { error: "Collection update returned no collection" };
+      }
+
+      return {
+        id: collection.id,
+        title: collection.title,
+        handle: collection.handle,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to update collection" };
+    }
+  },
+});
+
+export const addProductsToCollection = tool({
+  description: "Add products to a manual collection.",
+  inputSchema: z.object({
+    collectionId: z.string().describe("Shopify collection GID"),
+    productIds: z
+      .array(z.string())
+      .describe("Array of product GIDs to add to the collection"),
+  }),
+  execute: async ({ collectionId, productIds }) => {
+    try {
+      const data = await adminFetch<{
+        collectionAddProducts: {
+          collection: { id: string; title: string } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation CollectionAddProducts($id: ID!, $productIds: [ID!]!) {
+            collectionAddProducts(id: $id, productIds: $productIds) {
+              collection { id title }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { id: collectionId, productIds },
+      });
+
+      const { collection, userErrors } = data.collectionAddProducts;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        added: true,
+        collection: collection?.title ?? collectionId,
+        productsAdded: productIds.length,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to add products to collection",
+      };
+    }
+  },
+});
+
+export const removeProductsFromCollection = tool({
+  description: "Remove products from a manual collection.",
+  inputSchema: z.object({
+    collectionId: z.string().describe("Shopify collection GID"),
+    productIds: z
+      .array(z.string())
+      .describe("Array of product GIDs to remove from the collection"),
+  }),
+  execute: async ({ collectionId, productIds }) => {
+    try {
+      const data = await adminFetch<{
+        collectionRemoveProducts: {
+          job: { id: string } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation CollectionRemoveProducts($id: ID!, $productIds: [ID!]!) {
+            collectionRemoveProducts(id: $id, productIds: $productIds) {
+              job { id }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { id: collectionId, productIds },
+      });
+
+      const { userErrors } = data.collectionRemoveProducts;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        removed: true,
+        productsRemoved: productIds.length,
+      };
+    } catch (error) {
+      return {
+        error:
+          error instanceof Error ? error.message : "Failed to remove products from collection",
+      };
+    }
+  },
+});
+
+export const listCollections = tool({
+  description: "List collections in the Shopify store. Optionally search by title.",
+  inputSchema: z.object({
+    first: z
+      .number()
+      .min(1)
+      .max(50)
+      .optional()
+      .default(25)
+      .describe("Number of collections to return (max 50)"),
+    search: z.string().optional().describe("Search by collection title"),
+  }),
+  execute: async ({ first, search }) => {
+    try {
+      const queryFilter = search ? `title:*${search}*` : null;
+
+      const data = await adminFetch<{
+        collections: {
+          edges: Array<{
+            node: {
+              id: string;
+              title: string;
+              handle: string;
+              productsCount: { count: number };
+              image: { url: string; altText: string | null } | null;
+            };
+          }>;
+        };
+      }>({
+        query: `
+          query ListCollections($first: Int!, $query: String) {
+            collections(first: $first, query: $query, sortKey: TITLE) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                  productsCount { count }
+                  image { url altText }
+                }
+              }
+            }
+          }
+        `,
+        variables: { first, query: queryFilter },
+      });
+
+      return data.collections.edges.map(({ node }) => ({
+        id: node.id,
+        title: node.title,
+        handle: node.handle,
+        productsCount: node.productsCount.count,
+        image: node.image ? { url: node.image.url, alt: node.image.altText } : null,
+      }));
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to list collections" };
+    }
+  },
+});
+
+// ─── Product Tags (bulk) ─────────────────────────────────────────────────────
+
+export const updateProductTags = tool({
+  description:
+    "Add or remove tags from a product. More granular than updateProduct — does not replace the full tag list.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID"),
+    addTags: z.array(z.string()).optional().describe("Tags to add"),
+    removeTags: z.array(z.string()).optional().describe("Tags to remove"),
+  }),
+  execute: async ({ productId, addTags, removeTags }) => {
+    try {
+      const results: { added?: string[]; removed?: string[] } = {};
+
+      if (addTags && addTags.length > 0) {
+        const addData = await adminFetch<{
+          tagsAdd: {
+            node: { id: string } | null;
+            userErrors: Array<{ field: string[]; message: string }>;
+          };
+        }>({
+          query: `
+            mutation TagsAdd($id: ID!, $tags: [String!]!) {
+              tagsAdd(id: $id, tags: $tags) {
+                node { id }
+                userErrors { field message }
+              }
+            }
+          `,
+          variables: { id: productId, tags: addTags },
+        });
+
+        if (addData.tagsAdd.userErrors.length > 0) {
+          return { error: addData.tagsAdd.userErrors.map((e) => e.message).join(", ") };
+        }
+        results.added = addTags;
+      }
+
+      if (removeTags && removeTags.length > 0) {
+        const removeData = await adminFetch<{
+          tagsRemove: {
+            node: { id: string } | null;
+            userErrors: Array<{ field: string[]; message: string }>;
+          };
+        }>({
+          query: `
+            mutation TagsRemove($id: ID!, $tags: [String!]!) {
+              tagsRemove(id: $id, tags: $tags) {
+                node { id }
+                userErrors { field message }
+              }
+            }
+          `,
+          variables: { id: productId, tags: removeTags },
+        });
+
+        if (removeData.tagsRemove.userErrors.length > 0) {
+          return { error: removeData.tagsRemove.userErrors.map((e) => e.message).join(", ") };
+        }
+        results.removed = removeTags;
+      }
+
+      return { updated: true, ...results };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to update product tags" };
+    }
+  },
+});
+
 // ─── Read Tools ───────────────────────────────────────────────────────────────
 
 export const getSalesReport = tool({
