@@ -50,6 +50,7 @@ export interface Product {
   id: string;
   handle: string;
   title: string;
+  availableForSale: boolean;
   description: string;
   descriptionHtml: string;
   featuredImage: ShopifyImage | null;

@@ -98,6 +98,12 @@ export function ProductDetail({ product }: ProductDetailProps) {
           {product.title}
         </h1>
 
+        {!product.availableForSale && (
+          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-red-600">
+            Currently Sold Out
+          </p>
+        )}
+
         {/* Variant selector (includes selected price) */}
         <VariantSelector
           variants={variants}

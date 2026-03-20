@@ -45,6 +45,7 @@ const PRODUCT_FRAGMENT = `
     id
     handle
     title
+    availableForSale
     description
     descriptionHtml
     featuredImage {

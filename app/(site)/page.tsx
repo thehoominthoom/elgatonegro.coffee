@@ -225,7 +225,7 @@ export default async function Home() {
                       alt={featuredProducts[0].featuredImage.altText ?? featuredProducts[0].title}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className={`object-cover transition-transform duration-500 group-hover:scale-105${!featuredProducts[0].availableForSale ? " opacity-60 grayscale" : ""}`}
                     />
                   ) : (
                     <div className="w-full h-full bg-brand-black/10 grain-overlay" />
@@ -234,6 +234,11 @@ export default async function Home() {
                   {featuredProducts[0].vendor && (
                     <span className="absolute top-4 left-4 font-display text-[10px] uppercase tracking-[0.25em] bg-brand-orange text-brand-grey px-2 py-1">
                       {featuredProducts[0].vendor}
+                    </span>
+                  )}
+                  {!featuredProducts[0].availableForSale && (
+                    <span className="absolute top-4 right-4 font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1">
+                      Sold Out
                     </span>
                   )}
                 </div>
@@ -284,12 +289,17 @@ export default async function Home() {
                           alt={product.featuredImage.altText ?? product.title}
                           fill
                           sizes="(max-width: 768px) 50vw, 25vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          className={`object-cover transition-transform duration-500 group-hover:scale-105${!product.availableForSale ? " opacity-60 grayscale" : ""}`}
                         />
                       ) : (
                         <div className="w-full h-full bg-brand-black/10 grain-overlay" />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent" />
+                      {!product.availableForSale && (
+                        <span className="absolute top-2 right-2 font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1">
+                          Sold Out
+                        </span>
+                      )}
                     </div>
                     <div className="p-4 border border-brand-grey/10 group-hover:border-brand-orange/30 transition-colors">
                       {product.vendor && (

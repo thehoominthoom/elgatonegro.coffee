@@ -8,11 +8,12 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { handle, title, featuredImage, priceRange, vendor, roastLevel, flavorNotes } = product;
+  const { handle, title, featuredImage, priceRange, vendor, roastLevel, flavorNotes, availableForSale } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
   const showRange = hasPriceRange(minVariantPrice, maxVariantPrice);
   const roastValues = getMetafieldValues(roastLevel);
   const flavorValues = getMetafieldValues(flavorNotes);
+  const soldOut = !availableForSale;
 
   return (
     <Link
@@ -20,17 +21,22 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group block bg-brand-grey border border-brand-black/10 hover:border-brand-black/30 transition-colors"
     >
       {/* Image */}
-      <div className="aspect-square overflow-hidden bg-brand-black/5">
+      <div className="relative aspect-square overflow-hidden bg-brand-black/5">
         {featuredImage ? (
           <Image
             src={featuredImage.url}
             alt={featuredImage.altText ?? title}
             width={600}
             height={600}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className={`w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500${soldOut ? " opacity-60 grayscale" : ""}`}
           />
         ) : (
           <div className="w-full h-full bg-brand-black/10" />
+        )}
+        {soldOut && (
+          <span className="absolute top-2 right-2 font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1">
+            Sold Out
+          </span>
         )}
       </div>
 
