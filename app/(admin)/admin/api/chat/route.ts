@@ -8,6 +8,10 @@ import {
   getOrder,
   searchCustomers,
   getSalesReport,
+  updateProduct,
+  updateVariantPrice,
+  adjustInventory,
+  createProduct,
 } from "@/lib/shopify/ai-tools";
 
 const SYSTEM_PROMPT = `You are an internal business assistant for El Gato Negro, a mobile coffee cart business in San Antonio, TX.
@@ -26,7 +30,8 @@ Rules:
 - When showing multiple items, use markdown tables for readability.
 - Format currency values consistently.
 - If a query is ambiguous, ask for clarification rather than guessing.
-- You are read-only — you cannot modify products, orders, or inventory. If asked to make changes, explain that write operations are not available yet and suggest doing it in Shopify Admin directly.`;
+- Write operations are available: you can update products, change prices, adjust inventory, and create new products.
+- When making changes, confirm what you are about to do before executing the write operation. Summarize what changed after completing it.`;
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -48,6 +53,10 @@ export async function POST(req: Request) {
       getOrder,
       searchCustomers,
       getSalesReport,
+      updateProduct,
+      updateVariantPrice,
+      adjustInventory,
+      createProduct,
     },
     stopWhen: stepCountIs(5),
   });

@@ -1,7 +1,7 @@
 // ─── Shopify Admin API tools for AI assistant ────────────────────────────────
 //
-// Read-only tool definitions that wrap adminFetch for use with Vercel AI SDK.
-// Each tool queries the Shopify GraphQL Admin API and returns structured data.
+// Tool definitions that wrap adminFetch for use with Vercel AI SDK.
+// Each tool queries or mutates the Shopify GraphQL Admin API and returns structured data.
 
 import { tool } from "ai";
 import { z } from "zod";
@@ -672,6 +672,287 @@ export const searchCustomers = tool({
     }
   },
 });
+
+// ─── Write Tools ──────────────────────────────────────────────────────────────
+
+export const updateProduct = tool({
+  description:
+    "Update a product's title, description, status, tags, or product type. Only the fields you provide will be changed.",
+  inputSchema: z.object({
+    productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
+    title: z.string().optional().describe("New product title"),
+    descriptionHtml: z.string().optional().describe("New product description (HTML)"),
+    status: z
+      .enum(["ACTIVE", "DRAFT", "ARCHIVED"])
+      .optional()
+      .describe("New product status"),
+    tags: z.array(z.string()).optional().describe("Replace all tags with this list"),
+    productType: z.string().optional().describe("New product type"),
+  }),
+  execute: async ({ productId, title, descriptionHtml, status, tags, productType }) => {
+    try {
+      const input: Record<string, unknown> = { id: productId };
+      if (title !== undefined) input.title = title;
+      if (descriptionHtml !== undefined) input.descriptionHtml = descriptionHtml;
+      if (status !== undefined) input.status = status;
+      if (tags !== undefined) input.tags = tags;
+      if (productType !== undefined) input.productType = productType;
+
+      const data = await adminFetch<{
+        productUpdate: {
+          product: {
+            id: string;
+            title: string;
+            status: string;
+            handle: string;
+            productType: string;
+            tags: string[];
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation ProductUpdate($input: ProductInput!) {
+            productUpdate(input: $input) {
+              product {
+                id
+                title
+                status
+                handle
+                productType
+                tags
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input },
+      });
+
+      const { product, userErrors } = data.productUpdate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!product) {
+        return { error: "Product update returned no product" };
+      }
+
+      return {
+        id: product.id,
+        title: product.title,
+        status: product.status,
+        handle: product.handle,
+        productType: product.productType,
+        tags: product.tags,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to update product" };
+    }
+  },
+});
+
+export const updateVariantPrice = tool({
+  description: "Update the price on a specific product variant.",
+  inputSchema: z.object({
+    variantId: z.string().describe("Shopify variant GID (e.g. gid://shopify/ProductVariant/123)"),
+    price: z.string().describe('New price as a decimal string (e.g. "19.99")'),
+  }),
+  execute: async ({ variantId, price }) => {
+    try {
+      const data = await adminFetch<{
+        productVariantUpdate: {
+          productVariant: {
+            id: string;
+            title: string;
+            price: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation VariantPriceUpdate($input: ProductVariantInput!) {
+            productVariantUpdate(input: $input) {
+              productVariant {
+                id
+                title
+                price
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input: { id: variantId, price } },
+      });
+
+      const { productVariant, userErrors } = data.productVariantUpdate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!productVariant) {
+        return { error: "Variant update returned no variant" };
+      }
+
+      return {
+        id: productVariant.id,
+        title: productVariant.title,
+        newPrice: `$${productVariant.price}`,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to update variant price" };
+    }
+  },
+});
+
+export const adjustInventory = tool({
+  description:
+    "Adjust inventory quantity for an inventory item at the configured location. Use positive delta to add stock, negative to subtract.",
+  inputSchema: z.object({
+    inventoryItemId: z
+      .string()
+      .describe("Shopify inventory item GID (e.g. gid://shopify/InventoryItem/123)"),
+    delta: z.number().int().describe("Quantity change — positive to add, negative to subtract"),
+    reason: z.string().optional().describe("Reason for the adjustment (e.g. 'Restock', 'Damaged')"),
+  }),
+  execute: async ({ inventoryItemId, delta, reason }) => {
+    try {
+      const data = await adminFetch<{
+        inventoryAdjustQuantities: {
+          inventoryAdjustmentGroup: {
+            changes: Array<{
+              name: string;
+              delta: number;
+              quantityAfterChange: number;
+            }>;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation AdjustInventory($input: InventoryAdjustQuantitiesInput!) {
+            inventoryAdjustQuantities(input: $input) {
+              inventoryAdjustmentGroup {
+                changes {
+                  name
+                  delta
+                  quantityAfterChange
+                }
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: {
+          input: {
+            name: "available",
+            reason: reason ?? "correction",
+            changes: [
+              {
+                inventoryItemId,
+                locationId: SHOPIFY_LOCATION_ID,
+                delta,
+              },
+            ],
+          },
+        },
+      });
+
+      const { inventoryAdjustmentGroup, userErrors } = data.inventoryAdjustQuantities;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      const change = inventoryAdjustmentGroup?.changes[0];
+      return {
+        adjusted: true,
+        delta: change?.delta ?? delta,
+        quantityAfterChange: change?.quantityAfterChange ?? "unknown",
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to adjust inventory" };
+    }
+  },
+});
+
+export const createProduct = tool({
+  description:
+    "Create a new product in the Shopify store. Defaults to DRAFT status and El Gato Negro as vendor.",
+  inputSchema: z.object({
+    title: z.string().describe("Product title"),
+    descriptionHtml: z.string().optional().describe("Product description (HTML)"),
+    productType: z.string().optional().describe("Product type (e.g. Coffee, Merchandise)"),
+    vendor: z.string().optional().default("El Gato Negro").describe("Product vendor"),
+    status: z
+      .enum(["ACTIVE", "DRAFT", "ARCHIVED"])
+      .optional()
+      .default("DRAFT")
+      .describe("Product status"),
+    tags: z.array(z.string()).optional().describe("Product tags"),
+    price: z.string().optional().describe('Price for the default variant (e.g. "15.00")'),
+    sku: z.string().optional().describe("SKU for the default variant"),
+  }),
+  execute: async ({ title, descriptionHtml, productType, vendor, status, tags, price, sku }) => {
+    try {
+      const input: Record<string, unknown> = { title, vendor, status };
+      if (descriptionHtml) input.descriptionHtml = descriptionHtml;
+      if (productType) input.productType = productType;
+      if (tags) input.tags = tags;
+
+      // Add default variant with price/sku if provided
+      if (price || sku) {
+        const variant: Record<string, string> = {};
+        if (price) variant.price = price;
+        if (sku) variant.sku = sku;
+        input.variants = [variant];
+      }
+
+      const data = await adminFetch<{
+        productCreate: {
+          product: {
+            id: string;
+            title: string;
+            handle: string;
+            status: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation CreateProduct($input: ProductInput!) {
+            productCreate(input: $input) {
+              product {
+                id
+                title
+                handle
+                status
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { input },
+      });
+
+      const { product, userErrors } = data.productCreate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!product) {
+        return { error: "Product creation returned no product" };
+      }
+
+      return {
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        status: product.status,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to create product" };
+    }
+  },
+});
+
+// ─── Read Tools ───────────────────────────────────────────────────────────────
 
 export const getSalesReport = tool({
   description:
