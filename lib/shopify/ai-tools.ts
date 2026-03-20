@@ -836,7 +836,7 @@ export const updateProduct = tool({
 
 export const updateVariant = tool({
   description:
-    "Update a product variant's price, compare-at price, weight, or weight unit. Requires both the product GID and variant GID. Only the fields you provide will be changed.",
+    "Update a product variant's price or compare-at price. Requires both the product GID and variant GID. Only the fields you provide will be changed.",
   inputSchema: z.object({
     productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
     variantId: z.string().describe("Shopify variant GID (e.g. gid://shopify/ProductVariant/123)"),
@@ -845,19 +845,12 @@ export const updateVariant = tool({
       .string()
       .optional()
       .describe('Compare-at price as a decimal string (e.g. "24.99")'),
-    weight: z.number().optional().describe("Weight value"),
-    weightUnit: z
-      .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
-      .optional()
-      .describe("Weight unit"),
   }),
-  execute: async ({ productId, variantId, price, compareAtPrice, weight, weightUnit }) => {
+  execute: async ({ productId, variantId, price, compareAtPrice }) => {
     try {
       const variant: Record<string, unknown> = { id: variantId };
       if (price !== undefined) variant.price = price;
       if (compareAtPrice !== undefined) variant.compareAtPrice = compareAtPrice;
-      if (weight !== undefined) variant.weight = weight;
-      if (weightUnit !== undefined) variant.weightUnit = weightUnit;
 
       const data = await adminFetch<{
         productVariantsBulkUpdate: {
@@ -866,8 +859,6 @@ export const updateVariant = tool({
             title: string;
             price: string;
             compareAtPrice: string | null;
-            weight: number | null;
-            weightUnit: string;
           }>;
           userErrors: Array<{ field: string[]; message: string }>;
         };
@@ -880,8 +871,6 @@ export const updateVariant = tool({
                 title
                 price
                 compareAtPrice
-                weight
-                weightUnit
               }
               userErrors { field message }
             }
@@ -906,11 +895,104 @@ export const updateVariant = tool({
         compareAtPrice: updated.compareAtPrice
           ? `$${updated.compareAtPrice}`
           : null,
-        weight: updated.weight,
-        weightUnit: updated.weightUnit,
       };
     } catch (error) {
       return { error: error instanceof Error ? error.message : "Failed to update variant" };
+    }
+  },
+});
+
+export const updateInventoryItemWeight = tool({
+  description:
+    "Set the weight on a product variant. Internally updates the variant's inventory item measurement.",
+  inputSchema: z.object({
+    variantId: z
+      .string()
+      .describe("Shopify variant GID (e.g. gid://shopify/ProductVariant/123)"),
+    weight: z.number().describe("Weight value"),
+    weightUnit: z
+      .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
+      .describe("Weight unit"),
+  }),
+  execute: async ({ variantId, weight, weightUnit }) => {
+    try {
+      // Look up the variant's inventory item ID
+      const lookup = await adminFetch<{
+        productVariant: {
+          inventoryItem: { id: string };
+        } | null;
+      }>({
+        query: `
+          query GetVariantInventoryItem($id: ID!) {
+            productVariant(id: $id) {
+              inventoryItem { id }
+            }
+          }
+        `,
+        variables: { id: variantId },
+      });
+
+      if (!lookup.productVariant) {
+        return { error: `Variant not found: ${variantId}` };
+      }
+
+      const inventoryItemId = lookup.productVariant.inventoryItem.id;
+
+      // Update the inventory item weight
+      const data = await adminFetch<{
+        inventoryItemUpdate: {
+          inventoryItem: {
+            id: string;
+            measurement: {
+              weight: {
+                value: number;
+                unit: string;
+              };
+            };
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation InventoryItemUpdate($id: ID!, $input: InventoryItemInput!) {
+            inventoryItemUpdate(id: $id, input: $input) {
+              inventoryItem {
+                id
+                measurement {
+                  weight { value unit }
+                }
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: {
+          id: inventoryItemId,
+          input: {
+            measurement: {
+              weight: { value: weight, unit: weightUnit },
+            },
+          },
+        },
+      });
+
+      const { inventoryItem, userErrors } = data.inventoryItemUpdate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!inventoryItem) {
+        return { error: "Inventory item update returned no item" };
+      }
+
+      return {
+        inventoryItemId: inventoryItem.id,
+        weight: inventoryItem.measurement.weight.value,
+        weightUnit: inventoryItem.measurement.weight.unit,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to update inventory item weight",
+      };
     }
   },
 });
