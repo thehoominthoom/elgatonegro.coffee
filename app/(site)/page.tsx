@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
@@ -9,6 +10,8 @@ import type { SanityEvent } from "@/lib/home/types";
 import { todayInCT } from "@/lib/home/dates";
 import { buildStripRows } from "@/lib/home/events";
 import { buildHeroSlides } from "@/lib/home/hero";
+import { getAllProducts } from "@/lib/shopify/storefront";
+import type { Product } from "@/lib/shopify/types";
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
@@ -38,12 +41,6 @@ const EVENTS_QUERY = `*[
 }`;
 
 // ─── Static data ──────────────────────────────────────────────────────────────
-
-const products = [
-  { name: "El Gato Negro Tee", category: "Merch", price: "$35", img: "https://placehold.co/400x500/2A201D/FAF5F4", href: "/shop/product/egn-tee" },
-  { name: "House Blend — 12oz", category: "Coffee", price: "$22", img: "https://placehold.co/400x500/B43620/FAF5F4", href: "/shop/product/house-blend" },
-  { name: "Cart Build Guide", category: "Digital", price: "$49", img: "https://placehold.co/400x500/7B6838/FAF5F4", href: "/shop/product/cart-build-guide" },
-];
 
 const services = [
   {
@@ -103,13 +100,25 @@ export const metadata: Metadata = {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+/** Format a Shopify MoneyV2 amount for display */
+function formatPrice(amount: string, currencyCode: string): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode,
+  }).format(parseFloat(amount));
+}
+
 export default async function Home() {
   let sanityEvents: SanityEvent[] = [];
-  try {
-    sanityEvents = await client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } });
-  } catch {
-    // Sanity unavailable — page renders without events
-  }
+  let featuredProducts: Product[] = [];
+
+  const [eventsResult, productsResult] = await Promise.allSettled([
+    client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
+    getAllProducts(5),
+  ]);
+
+  if (eventsResult.status === "fulfilled") sanityEvents = eventsResult.value;
+  if (productsResult.status === "fulfilled") featuredProducts = productsResult.value.slice(0, 5);
 
   const today = todayInCT();
   const heroSlides = buildHeroSlides(sanityEvents, today);
@@ -197,36 +206,87 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-brand-grey/10">
-            {products.map((product) => (
+          {featuredProducts.length === 0 ? (
+            <p className="font-sans text-sm text-brand-grey/40 py-12 text-center">
+              Products coming soon.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-grey/10">
+              {/* Large featured product */}
               <Link
-                key={product.href}
-                href={product.href}
+                href={`/shop/products/${featuredProducts[0].handle}`}
                 className="group block bg-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
               >
                 <div className="relative overflow-hidden aspect-[4/5]">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- TODO: replace with next/image once real product images are added and res.cloudinary.com is confirmed in next.config remotePatterns */}
-                  <img
-                    src={product.img}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  {featuredProducts[0].featuredImage ? (
+                    <Image
+                      src={featuredProducts[0].featuredImage.url}
+                      alt={featuredProducts[0].featuredImage.altText ?? featuredProducts[0].title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-brand-black/10 grain-overlay" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 font-display text-[10px] uppercase tracking-[0.25em] bg-brand-orange text-brand-grey px-2 py-1">
-                    {product.category}
-                  </span>
+                  {featuredProducts[0].vendor && (
+                    <span className="absolute top-4 left-4 font-display text-[10px] uppercase tracking-[0.25em] bg-brand-orange text-brand-grey px-2 py-1">
+                      {featuredProducts[0].vendor}
+                    </span>
+                  )}
                 </div>
                 <div className="p-5 border border-brand-grey/10 group-hover:border-brand-orange/30 transition-colors">
-                  <h3 className="font-display font-bold uppercase tracking-tight text-brand-grey text-base leading-tight mb-1">
-                    {product.name}
+                  <h3 className="font-display font-bold uppercase tracking-tight text-brand-grey text-xl leading-tight mb-1">
+                    {featuredProducts[0].title}
                   </h3>
-                  <p className="font-display text-brand-yellow font-bold text-sm">
-                    {product.price}
+                  <p className="font-display text-brand-yellow font-bold text-base">
+                    {formatPrice(
+                      featuredProducts[0].priceRange.minVariantPrice.amount,
+                      featuredProducts[0].priceRange.minVariantPrice.currencyCode
+                    )}
                   </p>
                 </div>
               </Link>
-            ))}
-          </div>
+
+              {/* 4 smaller products — 2x2 grid */}
+              <div className="grid grid-cols-2 gap-px bg-brand-grey/10">
+                {featuredProducts.slice(1, 5).map((product) => (
+                  <Link
+                    key={product.id}
+                    href={`/shop/products/${product.handle}`}
+                    className="group block bg-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
+                  >
+                    <div className="relative overflow-hidden aspect-[4/5]">
+                      {product.featuredImage ? (
+                        <Image
+                          src={product.featuredImage.url}
+                          alt={product.featuredImage.altText ?? product.title}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 25vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-brand-black/10 grain-overlay" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-4 border border-brand-grey/10 group-hover:border-brand-orange/30 transition-colors">
+                      <h3 className="font-display font-bold uppercase tracking-tight text-brand-grey text-sm leading-tight mb-1">
+                        {product.title}
+                      </h3>
+                      <p className="font-display text-brand-yellow font-bold text-sm">
+                        {formatPrice(
+                          product.priceRange.minVariantPrice.amount,
+                          product.priceRange.minVariantPrice.currencyCode
+                        )}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <Link
             href="/shop"

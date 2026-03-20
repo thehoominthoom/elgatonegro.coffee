@@ -79,8 +79,7 @@ export function SiteFooter() {
         <FooterColumn
           title="Visit"
           links={[
-            { label: "Locations", href: "/locations" },
-            { label: "Events", href: "/events" },
+            { label: "Find Us", href: "/events" },
           ]}
         />
 

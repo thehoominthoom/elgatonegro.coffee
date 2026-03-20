@@ -33,6 +33,9 @@ export async function getProductByHandle(
 
 // ─── Collections ──────────────────────────────────────────────────────────────
 
+/** Collection handles excluded from the headless sales channel (safety net for cached data) */
+const EXCLUDED_COLLECTION_HANDLES = new Set(["digital-goods", "coffee-accessories"]);
+
 export async function getAllCollections(
   first = 20
 ): Promise<CollectionSummary[]> {
@@ -41,9 +44,11 @@ export async function getAllCollections(
   }>({
     query: GET_ALL_COLLECTIONS_QUERY,
     variables: { first },
-    revalidate: 3600,
+    revalidate: 300,
   });
-  return data.collections.nodes;
+  return data.collections.nodes.filter(
+    (c) => !EXCLUDED_COLLECTION_HANDLES.has(c.handle)
+  );
 }
 
 export async function getCollectionByHandle(
