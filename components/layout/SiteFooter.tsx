@@ -45,7 +45,7 @@ function FooterColumn({ title, links }: FooterColumnProps) {
 export function SiteFooter() {
   return (
     <footer className="bg-brand-black text-brand-grey">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         {/* Column 1 — Brand */}
         <div className="col-span-2 md:col-span-1">
           <p className="font-display text-xl font-bold text-brand-grey uppercase tracking-widest">
@@ -105,15 +105,6 @@ export function SiteFooter() {
           ]}
         />
 
-        <FooterColumn
-          title="Resources"
-          links={[
-            { label: "Blog", href: "/resources/blog" },
-            { label: "Build Guides", href: "/resources/build-guides" },
-            { label: "Product Lists", href: "/resources/product-lists" },
-            { label: "YouTube", href: "/resources/youtube" },
-          ]}
-        />
       </div>
 
       {/* Bottom bar */}
