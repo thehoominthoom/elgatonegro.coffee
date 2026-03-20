@@ -673,11 +673,69 @@ export const searchCustomers = tool({
   },
 });
 
+export const searchCategories = tool({
+  description:
+    "Search Shopify's standard product taxonomy to find category IDs. Use this before setting a product's category with updateProduct.",
+  inputSchema: z.object({
+    query: z
+      .string()
+      .describe('Search term for taxonomy categories (e.g. "coffee", "apparel", "t-shirt")'),
+  }),
+  execute: async ({ query }) => {
+    try {
+      const data = await adminFetch<{
+        taxonomy: {
+          categories: {
+            edges: Array<{
+              node: {
+                id: string;
+                name: string;
+                fullName: string;
+                ancestorIds: string[];
+                isLeaf: boolean;
+              };
+            }>;
+          };
+        };
+      }>({
+        query: `
+          query TaxonomyCategories($query: String!) {
+            taxonomy {
+              categories(first: 20, query: $query) {
+                edges {
+                  node {
+                    id
+                    name
+                    fullName
+                    ancestorIds
+                    isLeaf
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { query },
+      });
+
+      return data.taxonomy.categories.edges.map(({ node }) => ({
+        id: node.id,
+        name: node.name,
+        fullName: node.fullName,
+        ancestorIds: node.ancestorIds,
+        isLeaf: node.isLeaf,
+      }));
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to search categories" };
+    }
+  },
+});
+
 // ─── Write Tools ──────────────────────────────────────────────────────────────
 
 export const updateProduct = tool({
   description:
-    "Update a product's title, description, status, tags, or product type. Only the fields you provide will be changed.",
+    "Update a product's title, description, status, tags, product type, or taxonomy category. Only the fields you provide will be changed.",
   inputSchema: z.object({
     productId: z.string().describe("Shopify product GID (e.g. gid://shopify/Product/123)"),
     title: z.string().optional().describe("New product title"),
@@ -688,8 +746,24 @@ export const updateProduct = tool({
       .describe("New product status"),
     tags: z.array(z.string()).optional().describe("Replace all tags with this list"),
     productType: z.string().optional().describe("New product type"),
+    vendor: z.string().optional().describe("New product vendor"),
+    productCategory: z
+      .string()
+      .optional()
+      .describe(
+        "Shopify taxonomy category GID (e.g. gid://shopify/TaxonomyCategory/aa-1-2-3). Use searchCategories to find the right ID.",
+      ),
   }),
-  execute: async ({ productId, title, descriptionHtml, status, tags, productType }) => {
+  execute: async ({
+    productId,
+    title,
+    descriptionHtml,
+    status,
+    tags,
+    productType,
+    vendor,
+    productCategory,
+  }) => {
     try {
       const input: Record<string, unknown> = { id: productId };
       if (title !== undefined) input.title = title;
@@ -697,6 +771,9 @@ export const updateProduct = tool({
       if (status !== undefined) input.status = status;
       if (tags !== undefined) input.tags = tags;
       if (productType !== undefined) input.productType = productType;
+      if (vendor !== undefined) input.vendor = vendor;
+      if (productCategory !== undefined)
+        input.productCategory = { productTaxonomyNodeId: productCategory };
 
       const data = await adminFetch<{
         productUpdate: {
@@ -706,6 +783,7 @@ export const updateProduct = tool({
             status: string;
             handle: string;
             productType: string;
+            vendor: string;
             tags: string[];
           } | null;
           userErrors: Array<{ field: string[]; message: string }>;
@@ -720,6 +798,7 @@ export const updateProduct = tool({
                 status
                 handle
                 productType
+                vendor
                 tags
               }
               userErrors { field message }
@@ -743,6 +822,7 @@ export const updateProduct = tool({
         status: product.status,
         handle: product.handle,
         productType: product.productType,
+        vendor: product.vendor,
         tags: product.tags,
       };
     } catch (error) {
@@ -751,37 +831,60 @@ export const updateProduct = tool({
   },
 });
 
-export const updateVariantPrice = tool({
-  description: "Update the price on a specific product variant.",
+export const updateVariant = tool({
+  description:
+    "Update a product variant's price, compare-at price, weight, or weight unit. Only the fields you provide will be changed.",
   inputSchema: z.object({
     variantId: z.string().describe("Shopify variant GID (e.g. gid://shopify/ProductVariant/123)"),
-    price: z.string().describe('New price as a decimal string (e.g. "19.99")'),
+    price: z.string().optional().describe('New price as a decimal string (e.g. "19.99")'),
+    compareAtPrice: z
+      .string()
+      .optional()
+      .describe('Compare-at price as a decimal string (e.g. "24.99")'),
+    weight: z.number().optional().describe("Weight value"),
+    weightUnit: z
+      .enum(["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"])
+      .optional()
+      .default("OUNCES")
+      .describe("Weight unit"),
   }),
-  execute: async ({ variantId, price }) => {
+  execute: async ({ variantId, price, compareAtPrice, weight, weightUnit }) => {
     try {
+      const input: Record<string, unknown> = { id: variantId };
+      if (price !== undefined) input.price = price;
+      if (compareAtPrice !== undefined) input.compareAtPrice = compareAtPrice;
+      if (weight !== undefined) input.weight = weight;
+      if (weightUnit !== undefined) input.weightUnit = weightUnit;
+
       const data = await adminFetch<{
         productVariantUpdate: {
           productVariant: {
             id: string;
             title: string;
             price: string;
+            compareAtPrice: string | null;
+            weight: number | null;
+            weightUnit: string;
           } | null;
           userErrors: Array<{ field: string[]; message: string }>;
         };
       }>({
         query: `
-          mutation VariantPriceUpdate($input: ProductVariantInput!) {
+          mutation ProductVariantUpdate($input: ProductVariantInput!) {
             productVariantUpdate(input: $input) {
               productVariant {
                 id
                 title
                 price
+                compareAtPrice
+                weight
+                weightUnit
               }
               userErrors { field message }
             }
           }
         `,
-        variables: { input: { id: variantId, price } },
+        variables: { input },
       });
 
       const { productVariant, userErrors } = data.productVariantUpdate;
@@ -795,10 +898,15 @@ export const updateVariantPrice = tool({
       return {
         id: productVariant.id,
         title: productVariant.title,
-        newPrice: `$${productVariant.price}`,
+        price: `$${productVariant.price}`,
+        compareAtPrice: productVariant.compareAtPrice
+          ? `$${productVariant.compareAtPrice}`
+          : null,
+        weight: productVariant.weight,
+        weightUnit: productVariant.weightUnit,
       };
     } catch (error) {
-      return { error: error instanceof Error ? error.message : "Failed to update variant price" };
+      return { error: error instanceof Error ? error.message : "Failed to update variant" };
     }
   },
 });
@@ -1738,6 +1846,454 @@ export const getSalesReport = tool({
       };
     } catch (error) {
       return { error: error instanceof Error ? error.message : "Failed to generate sales report" };
+    }
+  },
+});
+
+// ─── Metafield Definitions ───────────────────────────────────────────────────
+
+const METAFIELD_OWNER_TYPE = z
+  .enum(["PRODUCT", "PRODUCTVARIANT", "COLLECTION", "CUSTOMER", "ORDER"])
+  .describe("The resource type that owns this metafield definition");
+
+export const createMetafieldDefinition = tool({
+  description:
+    "Create a new metafield definition in Shopify. Required before setMetafields can work on new custom fields.",
+  inputSchema: z.object({
+    name: z.string().describe('Human-readable name (e.g. "Roast Level")'),
+    namespace: z.string().describe('Metafield namespace (e.g. "custom")'),
+    key: z.string().describe('Metafield key (e.g. "roast_level")'),
+    type: z
+      .string()
+      .describe(
+        "Metafield type (e.g. single_line_text_field, number_integer, boolean, list.single_line_text_field, json)",
+      ),
+    ownerType: METAFIELD_OWNER_TYPE,
+    description: z.string().optional().describe("Description of the metafield"),
+    pin: z.boolean().optional().default(false).describe("Whether to pin to the admin UI"),
+  }),
+  execute: async ({ name, namespace, key, type, ownerType, description, pin }) => {
+    try {
+      const definition: Record<string, unknown> = {
+        name,
+        namespace,
+        key,
+        type,
+        ownerType,
+        pin,
+      };
+      if (description !== undefined) definition.description = description;
+
+      const data = await adminFetch<{
+        metafieldDefinitionCreate: {
+          createdDefinition: {
+            id: string;
+            name: string;
+            namespace: string;
+            key: string;
+            type: { name: string };
+            ownerType: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation MetafieldDefinitionCreate($definition: MetafieldDefinitionInput!) {
+            metafieldDefinitionCreate(definition: $definition) {
+              createdDefinition {
+                id
+                name
+                namespace
+                key
+                type { name }
+                ownerType
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { definition },
+      });
+
+      const { createdDefinition, userErrors } = data.metafieldDefinitionCreate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!createdDefinition) {
+        return { error: "Metafield definition creation returned no definition" };
+      }
+
+      return {
+        id: createdDefinition.id,
+        name: createdDefinition.name,
+        namespace: createdDefinition.namespace,
+        key: createdDefinition.key,
+        type: createdDefinition.type.name,
+        ownerType: createdDefinition.ownerType,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to create metafield definition",
+      };
+    }
+  },
+});
+
+export const listMetafieldDefinitions = tool({
+  description:
+    "List existing metafield definitions for a resource type. Use this to discover what custom fields exist before setting values.",
+  inputSchema: z.object({
+    ownerType: METAFIELD_OWNER_TYPE,
+  }),
+  execute: async ({ ownerType }) => {
+    try {
+      const data = await adminFetch<{
+        metafieldDefinitions: {
+          edges: Array<{
+            node: {
+              id: string;
+              name: string;
+              namespace: string;
+              key: string;
+              type: { name: string };
+              description: string | null;
+              pinnedPosition: number | null;
+            };
+          }>;
+        };
+      }>({
+        query: `
+          query MetafieldDefinitions($ownerType: MetafieldOwnerType!) {
+            metafieldDefinitions(first: 50, ownerType: $ownerType) {
+              edges {
+                node {
+                  id
+                  name
+                  namespace
+                  key
+                  type { name }
+                  description
+                  pinnedPosition
+                }
+              }
+            }
+          }
+        `,
+        variables: { ownerType },
+      });
+
+      return data.metafieldDefinitions.edges.map(({ node }) => ({
+        id: node.id,
+        name: node.name,
+        namespace: node.namespace,
+        key: node.key,
+        type: node.type.name,
+        description: node.description,
+        pinned: node.pinnedPosition !== null,
+      }));
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to list metafield definitions",
+      };
+    }
+  },
+});
+
+// ─── Discounts ───────────────────────────────────────────────────────────────
+
+export const createDiscountCode = tool({
+  description:
+    "Create a basic discount code (percentage or fixed amount off). Returns the created discount details.",
+  inputSchema: z.object({
+    title: z.string().describe("Internal name for the discount"),
+    code: z.string().describe("The actual discount code customers type at checkout"),
+    valueType: z
+      .enum(["percentage", "fixed_amount"])
+      .describe("Type of discount — percentage or fixed dollar amount"),
+    value: z
+      .number()
+      .describe("Discount value — percentage (0-100) or fixed amount in dollars"),
+    startsAt: z
+      .string()
+      .optional()
+      .describe("ISO date when the discount starts (defaults to now)"),
+    endsAt: z
+      .string()
+      .optional()
+      .describe("ISO date when the discount ends (null = no end date)"),
+    usageLimit: z.number().optional().describe("Maximum total uses across all customers"),
+    oncePerCustomer: z
+      .boolean()
+      .optional()
+      .default(true)
+      .describe("Whether each customer can only use this code once"),
+    appliesOncePerCustomer: z
+      .boolean()
+      .optional()
+      .default(true)
+      .describe("Whether the discount applies once per customer per order"),
+    minimumSubtotal: z
+      .number()
+      .optional()
+      .describe("Minimum order subtotal required to use this discount"),
+  }),
+  execute: async ({
+    title,
+    code,
+    valueType,
+    value,
+    startsAt,
+    endsAt,
+    usageLimit,
+    oncePerCustomer,
+    appliesOncePerCustomer,
+    minimumSubtotal,
+  }) => {
+    try {
+      const customerGets: Record<string, unknown> = {
+        items: { all: true },
+        value:
+          valueType === "percentage"
+            ? { percentage: value / 100 }
+            : { discountAmount: { amount: value, appliesOnEachItem: false } },
+      };
+
+      const basicCodeDiscount: Record<string, unknown> = {
+        title,
+        code,
+        startsAt: startsAt ?? new Date().toISOString(),
+        customerGets,
+        customerSelection: { all: true },
+        appliesOncePerCustomer: appliesOncePerCustomer ?? true,
+      };
+      if (endsAt !== undefined) basicCodeDiscount.endsAt = endsAt;
+      if (usageLimit !== undefined) basicCodeDiscount.usageLimit = usageLimit;
+      if (oncePerCustomer !== undefined) basicCodeDiscount.oncePerCustomer = oncePerCustomer;
+      if (minimumSubtotal !== undefined) {
+        basicCodeDiscount.minimumRequirement = {
+          subtotal: { greaterThanOrEqualToSubtotal: minimumSubtotal },
+        };
+      }
+
+      const data = await adminFetch<{
+        discountCodeBasicCreate: {
+          codeDiscountNode: {
+            id: string;
+            codeDiscount: {
+              title: string;
+              codes: { nodes: Array<{ code: string }> };
+              startsAt: string;
+              endsAt: string | null;
+              status: string;
+            };
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
+            discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
+              codeDiscountNode {
+                id
+                codeDiscount {
+                  ... on DiscountCodeBasic {
+                    title
+                    codes(first: 1) { nodes { code } }
+                    startsAt
+                    endsAt
+                    status
+                  }
+                }
+              }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { basicCodeDiscount },
+      });
+
+      const { codeDiscountNode, userErrors } = data.discountCodeBasicCreate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+      if (!codeDiscountNode) {
+        return { error: "Discount creation returned no discount" };
+      }
+
+      const d = codeDiscountNode.codeDiscount;
+      return {
+        id: codeDiscountNode.id,
+        title: d.title,
+        code: d.codes.nodes[0]?.code ?? code,
+        startsAt: d.startsAt,
+        endsAt: d.endsAt,
+        status: d.status,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to create discount code" };
+    }
+  },
+});
+
+export const listDiscountCodes = tool({
+  description: "List discount codes in the store. Optionally filter by search query.",
+  inputSchema: z.object({
+    query: z.string().optional().describe("Search filter for discount codes"),
+    first: z
+      .number()
+      .min(1)
+      .max(50)
+      .optional()
+      .default(25)
+      .describe("Number of discount codes to return (max 50)"),
+  }),
+  execute: async ({ query, first }) => {
+    try {
+      const data = await adminFetch<{
+        codeDiscountNodes: {
+          nodes: Array<{
+            id: string;
+            codeDiscount: {
+              title: string;
+              codes: { nodes: Array<{ code: string }> };
+              status: string;
+              startsAt: string;
+              endsAt: string | null;
+              usageLimit?: number | null;
+              asyncUsageCount?: number;
+            };
+          }>;
+        };
+      }>({
+        query: `
+          query DiscountCodes($first: Int!, $query: String) {
+            codeDiscountNodes(first: $first, query: $query) {
+              nodes {
+                id
+                codeDiscount {
+                  ... on DiscountCodeBasic {
+                    title
+                    codes(first: 1) { nodes { code } }
+                    status
+                    startsAt
+                    endsAt
+                    usageLimit
+                    asyncUsageCount
+                  }
+                  ... on DiscountCodeBuyXGetY {
+                    title
+                    codes(first: 1) { nodes { code } }
+                    status
+                    startsAt
+                    endsAt
+                  }
+                  ... on DiscountCodeFreeShipping {
+                    title
+                    codes(first: 1) { nodes { code } }
+                    status
+                    startsAt
+                    endsAt
+                  }
+                }
+              }
+            }
+          }
+        `,
+        variables: { first, query: query ?? null },
+      });
+
+      return data.codeDiscountNodes.nodes.map((node) => ({
+        id: node.id,
+        title: node.codeDiscount.title,
+        code: node.codeDiscount.codes.nodes[0]?.code ?? null,
+        status: node.codeDiscount.status,
+        startsAt: node.codeDiscount.startsAt,
+        endsAt: node.codeDiscount.endsAt,
+        usageLimit: node.codeDiscount.usageLimit ?? null,
+        totalUsed: node.codeDiscount.asyncUsageCount ?? null,
+      }));
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to list discount codes" };
+    }
+  },
+});
+
+export const deactivateDiscountCode = tool({
+  description: "Deactivate an active discount code.",
+  inputSchema: z.object({
+    id: z.string().describe("Shopify discount node GID (e.g. gid://shopify/DiscountCodeNode/123)"),
+  }),
+  execute: async ({ id }) => {
+    try {
+      const data = await adminFetch<{
+        discountCodeDeactivate: {
+          codeDiscountNode: { id: string } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation discountCodeDeactivate($id: ID!) {
+            discountCodeDeactivate(id: $id) {
+              codeDiscountNode { id }
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { id },
+      });
+
+      const { codeDiscountNode, userErrors } = data.discountCodeDeactivate;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        deactivated: true,
+        id: codeDiscountNode?.id ?? id,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : "Failed to deactivate discount code",
+      };
+    }
+  },
+});
+
+export const deleteDiscountCode = tool({
+  description: "Permanently delete a discount code.",
+  inputSchema: z.object({
+    id: z.string().describe("Shopify discount node GID (e.g. gid://shopify/DiscountCodeNode/123)"),
+  }),
+  execute: async ({ id }) => {
+    try {
+      const data = await adminFetch<{
+        discountCodeDelete: {
+          deletedCodeDiscountId: string | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>({
+        query: `
+          mutation discountCodeDelete($id: ID!) {
+            discountCodeDelete(id: $id) {
+              deletedCodeDiscountId
+              userErrors { field message }
+            }
+          }
+        `,
+        variables: { id },
+      });
+
+      const { deletedCodeDiscountId, userErrors } = data.discountCodeDelete;
+      if (userErrors.length > 0) {
+        return { error: userErrors.map((e) => e.message).join(", ") };
+      }
+
+      return {
+        deleted: true,
+        deletedId: deletedCodeDiscountId,
+      };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Failed to delete discount code" };
     }
   },
 });
