@@ -13,8 +13,16 @@ export function formatMoney(money: Money): string {
 export function getMetafieldValues(metafield: MetafieldWithReferences | null): string[] {
   if (!metafield) return [];
   return metafield.references.nodes
-    .map((node) => node.field?.value)
+    .map((node) => node.field?.value ?? formatHandle(node.handle))
     .filter((v): v is string => Boolean(v));
+}
+
+/** Convert a handle like "chocolate-mousse" to "Chocolate Mousse". */
+function formatHandle(handle: string): string {
+  return handle
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 /** Return true when min and max variant prices differ. */

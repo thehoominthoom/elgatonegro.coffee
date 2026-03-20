@@ -80,7 +80,7 @@ const PRODUCT_FRAGMENT = `
         nodes {
           ... on Metaobject {
             handle
-            field(key: "name") {
+            field(key: "label") {
               value
             }
           }
@@ -92,7 +92,7 @@ const PRODUCT_FRAGMENT = `
         nodes {
           ... on Metaobject {
             handle
-            field(key: "name") {
+            field(key: "label") {
               value
             }
           }
@@ -104,7 +104,7 @@ const PRODUCT_FRAGMENT = `
         nodes {
           ... on Metaobject {
             handle
-            field(key: "name") {
+            field(key: "label") {
               value
             }
           }
