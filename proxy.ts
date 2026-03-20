@@ -23,25 +23,21 @@ async function handleAdminRequest(
   }
 
   const handler = clerkMiddleware(async (auth, clerkReq: NextRequest) => {
+    const pathname = clerkReq.nextUrl.pathname;
+
     // Allow Clerk auth routes through without protection
-    if (
-      clerkReq.nextUrl.pathname.startsWith('/sign-in') ||
-      clerkReq.nextUrl.pathname.startsWith('/sign-up')
-    ) {
+    // These live at app/(admin)/sign-in/ — route group doesn't affect URL,
+    // so /sign-in resolves directly without rewrite
+    if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
       return NextResponse.next();
     }
 
-    // Protect all other admin routes
-    const { userId } = await auth();
-
-    if (!userId) {
-      const signInUrl = new URL('/sign-in', clerkReq.url);
-      return NextResponse.redirect(signInUrl);
-    }
+    // Protect all other admin routes — redirects unauthenticated users to sign-in
+    await auth.protect();
 
     // Rewrite admin subdomain to the (admin) route group
     const url = clerkReq.nextUrl.clone();
-    url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+    url.pathname = `/admin${pathname === '/' ? '' : pathname}`;
     return NextResponse.rewrite(url);
   });
 
