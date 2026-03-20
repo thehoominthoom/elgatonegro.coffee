@@ -11,7 +11,7 @@ const securityHeaders = [
       // Styles: self + unsafe-inline (Tailwind + Clerk inject styles)
       "style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee",
       // Images: self + data URIs + all CDNs used
-      "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com https://res.cloudinary.com https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee https://maps.googleapis.com https://maps.gstatic.com",
+      "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com https://res.cloudinary.com https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee https://img.clerk.com https://maps.googleapis.com https://maps.gstatic.com",
       // Fonts: self + Google Fonts (if used) + Clerk
       "font-src 'self' data: https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee",
       // Connect: self + APIs
