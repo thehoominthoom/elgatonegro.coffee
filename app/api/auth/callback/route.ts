@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exchangeCodeForTokens } from "@/lib/shopify/customer-auth";
+import { createRemoteJWKSet, jwtVerify } from "jose";
+import { exchangeCodeForTokens, getOIDCConfig } from "@/lib/shopify/customer-auth";
 import {
   getAuthStateCookie,
   clearAuthStateCookie,
@@ -32,10 +33,13 @@ export async function GET(request: NextRequest) {
     // Exchange authorization code for tokens
     const tokens = await exchangeCodeForTokens(code, authState.codeVerifier);
 
-    // Parse ID token to extract basic customer info (JWT payload is the middle segment)
-    const idPayload = JSON.parse(
-      atob(tokens.id_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
-    );
+    // Verify ID token signature using Shopify's JWKS
+    const oidcConfig = await getOIDCConfig();
+    const JWKS = createRemoteJWKSet(new URL(oidcConfig.jwks_uri));
+
+    const { payload: idPayload } = await jwtVerify(tokens.id_token, JWKS, {
+      issuer: oidcConfig.issuer,
+    });
 
     // Validate nonce
     if (idPayload.nonce !== authState.nonce) {
@@ -50,10 +54,10 @@ export async function GET(request: NextRequest) {
       idToken: tokens.id_token,
       expiresAt: now + tokens.expires_in,
       customer: {
-        id: idPayload.sub ?? "",
-        email: idPayload.email ?? "",
-        firstName: idPayload.given_name ?? "",
-        lastName: idPayload.family_name ?? "",
+        id: (idPayload.sub as string) ?? "",
+        email: (idPayload.email as string) ?? "",
+        firstName: (idPayload.given_name as string) ?? "",
+        lastName: (idPayload.family_name as string) ?? "",
       },
     };
 

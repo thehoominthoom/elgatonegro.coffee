@@ -9,7 +9,7 @@ const STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
 const CLIENT_ID = process.env.SHOPIFY_ADMIN_CLIENT_ID!;
 const CLIENT_SECRET = process.env.SHOPIFY_ADMIN_CLIENT_SECRET!;
 
-const ADMIN_API_VERSION = "2025-01";
+const ADMIN_API_VERSION = process.env.SHOPIFY_API_VERSION ?? "2025-01";
 const TOKEN_URL = `https://${STORE_DOMAIN}/admin/oauth/access_token`;
 const GRAPHQL_URL = `https://${STORE_DOMAIN}/admin/api/${ADMIN_API_VERSION}/graphql.json`;
 

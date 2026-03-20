@@ -10,11 +10,39 @@ const SESSION_SECRET = process.env.SESSION_SECRET!;
 const SESSION_COOKIE = "egn-customer-session";
 const AUTH_STATE_COOKIE = "egn-auth-state";
 
-// Derive a 256-bit key from the session secret
-function getEncryptionKey(): Uint8Array {
+// Validate SESSION_SECRET at startup
+if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
+  throw new Error(
+    "SESSION_SECRET must be set and at least 32 characters long."
+  );
+}
+
+// Derive a 256-bit key from the session secret using HKDF (Web Crypto API)
+let _derivedKey: Uint8Array | null = null;
+
+async function getEncryptionKey(): Promise<Uint8Array> {
+  if (_derivedKey) return _derivedKey;
+
   const encoder = new TextEncoder();
-  const key = encoder.encode(SESSION_SECRET.padEnd(32, "0").slice(0, 32));
-  return key;
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(SESSION_SECRET),
+    "HKDF",
+    false,
+    ["deriveBits"]
+  );
+  const derived = await crypto.subtle.deriveBits(
+    {
+      name: "HKDF",
+      hash: "SHA-256",
+      salt: new Uint8Array(32),
+      info: encoder.encode("egn-session-encryption"),
+    },
+    keyMaterial,
+    256
+  );
+  _derivedKey = new Uint8Array(derived);
+  return _derivedKey;
 }
 
 // ─── Session payload ────────────────────────────────────────────────────────
@@ -42,7 +70,7 @@ export interface AuthState {
 
 export async function setAuthStateCookie(authState: AuthState): Promise<void> {
   const jar = await cookies();
-  const key = getEncryptionKey();
+  const key = await getEncryptionKey();
 
   const jwt = await new EncryptJWT(authState as unknown as Record<string, unknown>)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
@@ -65,7 +93,7 @@ export async function getAuthStateCookie(): Promise<AuthState | null> {
   if (!cookie) return null;
 
   try {
-    const key = getEncryptionKey();
+    const key = await getEncryptionKey();
     const { payload } = await jwtDecrypt(cookie, key);
     return payload as unknown as AuthState;
   } catch {
@@ -82,7 +110,7 @@ export async function clearAuthStateCookie(): Promise<void> {
 
 export async function setSessionCookie(session: CustomerSession): Promise<void> {
   const jar = await cookies();
-  const key = getEncryptionKey();
+  const key = await getEncryptionKey();
 
   const jwt = await new EncryptJWT(session as unknown as Record<string, unknown>)
     .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
@@ -105,7 +133,7 @@ export async function getSessionCookie(): Promise<CustomerSession | null> {
   if (!cookie) return null;
 
   try {
-    const key = getEncryptionKey();
+    const key = await getEncryptionKey();
     const { payload } = await jwtDecrypt(cookie, key);
     return payload as unknown as CustomerSession;
   } catch {

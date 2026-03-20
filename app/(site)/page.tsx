@@ -1,38 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
-import { type SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
 import { trimAddress } from "@/lib/utils";
 import { clients } from "@/lib/clients";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface ScheduleDay {
-  _key: string;
-  date: string;      // YYYY-MM-DD
-  openTime: string;  // e.g. "9:00 AM"
-  closeTime: string; // e.g. "3:00 PM"
-}
-
-interface SanityEvent {
-  _id: string;
-  title: string;
-  schedule: ScheduleDay[] | null;
-  locationName: string | null;
-  location: string | null;
-  image: SanityImageSource | null;
-  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
-  eventPageType: "internal" | "external" | null;
-  externalUrl: string | null;
-  description: unknown[] | null;
-  ctaLabel: string | null;
-  ctaUrl: string | null;
-  slug: string | null;
-  recurrenceLabel: string | null;
-}
+import type { SanityEvent } from "@/lib/home/types";
+import { todayInCT } from "@/lib/home/dates";
+import { buildStripRows } from "@/lib/home/events";
+import { buildHeroSlides } from "@/lib/home/hero";
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
@@ -61,115 +37,13 @@ const EVENTS_QUERY = `*[
   recurrenceLabel
 }`;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Today's date in CT as YYYY-MM-DD */
-function todayInCT(): string {
-  return new Date().toLocaleDateString("en-CA", {
-    timeZone: "America/Chicago",
-  });
-}
-
-/** Format a single YYYY-MM-DD date string for display — no UTC shift risk. */
-function formatEventDate(dateStr: string): string {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
-
-function formatEventDateRange(schedule: ScheduleDay[]): string {
-  if (!schedule.length) return "";
-  const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-  const first = sorted[0].date;
-  const last = sorted[sorted.length - 1].date;
-  if (first === last) return formatEventDate(first);
-  const [, fm] = first.split("-").map(Number);
-  const [, lm] = last.split("-").map(Number);
-  if (fm === lm) {
-    const [, , ld] = last.split("-").map(Number);
-    return `${formatEventDate(first)}–${ld}`;
-  }
-  return `${formatEventDate(first)} – ${formatEventDate(last)}`;
-}
-
-function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRecurring: boolean): string | null {
-  const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-  const todayEntry = sorted.find((d) => d.date === today);
-  if (todayEntry) {
-    return `Today: ${todayEntry.openTime} – ${todayEntry.closeTime} CT`;
-  }
-  if (!isRecurring) return null;
-  const future = sorted.filter((d) => d.date > today);
-  if (!future.length) return null;
-  const next = future[0];
-  const [ny, nm, nd] = next.date.split("-").map(Number);
-  const nextDate = new Date(ny, nm - 1, nd);
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const dow = dayNames[nextDate.getDay()];
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const [todayY, todayM, todayD] = today.split("-").map(Number);
-  const todayDate = new Date(todayY, todayM - 1, todayD);
-  const diffDays = Math.round((nextDate.getTime() - todayDate.getTime()) / 86400000);
-  const dayLabel = diffDays <= 6 ? dow : `${monthNames[nm - 1]} ${nd}`;
-  return `Next: ${dayLabel} ${next.openTime}–${next.closeTime} CT`;
-}
-
-// ─── Strip rows ───────────────────────────────────────────────────────────────
-
-type StripRow = { key: string; event: SanityEvent; displayDate: string; sortDate: string };
-
-function buildStripRows(events: SanityEvent[], today: string): StripRow[] {
-  const rows: StripRow[] = [];
-
-  for (const event of events) {
-    const schedule = event.schedule ?? [];
-    if (!schedule.length) continue;
-
-    const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-    const windowDates = sorted.filter((d) => d.date >= today);
-    if (!windowDates.length) continue;
-
-    // Detect consecutive (multi-day) vs recurring (gaps between dates).
-    // Both checks operate on windowDates only — past dates must not
-    // influence the consecutive test or the displayed range.
-    const isConsecutive = windowDates.every((d, i) => {
-      if (i === 0) return true;
-      const prev = new Date(windowDates[i - 1].date);
-      const curr = new Date(d.date);
-      return (curr.getTime() - prev.getTime()) === 86400000;
-    });
-
-    if (isConsecutive) {
-      rows.push({
-        key: event._id,
-        event,
-        displayDate: formatEventDateRange(windowDates),
-        sortDate: windowDates[0].date,
-      });
-    } else {
-      for (const d of windowDates) {
-        rows.push({
-          key: `${event._id}-${d._key}`,
-          event,
-          displayDate: formatEventDate(d.date),
-          sortDate: d.date,
-        });
-      }
-    }
-  }
-
-  rows.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
-  return rows;
-}
+// ─── Static data ──────────────────────────────────────────────────────────────
 
 const products = [
   { name: "El Gato Negro Tee", category: "Merch", price: "$35", img: "https://placehold.co/400x500/2A201D/FAF5F4", href: "/shop/product/egn-tee" },
   { name: "House Blend — 12oz", category: "Coffee", price: "$22", img: "https://placehold.co/400x500/B43620/FAF5F4", href: "/shop/product/house-blend" },
   { name: "Cart Build Guide", category: "Digital", price: "$49", img: "https://placehold.co/400x500/7B6838/FAF5F4", href: "/shop/product/cart-build-guide" },
 ];
-
 
 const services = [
   {
@@ -238,34 +112,7 @@ export default async function Home() {
   }
 
   const today = todayInCT();
-
-  const heroSlides: HeroSlide[] = sanityEvents.filter((e) => e.image).slice(0, 6).map((e) => {
-    const schedule = e.schedule ?? [];
-    const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-    const isHappeningNow = sorted.some((d) => d.date === today);
-    const dateRange = sorted.length ? formatEventDateRange(sorted) : "";
-    const timeContext = sorted.length ? getHeroTimeContext(sorted, today, !!e.recurrenceLabel) : null;
-    const href =
-      e.eventPageType === "external" && e.externalUrl
-        ? e.externalUrl
-        : e.slug
-        ? `/events/${e.slug}`
-        : "/events";
-    return {
-      id: e._id,
-      title: e.title,
-      dateRange,
-      timeContext,
-      location: e.locationName || (e.location ? trimAddress(e.location) : ""),
-      type: e.type ?? "open",
-      isHappeningNow,
-      recurrenceLabel: e.recurrenceLabel ?? null,
-      image: e.image
-        ? urlFor(e.image).width(1440).url()
-        : "/images/hero/hero-barista_roasting.webp",
-      href,
-    };
-  });
+  const heroSlides = buildHeroSlides(sanityEvents, today);
 
   return (
     <>
@@ -434,7 +281,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          {/* 4b. Service cards — 2×2 grid */}
+          {/* 4b. Service cards — 2x2 grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-brand-black">
             {services.map((service, i) => (
               <Link

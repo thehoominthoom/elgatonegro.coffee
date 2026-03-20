@@ -51,12 +51,17 @@ async function handleAdminRequest(
 export async function proxy(req: NextRequest, event: NextFetchEvent) {
   const hostname = req.headers.get('host') ?? '';
 
-  // Non-admin hosts pass through immediately — no Clerk involvement
-  if (!isAdminHost(hostname)) {
-    return NextResponse.next();
+  // Admin subdomain — full Clerk auth flow
+  if (isAdminHost(hostname)) {
+    return handleAdminRequest(req, event);
   }
 
-  return handleAdminRequest(req, event);
+  // Block direct /admin path access on the public domain
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    return new NextResponse(null, { status: 404 });
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

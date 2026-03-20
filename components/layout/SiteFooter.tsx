@@ -99,9 +99,9 @@ export function SiteFooter() {
           title="Shop"
           links={[
             { label: "All Products", href: "/shop" },
-            { label: "Merch", href: "/shop/merch" },
-            { label: "Coffee Beans", href: "/shop/beans" },
-            { label: "Digital", href: "/shop/digital" },
+            { label: "Coffee Beans", href: "/shop/collections/coffee-beans" },
+            { label: "Apparel", href: "/shop/collections/apparel" },
+            { label: "Merchandise", href: "/shop/collections/merchandise" },
           ]}
         />
 

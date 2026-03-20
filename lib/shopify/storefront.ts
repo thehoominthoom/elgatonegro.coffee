@@ -15,7 +15,7 @@ export async function getAllProducts(first = 50): Promise<Product[]> {
   const data = await shopifyFetch<{ products: { nodes: Product[] } }>({
     query: GET_ALL_PRODUCTS_QUERY,
     variables: { first },
-    revalidate: 3600,
+    revalidate: 300,
   });
   return data.products.nodes;
 }
@@ -26,7 +26,7 @@ export async function getProductByHandle(
   const data = await shopifyFetch<{ productByHandle: Product | null }>({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
-    revalidate: 3600,
+    revalidate: 300,
   });
   return data.productByHandle;
 }

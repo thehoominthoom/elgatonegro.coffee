@@ -141,7 +141,7 @@ function MenuItemRow({ item }: { item: MenuItem }) {
 export default async function MenuPage() {
   let menuData: { title?: string; items?: MenuItem[] } | null = null;
   try {
-    menuData = await client.fetch(MENU_QUERY, {}, { next: { revalidate: 60 } });
+    menuData = await client.fetch(MENU_QUERY, {});
   } catch {
     // Sanity unavailable — render empty state
   }

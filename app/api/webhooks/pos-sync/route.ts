@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac } from "crypto";
+import { Redis } from "@upstash/redis";
 import { adminFetch } from "@/lib/shopify/admin";
 import {
   ADMIN_VARIANT_BY_SKU_QUERY,
@@ -18,9 +19,9 @@ const HELCIM_API_BASE = "https://api.helcim.com/v2";
 /** SKU category codes that should sync to Shopify inventory. */
 const SYNC_CATEGORIES = new Set(["WB", "MRC", "APP", "CA"]);
 
-// ─── Duplicate detection (in-memory, resets on cold start) ──────────────────
+// ─── Duplicate detection (Upstash Redis) ────────────────────────────────────
 
-const processedWebhookIds = new Set<string>();
+const redis = Redis.fromEnv();
 
 // ─── Helcim API types ───────────────────────────────────────────────────────
 
@@ -242,6 +243,22 @@ export async function POST(request: NextRequest) {
   // ── Read body once for both verification and parsing ───────────────────
   const body = await request.text();
 
+  // ── Replay protection — reject timestamps older than 5 minutes ──────
+  const timestampSeconds = Math.floor(Number(webhookTimestamp));
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  if (
+    Number.isNaN(timestampSeconds) ||
+    Math.abs(nowSeconds - timestampSeconds) > 300
+  ) {
+    console.warn(
+      `[helcim-webhook] Stale or invalid timestamp — rejecting (timestamp: ${webhookTimestamp})`
+    );
+    return NextResponse.json(
+      { error: "Webhook timestamp too old" },
+      { status: 401 }
+    );
+  }
+
   if (
     !verifyWebhookSignature(body, webhookSignature, webhookTimestamp, webhookId)
   ) {
@@ -270,19 +287,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  // ── Duplicate detection ───────────────────────────────────────────────
-  if (processedWebhookIds.has(webhookId)) {
+  // ── Duplicate detection (Redis SET NX with 10-minute TTL) ────────────
+  const dedupKey = `webhook:${webhookId}`;
+  const isNew = await redis.set(dedupKey, 1, { ex: 600, nx: true });
+  if (!isNew) {
     console.warn(
       `[helcim-webhook] Duplicate webhook detected — id: ${webhookId}, transaction: ${payload.id}`
     );
     return NextResponse.json({ received: true });
-  }
-  processedWebhookIds.add(webhookId);
-
-  // Cap the set size to prevent unbounded memory growth
-  if (processedWebhookIds.size > 10000) {
-    const first = processedWebhookIds.values().next().value;
-    if (first) processedWebhookIds.delete(first);
   }
 
   // ── Fetch transaction details ─────────────────────────────────────────

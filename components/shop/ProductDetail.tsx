@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
 import { VariantSelector } from "./VariantSelector";
@@ -109,8 +110,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
         {product.descriptionHtml ? (
           <div
             className="font-sans text-sm leading-relaxed text-brand-black/70 prose prose-sm max-w-none"
-            /* eslint-disable-next-line react/no-danger -- Shopify's HTML is trusted */
-            dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(product.descriptionHtml),
+            }}
           />
         ) : product.description ? (
           <p className="font-sans text-sm leading-relaxed text-brand-black/70">

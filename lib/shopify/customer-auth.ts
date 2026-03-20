@@ -4,7 +4,6 @@
 // Confidential client: token requests use Basic Auth (client_id:client_secret).
 
 const CLIENT_ID = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID!;
-const CLIENT_SECRET = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET!;
 const CUSTOMER_ACCOUNT_API_URL = process.env.SHOPIFY_CUSTOMER_ACCOUNT_API_URL!;
 const APP_URL = process.env.APP_URL!;
 
@@ -18,6 +17,8 @@ interface OIDCConfig {
   token_endpoint: string;
   userinfo_endpoint: string;
   end_session_endpoint: string;
+  jwks_uri: string;
+  issuer: string;
 }
 
 let cachedConfig: OIDCConfig | null = null;
@@ -91,10 +92,6 @@ export async function buildAuthorizationUrl(params: {
 }
 
 // ─── Token exchange ─────────────────────────────────────────────────────────
-
-function getBasicAuthHeader(): string {
-  return "Basic " + btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-}
 
 export interface TokenResponse {
   access_token: string;
