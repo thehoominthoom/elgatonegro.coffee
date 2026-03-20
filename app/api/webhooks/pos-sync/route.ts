@@ -61,13 +61,11 @@ interface InventoryAdjustResponse {
   inventoryAdjustQuantities: {
     inventoryAdjustmentGroup: {
       reason: string;
-      changes: {
-        nodes: Array<{
-          name: string;
-          delta: number;
-          quantityAfterChange: number;
-        }>;
-      };
+      changes: Array<{
+        name: string;
+        delta: number;
+        quantityAfterChange: number;
+      }>;
     } | null;
     userErrors: Array<{
       field: string;
@@ -218,8 +216,7 @@ async function decrementInventory(
   }
 
   const changes =
-    data.inventoryAdjustQuantities.inventoryAdjustmentGroup?.changes.nodes ??
-    [];
+    data.inventoryAdjustQuantities.inventoryAdjustmentGroup?.changes ?? [];
   for (const change of changes) {
     console.log(
       `[helcim-webhook] Inventory adjusted — SKU: ${sku}, delta: ${change.delta}, remaining: ${change.quantityAfterChange}`

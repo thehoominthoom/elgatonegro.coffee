@@ -74,12 +74,10 @@ export const ADMIN_INVENTORY_ADJUST_MUTATION = `
     inventoryAdjustQuantities(input: $input) {
       inventoryAdjustmentGroup {
         reason
-        changes(first: 10) {
-          nodes {
-            name
-            delta
-            quantityAfterChange
-          }
+        changes {
+          name
+          delta
+          quantityAfterChange
         }
       }
       userErrors {
