@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { SendHorizonal, Loader2, Bot, User } from "lucide-react";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -11,10 +11,11 @@ const transport = new DefaultChatTransport({
 });
 
 export default function AIChat() {
-  const { messages, sendMessage, status, error, input, setInput } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport,
   });
 
+  const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
