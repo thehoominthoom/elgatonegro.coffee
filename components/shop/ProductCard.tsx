@@ -28,7 +28,7 @@ export function ProductCard({ product }: ProductCardProps) {
             alt={featuredImage.altText ?? title}
             width={600}
             height={600}
-            className={`w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500${soldOut ? " opacity-60 grayscale" : ""}`}
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full bg-brand-black/10" />

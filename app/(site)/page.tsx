@@ -225,7 +225,7 @@ export default async function Home() {
                       alt={featuredProducts[0].featuredImage.altText ?? featuredProducts[0].title}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className={`object-cover transition-transform duration-500 group-hover:scale-105${!featuredProducts[0].availableForSale ? " opacity-60 grayscale" : ""}`}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-full h-full bg-brand-black/10 grain-overlay" />
@@ -289,7 +289,7 @@ export default async function Home() {
                           alt={product.featuredImage.altText ?? product.title}
                           fill
                           sizes="(max-width: 768px) 50vw, 25vw"
-                          className={`object-cover transition-transform duration-500 group-hover:scale-105${!product.availableForSale ? " opacity-60 grayscale" : ""}`}
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full bg-brand-black/10 grain-overlay" />
