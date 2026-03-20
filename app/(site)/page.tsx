@@ -12,6 +12,7 @@ import { buildStripRows } from "@/lib/home/events";
 import { buildHeroSlides } from "@/lib/home/hero";
 import { getAllProducts } from "@/lib/shopify/storefront";
 import type { Product } from "@/lib/shopify/types";
+import { getMetafieldValues } from "@/lib/shopify/utils";
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
@@ -246,20 +247,25 @@ export default async function Home() {
                       featuredProducts[0].priceRange.minVariantPrice.currencyCode
                     )}
                   </p>
-                  {(featuredProducts[0].roastLevel || featuredProducts[0].flavorNotes) && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {featuredProducts[0].roastLevel && (
-                        <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1.5 py-0.5">
-                          {featuredProducts[0].roastLevel.value}
-                        </span>
-                      )}
-                      {featuredProducts[0].flavorNotes && (
-                        <span className="font-sans text-[10px] text-brand-grey/50 px-1.5 py-0.5">
-                          {featuredProducts[0].flavorNotes.value}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {(() => {
+                    const roast = getMetafieldValues(featuredProducts[0].roastLevel);
+                    const flavor = getMetafieldValues(featuredProducts[0].flavorNotes);
+                    if (roast.length === 0 && flavor.length === 0) return null;
+                    return (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {roast[0] && (
+                          <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1.5 py-0.5">
+                            {roast[0]}
+                          </span>
+                        )}
+                        {flavor.length > 0 && (
+                          <span className="font-sans text-[10px] text-brand-grey/50 px-1.5 py-0.5">
+                            {flavor.join(", ")}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               </Link>
 
@@ -300,20 +306,25 @@ export default async function Home() {
                           product.priceRange.minVariantPrice.currencyCode
                         )}
                       </p>
-                      {(product.roastLevel || product.flavorNotes) && (
-                        <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          {product.roastLevel && (
-                            <span className="font-sans text-[9px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1 py-0.5">
-                              {product.roastLevel.value}
-                            </span>
-                          )}
-                          {product.flavorNotes && (
-                            <span className="font-sans text-[9px] text-brand-grey/50 px-1 py-0.5 line-clamp-1">
-                              {product.flavorNotes.value}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                      {(() => {
+                        const roast = getMetafieldValues(product.roastLevel);
+                        const flavor = getMetafieldValues(product.flavorNotes);
+                        if (roast.length === 0 && flavor.length === 0) return null;
+                        return (
+                          <div className="flex flex-wrap gap-1.5 mt-1.5">
+                            {roast[0] && (
+                              <span className="font-sans text-[9px] uppercase tracking-[0.1em] text-brand-grey/50 border border-brand-grey/20 px-1 py-0.5">
+                                {roast[0]}
+                              </span>
+                            )}
+                            {flavor.length > 0 && (
+                              <span className="font-sans text-[9px] text-brand-grey/50 px-1 py-0.5 line-clamp-1">
+                                {flavor.join(", ")}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </Link>
                 ))}

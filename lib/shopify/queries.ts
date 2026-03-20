@@ -75,17 +75,41 @@ const PRODUCT_FRAGMENT = `
     }
     tags
     vendor
-    roastLevel: metafield(namespace: "custom", key: "roast_level") {
-      value
-      type
+    roastLevel: metafield(namespace: "shopify", key: "coffee-roast") {
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            handle
+            field(key: "name") {
+              value
+            }
+          }
+        }
+      }
     }
-    flavorNotes: metafield(namespace: "custom", key: "flavor_notes") {
-      value
-      type
+    flavorNotes: metafield(namespace: "shopify", key: "flavor") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            handle
+            field(key: "name") {
+              value
+            }
+          }
+        }
+      }
     }
-    country: metafield(namespace: "custom", key: "country") {
-      value
-      type
+    country: metafield(namespace: "shopify", key: "country") {
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            handle
+            field(key: "name") {
+              value
+            }
+          }
+        }
+      }
     }
   }
 `;

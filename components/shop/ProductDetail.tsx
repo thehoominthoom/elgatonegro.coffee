@@ -4,6 +4,7 @@ import { useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import Image from "next/image";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
+import { getMetafieldValues } from "@/lib/shopify/utils";
 import { VariantSelector } from "./VariantSelector";
 import { AddToCartButton } from "./AddToCartButton";
 
@@ -22,6 +23,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const images = product.images.nodes;
   const activeImage = images[activeImageIndex] ?? product.featuredImage;
+
+  const roastValues = getMetafieldValues(product.roastLevel);
+  const flavorValues = getMetafieldValues(product.flavorNotes);
+  const countryValues = getMetafieldValues(product.country);
 
   function handleVariantSelect(variant: ProductVariant) {
     setSelectedVariant(variant);
@@ -107,24 +112,24 @@ export function ProductDetail({ product }: ProductDetailProps) {
         />
 
         {/* Coffee specs */}
-        {(product.roastLevel || product.flavorNotes || product.country) && (
+        {(roastValues.length > 0 || flavorValues.length > 0 || countryValues.length > 0) && (
           <div className="border border-brand-black/10 divide-y divide-brand-black/10">
-            {product.roastLevel && (
+            {roastValues[0] && (
               <div className="flex justify-between px-4 py-3">
                 <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Roast</span>
-                <span className="font-sans text-sm font-extrabold text-brand-black">{product.roastLevel.value}</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{roastValues[0]}</span>
               </div>
             )}
-            {product.flavorNotes && (
+            {flavorValues.length > 0 && (
               <div className="flex justify-between px-4 py-3">
                 <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Flavor Notes</span>
-                <span className="font-sans text-sm font-extrabold text-brand-black">{product.flavorNotes.value}</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{flavorValues.join(", ")}</span>
               </div>
             )}
-            {product.country && (
+            {countryValues[0] && (
               <div className="flex justify-between px-4 py-3">
                 <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Origin</span>
-                <span className="font-sans text-sm font-extrabold text-brand-black">{product.country.value}</span>
+                <span className="font-sans text-sm font-extrabold text-brand-black">{countryValues[0]}</span>
               </div>
             )}
           </div>

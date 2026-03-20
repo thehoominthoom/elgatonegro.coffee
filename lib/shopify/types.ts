@@ -33,9 +33,15 @@ export interface ProductVariant {
 
 // ─── Metafield ───────────────────────────────────────────────────────────────
 
-export interface Metafield {
-  value: string;
-  type: string;
+export interface MetafieldReference {
+  handle: string;
+  field: { value: string } | null;
+}
+
+export interface MetafieldWithReferences {
+  references: {
+    nodes: MetafieldReference[];
+  };
 }
 
 // ─── Product ──────────────────────────────────────────────────────────────────
@@ -60,9 +66,9 @@ export interface Product {
   }>;
   tags: string[];
   vendor: string;
-  roastLevel: Metafield | null;
-  flavorNotes: Metafield | null;
-  country: Metafield | null;
+  roastLevel: MetafieldWithReferences | null;
+  flavorNotes: MetafieldWithReferences | null;
+  country: MetafieldWithReferences | null;
 }
 
 // ─── Collection ───────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
-import { formatMoney, hasPriceRange } from "@/lib/shopify/utils";
+import { formatMoney, hasPriceRange, getMetafieldValues } from "@/lib/shopify/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +11,8 @@ export function ProductCard({ product }: ProductCardProps) {
   const { handle, title, featuredImage, priceRange, vendor, roastLevel, flavorNotes } = product;
   const { minVariantPrice, maxVariantPrice } = priceRange;
   const showRange = hasPriceRange(minVariantPrice, maxVariantPrice);
+  const roastValues = getMetafieldValues(roastLevel);
+  const flavorValues = getMetafieldValues(flavorNotes);
 
   return (
     <Link
@@ -51,16 +53,16 @@ export function ProductCard({ product }: ProductCardProps) {
             formatMoney(minVariantPrice)
           )}
         </p>
-        {(roastLevel || flavorNotes) && (
+        {(roastValues.length > 0 || flavorValues.length > 0) && (
           <div className="flex flex-wrap gap-1.5 mt-2">
-            {roastLevel && (
+            {roastValues[0] && (
               <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-black/50 border border-brand-black/10 px-1.5 py-0.5">
-                {roastLevel.value}
+                {roastValues[0]}
               </span>
             )}
-            {flavorNotes && (
+            {flavorValues.length > 0 && (
               <span className="font-sans text-[10px] text-brand-black/50 px-1.5 py-0.5 line-clamp-1">
-                {flavorNotes.value}
+                {flavorValues.join(", ")}
               </span>
             )}
           </div>
