@@ -6,7 +6,7 @@ import {
   getCollectionByHandle,
   getAllCollections,
 } from "@/lib/shopify/storefront";
-import { ProductCard } from "@/components/shop/ProductCard";
+import { CollectionGrid } from "@/components/shop/CollectionGrid";
 
 export const revalidate = 3600;
 
@@ -89,17 +89,7 @@ export default async function CollectionPage({
       {/* ── Product grid ────────────────────────────────────────── */}
       <section className="px-4 md:px-6 pb-16">
         <div className="mx-auto max-w-7xl">
-          {products.length === 0 ? (
-            <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
-              No products in this collection yet.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-brand-black/10">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+          <CollectionGrid products={products} />
         </div>
       </section>
     </main>

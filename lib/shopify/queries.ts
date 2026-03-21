@@ -45,6 +45,7 @@ const PRODUCT_FRAGMENT = `
     id
     handle
     title
+    createdAt
     availableForSale
     description
     descriptionHtml
