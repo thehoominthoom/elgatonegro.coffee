@@ -15,7 +15,7 @@ const securityHeaders = [
       // Fonts: self + Google Fonts (if used) + Clerk
       "font-src 'self' data: https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee",
       // Connect: self + APIs
-      "connect-src 'self' https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee https://*.clerk.com https://challenges.cloudflare.com https://maps.googleapis.com https://*.shopify.com https://cdn.sanity.io https://vercel.live",
+      "connect-src 'self' https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee https://*.clerk.com https://challenges.cloudflare.com https://maps.googleapis.com https://*.shopify.com https://cdn.sanity.io https://*.api.sanity.io https://vercel.live",
       // Frames: Turnstile + Clerk
       "frame-src https://challenges.cloudflare.com https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee",
       // Workers: Clerk uses blob workers
