@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/about/crew_in_front_of_cart_exchange-260110.jpg",
+        url: "/images/about/crew_in_front_of_cart_exchange-260110.webp",
         width: 1200,
         height: 630,
         alt: "El Gato Negro Coffee crew in front of the cart",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "About — El Gato Negro Coffee",
     description:
       "San Antonio mobile coffee cart. Specialty espresso, bold energy, community first.",
-    images: ["/images/about/crew_in_front_of_cart_exchange-260110.jpg"],
+    images: ["/images/about/crew_in_front_of_cart_exchange-260110.webp"],
   },
 };
 
@@ -39,14 +39,14 @@ const team = [
     name: "Juan",
     role: "The Coffee Guy",
     bio: "Runs the carts, pulls the shots, and sets the standard for every cup that goes out. Juan built EGN from the ground up — hands-on, no shortcuts, no compromise on the product.",
-    image: "/images/about/juan_grinding_coffee_from_low_exchange-260110.jpg",
+    image: "/images/about/juan_grinding_coffee_from_low_exchange-260110.webp",
     imageAlt: "Juan grinding coffee",
   },
   {
     name: "Phil",
     role: "The Brand Guy",
     bio: "Runs the website, the brand, and the business side. Phil brings the design eye, the tech backbone, and the strategy that keeps EGN moving forward.",
-    image: "/images/about/phil_steaming_milk_from_low_exchange-260110.jpg",
+    image: "/images/about/phil_steaming_milk_from_low_exchange-260110.webp",
     imageAlt: "Phil steaming milk",
   },
 ];
@@ -86,7 +86,7 @@ export default function AboutPage() {
       {/* ── 1. Hero — Full-viewport image + massive type ──────────────── */}
       <section className="relative w-full h-screen min-h-[600px] overflow-hidden -mt-44 md:-mt-36">
         <Image
-          src="/images/about/crew_in_front_of_cart_exchange-260110.jpg"
+          src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
           alt="El Gato Negro crew in front of the coffee cart"
           fill
           priority
@@ -176,7 +176,7 @@ export default function AboutPage() {
               {/* Inset image — hidden on tablet, visible on mobile + desktop */}
               <div className="block md:hidden lg:block relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
-                  src="/images/about/phil_and_juan_making_coffee_exchange-260110.jpg"
+                  src="/images/about/phil_and_juan_making_coffee_exchange-260110.webp"
                   alt="Phil and Juan making coffee at an event"
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
@@ -189,7 +189,7 @@ export default function AboutPage() {
             <div className="md:col-span-7 order-1 md:order-2">
               <div className="relative aspect-[3/4] md:aspect-[3/5] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
-                  src="/images/hero/juan-stamping-cups.jpg"
+                  src="/images/hero/juan-stamping-cups.webp"
                   alt="El Gato Negro branded cups lined up on a counter"
                   fill
                   sizes="(max-width: 768px) 100vw, 58vw"

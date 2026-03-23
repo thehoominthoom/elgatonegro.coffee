@@ -360,7 +360,7 @@ export default async function Home() {
       <section className="relative bg-brand-black py-14 md:py-20 overflow-hidden">
         {/* Background image */}
         <Image
-          src="/images/hero/juan-stamping-cups.jpg"
+          src="/images/hero/juan-stamping-cups.webp"
           alt=""
           fill
           sizes="100vw"
