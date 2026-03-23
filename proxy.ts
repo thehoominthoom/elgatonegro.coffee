@@ -35,6 +35,12 @@ async function handleAdminRequest(
     // Protect all other admin routes — redirects unauthenticated users to sign-in
     await auth.protect();
 
+    // Studio lives at app/(admin)/studio/ — route group doesn't affect URL,
+    // so /studio resolves directly without the /admin rewrite
+    if (pathname.startsWith('/studio')) {
+      return NextResponse.next();
+    }
+
     // Rewrite admin subdomain to the (admin) route group
     const url = clerkReq.nextUrl.clone();
     url.pathname = `/admin${pathname === '/' ? '' : pathname}`;
