@@ -126,12 +126,12 @@
 }
 
 @utility photo-treatment {
-  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.04em);
+  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.028em);
 }
 
 /* Lighter blur for small images (product cards, thumbnails) */
 @utility photo-treatment-sm {
-  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.02em);
+  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.014em);
 }
 
 @layer utilities {
@@ -223,12 +223,12 @@
 /* ── Print-media blur ──────────────────────────────────────────────────────── */
 /* Editorial blur on block-level text for cohesive print feel */
 :where(h1, h2, h3, h4, h5, h6, p, a, blockquote, figcaption, li, dt, dd) {
-  filter: blur(0.4px);
+  filter: blur(0.28px);
 }
 
 /* Reduced blur for small text */
 :where(.text-xs, .text-\[11px\], .text-\[10px\], .text-\[9px\]) {
-  filter: blur(0.25px);
+  filter: blur(0.175px);
 }
 
 /* Exempt interactive/form elements */
