@@ -186,7 +186,7 @@ export default async function MenuPage() {
               className={
                 columns.length > 1
                   ? "grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-0"
-                  : "max-w-lg mx-auto"
+                  : "max-w-lg"
               }
             >
               {columns.map((column, colIdx) => (
