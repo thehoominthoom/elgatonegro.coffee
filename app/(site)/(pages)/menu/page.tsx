@@ -171,17 +171,9 @@ export default async function MenuPage() {
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
             What We Serve
           </p>
-          <h1
-            className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-            style={{ fontSize: "clamp(4rem, 15vw, 12rem)" }}
-          >
-            The
-            <br />
-            Menu.
+          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl uppercase text-brand-grey tracking-tight leading-[0.9]">
+            The Menu
           </h1>
-          <p className="font-accent text-lg md:text-2xl text-brand-grey/50 max-w-sm mt-8 -rotate-1">
-            Pulled to order. No drip. No shortcuts.
-          </p>
         </div>
       </section>
 
