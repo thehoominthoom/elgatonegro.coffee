@@ -39,8 +39,9 @@ const menuProductItem = defineArrayMember({
     defineField({
       name: "price",
       title: "Price",
+      description: "Leave blank for items without a price",
       type: "number",
-      validation: (Rule) => Rule.required().min(0),
+      validation: (Rule) => Rule.min(0),
     }),
   ],
   preview: {
@@ -145,18 +146,19 @@ const menuDivider = defineArrayMember({
   name: "menuDivider",
   title: "Divider Line",
   type: "object",
+  description: "A horizontal divider between menu sections",
   fields: [
     defineField({
       name: "placeholder",
-      title: "Divider",
+      title: "Visual divider line (no editing needed)",
       type: "string",
+      initialValue: "\u2014",
       readOnly: true,
-      hidden: true,
     }),
   ],
   preview: {
     prepare() {
-      return { title: "── Divider ──" };
+      return { title: "\u2500\u2500 Divider \u2500\u2500" };
     },
   },
 });
@@ -165,13 +167,14 @@ const menuColumnBreak = defineArrayMember({
   name: "menuColumnBreak",
   title: "Column Break",
   type: "object",
+  description: "Splits the menu into a new column at this point",
   fields: [
     defineField({
       name: "placeholder",
-      title: "Column Break",
+      title: "Column break marker (no editing needed)",
       type: "string",
+      initialValue: "\u2B05 Column Break \u27A1",
       readOnly: true,
-      hidden: true,
     }),
   ],
   preview: {
