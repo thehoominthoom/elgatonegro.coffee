@@ -42,14 +42,14 @@ export function ProductDetail({ product }: ProductDetailProps) {
       {/* ── Left: Images ───────────────────────────────────────── */}
       <div className="space-y-3">
         {/* Main image */}
-        <div className="aspect-square bg-brand-black/5 overflow-hidden">
+        <div className="relative aspect-square bg-brand-black/5 overflow-hidden grain-overlay rounded-sm">
           {activeImage ? (
             <Image
               src={activeImage.url}
               alt={activeImage.altText ?? product.title}
               width={800}
               height={800}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover photo-treatment"
               priority
             />
           ) : (
@@ -66,7 +66,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 onClick={() => setActiveImageIndex(i)}
                 aria-label={`View image ${i + 1}`}
                 className={[
-                  "shrink-0 w-16 h-16 overflow-hidden border-2 transition-colors",
+                  "relative shrink-0 w-16 h-16 overflow-hidden border-2 transition-colors rounded-sm",
                   i === activeImageIndex
                     ? "border-brand-orange"
                     : "border-transparent hover:border-brand-black/30",
@@ -77,7 +77,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                   alt={img.altText ?? `${product.title} ${i + 1}`}
                   width={64}
                   height={64}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover photo-treatment-sm"
                 />
               </button>
             ))}
@@ -89,7 +89,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
       <div className="space-y-6">
         {/* Vendor / eyebrow */}
         {product.vendor && (
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/40">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60">
             {product.vendor}
           </p>
         )}
@@ -99,7 +99,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
         </h1>
 
         {!product.availableForSale && (
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-red-600">
+          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-orange">
             Currently Sold Out
           </p>
         )}
@@ -119,22 +119,22 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
         {/* Coffee specs */}
         {(roastValues.length > 0 || flavorValues.length > 0 || countryValues.length > 0) && (
-          <div className="border border-brand-black/10 divide-y divide-brand-black/10">
+          <div className="border border-brand-black/10 divide-y divide-brand-black/10 rounded-sm">
             {roastValues[0] && (
               <div className="flex justify-between px-4 py-3">
-                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Roast</span>
+                <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">Roast</span>
                 <span className="font-sans text-sm font-extrabold text-brand-black">{roastValues[0]}</span>
               </div>
             )}
             {flavorValues.length > 0 && (
               <div className="flex justify-between px-4 py-3">
-                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Flavor Notes</span>
+                <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">Flavor Notes</span>
                 <span className="font-sans text-sm font-extrabold text-brand-black">{flavorValues.join(", ")}</span>
               </div>
             )}
             {countryValues[0] && (
               <div className="flex justify-between px-4 py-3">
-                <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/40">Origin</span>
+                <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">Origin</span>
                 <span className="font-sans text-sm font-extrabold text-brand-black">{countryValues[0]}</span>
               </div>
             )}
@@ -144,13 +144,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
         {/* Description */}
         {product.descriptionHtml ? (
           <div
-            className="font-sans text-sm leading-relaxed text-brand-black/70 prose prose-sm max-w-none"
+            className="font-sans text-base leading-[1.7] text-brand-black/60 prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(product.descriptionHtml),
             }}
           />
         ) : product.description ? (
-          <p className="font-sans text-sm leading-relaxed text-brand-black/70">
+          <p className="font-sans text-base leading-[1.7] text-brand-black/60">
             {product.description}
           </p>
         ) : null}

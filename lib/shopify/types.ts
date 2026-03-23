@@ -71,6 +71,7 @@ export interface Product {
   roastLevel: MetafieldWithReferences | null;
   flavorNotes: MetafieldWithReferences | null;
   country: MetafieldWithReferences | null;
+  collections: { nodes: { handle: string; title: string }[] };
 }
 
 // ─── Collection ───────────────────────────────────────────────────────────────

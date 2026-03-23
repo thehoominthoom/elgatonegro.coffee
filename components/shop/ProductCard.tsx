@@ -18,30 +18,30 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/shop/products/${handle}`}
-      className="group block bg-brand-grey border border-brand-black/10 hover:border-brand-black/30 transition-colors"
+      className="group block bg-brand-grey rounded-sm overflow-hidden"
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-brand-black/5">
+      <div className="relative aspect-square overflow-hidden bg-brand-black/5 grain-overlay-sm">
         {featuredImage ? (
           <Image
             src={featuredImage.url}
             alt={featuredImage.altText ?? title}
             width={600}
             height={600}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className="w-full h-full object-cover photo-treatment-sm group-hover:scale-[1.03] transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full bg-brand-black/10" />
         )}
         {soldOut && (
-          <span className="absolute top-2 right-2 font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1">
+          <span className="absolute top-2 right-2 z-[3] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1 rounded-sm">
             Sold Out
           </span>
         )}
       </div>
 
       {/* Meta */}
-      <div className="px-4 py-4 border-t border-brand-black/10">
+      <div className="px-4 py-4">
         {vendor && (
           <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40 mb-1">
             {vendor}
@@ -62,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {(roastValues.length > 0 || flavorValues.length > 0) && (
           <div className="flex flex-wrap gap-1.5 mt-2">
             {roastValues[0] && (
-              <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-black/50 border border-brand-black/10 px-1.5 py-0.5">
+              <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-brand-black/50 border border-brand-black/10 px-1.5 py-0.5 rounded-sm">
                 {roastValues[0]}
               </span>
             )}

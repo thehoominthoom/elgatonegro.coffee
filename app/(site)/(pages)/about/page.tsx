@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero/hero-barista_roasting.webp",
+        url: "/images/about/crew_in_front_of_cart_exchange-260110.jpg",
         width: 1200,
         height: 630,
-        alt: "El Gato Negro Coffee — barista roasting",
+        alt: "El Gato Negro Coffee crew in front of the cart",
       },
     ],
   },
@@ -28,173 +28,261 @@ export const metadata: Metadata = {
     title: "About — El Gato Negro Coffee",
     description:
       "San Antonio mobile coffee cart. Specialty espresso, bold energy, community first.",
-    images: ["/images/hero/hero-barista_roasting.webp"],
+    images: ["/images/about/crew_in_front_of_cart_exchange-260110.jpg"],
   },
 };
 
-// ── Team data ────────────────────────────────────────────────────────────────
+// ── Data ──────────────────────────────────────────────────────────────────────
 
 const team = [
   {
     name: "Juan",
     role: "The Coffee Guy",
     bio: "Runs the carts, pulls the shots, and sets the standard for every cup that goes out. Juan built EGN from the ground up — hands-on, no shortcuts, no compromise on the product.",
+    image: "/images/about/juan_grinding_coffee_from_low_exchange-260110.jpg",
+    imageAlt: "Juan grinding coffee",
   },
   {
     name: "Phil",
     role: "The Brand Guy",
     bio: "Runs the website, the brand, and the business side. Phil brings the design eye, the tech backbone, and the strategy that keeps EGN moving forward.",
+    image: "/images/about/phil_steaming_milk_from_low_exchange-260110.jpg",
+    imageAlt: "Phil steaming milk",
   },
 ];
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+const approach = [
+  {
+    eyebrow: "We Come To You",
+    title: "Mobile First",
+    description:
+      "We come to you. Weddings, conventions, pop-ups, corporate events — wherever people gather, we set up and serve specialty espresso on site.",
+  },
+  {
+    eyebrow: "No Shortcuts",
+    title: "Specialty Coffee",
+    description:
+      "No drip machines. No shortcuts. Every drink is pulled, poured, and made to order by someone who knows what they are doing and cares about the result.",
+  },
+  {
+    eyebrow: "Beyond the Cup",
+    title: "Event Service",
+    description:
+      "We do not just show up with a cart. We work with organizers to match the energy, the branding, and the flow of the event. Coffee is the product. Experience is the point.",
+  },
+  {
+    eyebrow: "San Antonio Built Us",
+    title: "Community Roots",
+    description:
+      "San Antonio built us. We show up for local events, support the community, and keep the relationships that matter close. This is not a franchise play. This is home.",
+  },
+];
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
   return (
     <>
-      {/* ── 1. Hero ──────────────────────────────────────────────────── */}
-      <section className="relative bg-brand-black grain-overlay overflow-hidden">
+      {/* ── 1. Hero — Full-viewport image + massive type ──────────────── */}
+      <section className="relative w-full h-screen min-h-[600px] overflow-hidden -mt-44 md:-mt-36">
         <Image
-          src="/images/hero/hero-barista_roasting.webp"
-          alt="El Gato Negro barista at work"
+          src="/images/about/crew_in_front_of_cart_exchange-260110.jpg"
+          alt="El Gato Negro crew in front of the coffee cart"
           fill
           priority
-          className="object-cover opacity-30"
           sizes="100vw"
+          className="object-cover photo-treatment"
         />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.3em] text-brand-orange mb-4">
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-brand-black/40 to-brand-black/30" />
+        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+
+        <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             About EGN
           </p>
-          <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tight text-brand-grey max-w-3xl">
-            Not Your Average Coffee Cart
+          <h1
+            className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
+            style={{ fontSize: "clamp(3.5rem, 15vw, 14rem)" }}
+          >
+            Not Your
+            <br />
+            Average
+            <br />
+            Coffee
+            <br />
+            Cart.
           </h1>
-          <p className="font-sans text-lg md:text-xl text-brand-grey/70 max-w-xl mt-6 leading-relaxed">
+          <p className="font-sans text-lg md:text-xl text-brand-grey/70 max-w-md leading-relaxed mt-6">
             Bold espresso. Bolder energy. We bring specialty coffee to the
-            events, communities, and moments that matter most in San Antonio.
+            events, communities, and moments that matter most.
           </p>
         </div>
       </section>
 
-      {/* ── 2. The Story ─────────────────────────────────────────────── */}
-      <section className="bg-brand-grey py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="max-w-3xl">
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-4">
+      {/* ── 2. Story — Magazine spread ─────────────────────────────────── */}
+      <section className="relative bg-brand-black overflow-hidden">
+        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
+          {/* Mobile-only heading above grid */}
+          <div className="md:hidden mb-8">
+            <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
               Our Story
             </p>
-            <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-black tracking-tight mb-8">
-              How It Started
+            <h2 className="font-display font-bold text-3xl uppercase text-brand-grey tracking-tight leading-[0.9]">
+              How It
+              <br />
+              Started
             </h2>
-            <div className="space-y-6 font-sans text-base leading-relaxed text-brand-black/80">
-              <p>
-                El Gato Negro started the way most good things do — two guys who
-                were tired of seeing the same watered-down coffee at every event
-                in town. No personality. No craft. Just brown liquid in a
-                styrofoam cup and a line of people who deserved better.
-              </p>
-              <p>
-                So we built a cart. Then we built another one. We showed up at
-                pop-ups, weddings, brand activations, and conventions — anywhere
-                people gathered and needed something real in their hands. Not
-                just a drink. An experience that matched the energy of whatever
-                was happening around it.
-              </p>
-              <p>
-                EGN is San Antonio through and through. The name, the look, the
-                attitude — it all comes from here. We pull from skate culture,
-                Mexican cowboy roots, and a deep belief that coffee should hit
-                different when it is made by people who actually care.
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 items-center">
+            {/* Left column — text + inset image */}
+            <div className="md:col-span-5 order-2 md:order-1">
+              {/* Desktop heading */}
+              <div className="hidden md:block mb-10">
+                <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
+                  Our Story
+                </p>
+                <h2 className="font-display font-bold text-4xl lg:text-5xl xl:text-6xl uppercase text-brand-grey tracking-tight leading-[0.9]">
+                  How It
+                  <br />
+                  Started
+                </h2>
+              </div>
+
+              {/* Body text with orange left border */}
+              <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5 mb-10 md:mb-12">
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-grey/70">
+                  El Gato Negro started the way most good things do — two guys
+                  who were tired of seeing the same watered-down coffee at every
+                  event in town. No personality. No craft. Just brown liquid in a
+                  styrofoam cup and a line of people who deserved better.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-grey/70">
+                  So we built a cart. Then we built another one. We showed up at
+                  pop-ups, weddings, brand activations, and conventions — anywhere
+                  people gathered and needed something real in their hands. Not
+                  just a drink. An experience that matched the energy of whatever
+                  was happening around it.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-grey/70">
+                  EGN is San Antonio through and through. The name, the look, the
+                  attitude — it all comes from here. We pull from skate culture,
+                  Mexican cowboy roots, and a deep belief that coffee should hit
+                  different when it is made by people who actually care.
+                </p>
+              </div>
+
+              {/* Inset image — hidden on tablet, visible on mobile + desktop */}
+              <div className="block md:hidden lg:block relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
+                <Image
+                  src="/images/about/phil_and_juan_making_coffee_exchange-260110.jpg"
+                  alt="Phil and Juan making coffee at an event"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover photo-treatment-sm"
+                />
+              </div>
+            </div>
+
+            {/* Right column — dominant tall image */}
+            <div className="md:col-span-7 order-1 md:order-2">
+              <div className="relative aspect-[3/4] md:aspect-[3/5] overflow-hidden rounded-sm grain-overlay-sm">
+                <Image
+                  src="/images/hero/juan-stamping-cups.jpg"
+                  alt="El Gato Negro branded cups lined up on a counter"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 58vw"
+                  className="object-cover photo-treatment"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. Hellcat Logo Breakdown ──────────────────────────────────── */}
+      <section className="relative bg-brand-yellow overflow-hidden">
+        <div className="absolute inset-0 grain-overlay pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-12 md:mb-16">
+            The Mark
+          </p>
+
+          {/* Hellcat logo — large, centered */}
+          <div className="flex justify-center mb-16 md:mb-24">
+            <img
+              src="/brand/hellcat-color.svg"
+              alt="El Gato Negro Hellcat logo"
+              className="w-full max-w-xs md:max-w-md"
+            />
+          </div>
+
+          {/* Two-column: explanation + pull quote */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+            <div>
+              <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-black tracking-tight mb-6">
+                The Hellcat
+              </h2>
+              <div className="space-y-4 font-sans text-base leading-relaxed text-brand-black/70 max-w-lg">
+                <p>
+                  Born from 1980s skate graphics and the grit of Mexican cowboy
+                  culture. The hellcat is not a mascot — it is an attitude. It
+                  shows up on the cart, on the cups, on the merch. It is the mark
+                  that tells you this is not your average coffee experience.
+                </p>
+                <p>
+                  The name El Gato Negro — the black cat — carries superstition,
+                  rebellion, and a refusal to play it safe. That energy is baked
+                  into every detail of the brand.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <p className="font-accent text-2xl md:text-3xl text-brand-black leading-snug -rotate-2">
+                &ldquo;Skate culture. Mexican cowboy roots. A black cat with an
+                attitude problem.&rdquo;
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. Meet the Team ─────────────────────────────────────────── */}
-      <section className="bg-brand-black grain-overlay py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.3em] text-brand-yellow mb-4">
+      {/* ── 4. Meet the Team — Editorial cards ─────────────────────────── */}
+      <section className="bg-brand-grey grain-overlay py-20 md:py-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-3">
             The People
           </p>
-          <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-grey tracking-tight mb-12">
+          <h2 className="font-display font-bold text-5xl md:text-7xl uppercase text-brand-black tracking-tight leading-[0.9] mb-14 md:mb-20">
             Meet the Team
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-grey/10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8">
             {team.map((member) => (
-              <div
-                key={member.name}
-                className="bg-brand-black p-8 md:p-12"
-              >
-                {/* Placeholder avatar */}
-                <div className="w-24 h-24 bg-brand-orange/20 border-2 border-brand-orange mb-6 flex items-center justify-center">
-                  <span className="font-display text-3xl font-bold uppercase text-brand-orange">
-                    {member.name[0]}
-                  </span>
+              <div key={member.name}>
+                {/* Team photo */}
+                <div className="relative aspect-[3/4] overflow-hidden grain-overlay-sm rounded-sm">
+                  <Image
+                    src={member.image}
+                    alt={member.imageAlt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover photo-treatment"
+                  />
                 </div>
 
-                <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-2">
+                <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mt-6 mb-2">
                   {member.role}
                 </p>
-                <h3 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-grey mb-4">
+                <h3 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-black tracking-tight mb-4">
                   {member.name}
                 </h3>
-                <p className="font-sans text-sm leading-relaxed text-brand-grey/70 max-w-md">
+                <p className="font-sans text-base md:text-lg leading-relaxed text-brand-black/70 max-w-md border-l-2 border-brand-orange pl-6">
                   {member.bio}
                 </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. Our Approach ──────────────────────────────────────────── */}
-      <section className="bg-brand-grey py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="border-b-2 border-brand-black pb-10 md:pb-16 mb-12">
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-4">
-              What Makes Us Different
-            </p>
-            <h2 className="font-display font-bold text-4xl md:text-5xl uppercase text-brand-black tracking-tight">
-              Our Approach
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-brand-black">
-            {[
-              {
-                title: "Mobile First",
-                description:
-                  "We come to you. Weddings, conventions, pop-ups, corporate events — wherever people gather, we set up and serve specialty espresso on site.",
-              },
-              {
-                title: "Specialty Coffee",
-                description:
-                  "No drip machines. No shortcuts. Every drink is pulled, poured, and made to order by someone who knows what they are doing and cares about the result.",
-              },
-              {
-                title: "Event Service",
-                description:
-                  "We do not just show up with a cart. We work with organizers to match the energy, the branding, and the flow of the event. Coffee is the product. Experience is the point.",
-              },
-              {
-                title: "Community Roots",
-                description:
-                  "San Antonio built us. We show up for local events, support the community, and keep the relationships that matter close. This is not a franchise play. This is home.",
-              },
-            ].map((item, i) => (
-              <div
-                key={item.title}
-                className={`p-8 md:p-10 border-brand-black ${
-                  i % 2 === 0 ? "md:border-r-2" : ""
-                } ${i < 2 ? "border-b-2" : ""}`}
-              >
-                <h3 className="font-display font-bold text-xl uppercase tracking-tight text-brand-black mb-4">
-                  {item.title}
-                </h3>
-                <p className="font-sans text-sm leading-relaxed text-brand-black/70 max-w-md">
-                  {item.description}
+                <p className="font-accent text-lg text-brand-orange mt-4">
+                  — {member.name}
                 </p>
               </div>
             ))}
@@ -202,20 +290,65 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 5. CTA ───────────────────────────────────────────────────── */}
-      <section className="bg-brand-orange py-16 md:py-20 border-t-2 border-brand-black">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* ── 5. Our Approach — Stacked editorial strips ─────────────────── */}
+      <section className="relative bg-brand-black overflow-hidden">
+        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-yellow mb-3">
+            What Drives Us
+          </p>
+          <h2 className="font-display font-bold text-5xl md:text-7xl lg:text-8xl uppercase text-brand-grey tracking-tight leading-[0.9] mb-14 md:mb-20">
+            Our Approach
+          </h2>
+
           <div>
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/70 mb-2">
-              Like What You See?
-            </p>
-            <h2 className="font-display font-bold text-3xl md:text-4xl uppercase text-brand-black tracking-tight">
-              Let&apos;s bring the cart to your event.
-            </h2>
+            {approach.map((item, i) => (
+              <div
+                key={item.title}
+                className={[
+                  "relative py-7 md:py-9 border-b border-dashed border-brand-grey/10",
+                  i === 0
+                    ? "border-t border-dashed border-brand-grey/10"
+                    : "",
+                ].join(" ")}
+              >
+                {/* Faded index number */}
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 right-4 md:right-6 font-display font-bold text-[15vw] md:text-[10vw] lg:text-[8vw] leading-none text-brand-grey/[0.04] select-none pointer-events-none tabular-nums text-left"
+                  style={{ width: "2ch" }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {/* Content */}
+                <div className="relative z-10">
+                  <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-green mb-3">
+                    {item.eyebrow}
+                  </p>
+                  <h3 className="font-display font-bold text-2xl md:text-3xl uppercase text-brand-grey tracking-tight mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="font-sans text-sm leading-relaxed text-brand-grey/60 max-w-xl">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── 6. CTA — Flat orange with grain ────────────────────────────── */}
+      <section className="bg-brand-orange grain-overlay">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
+          <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-4 md:mb-6">
+            Like What You See?
+          </p>
+          <h2 className="font-display font-bold text-4xl md:text-6xl lg:text-7xl uppercase text-brand-black tracking-tight leading-[0.95] max-w-3xl mb-10 md:mb-12">
+            Let&apos;s bring the cart to your event.
+          </h2>
           <Link
             href="/inquiry"
-            className="group shrink-0 inline-flex items-center gap-2 bg-brand-black text-brand-grey font-display font-bold uppercase tracking-[0.1em] text-sm px-8 py-4 border-2 border-brand-black hover:bg-transparent hover:text-brand-black transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-black active:scale-[0.98] whitespace-nowrap"
+            className="group inline-flex items-center gap-3 bg-brand-black text-brand-grey font-display font-bold uppercase tracking-[0.1em] text-sm px-8 py-4 md:px-10 md:py-5 rounded-sm hover:bg-brand-orange transition-colors duration-300"
           >
             Start Your Inquiry
             <ArrowRight

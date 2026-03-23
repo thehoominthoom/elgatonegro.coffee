@@ -23,7 +23,7 @@ interface FooterColumnProps {
 function FooterColumn({ title, links }: FooterColumnProps) {
   return (
     <div>
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-brand-yellow mb-3">
+      <h3 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-yellow mb-3">
         {title}
       </h3>
       <ul className="space-y-2">

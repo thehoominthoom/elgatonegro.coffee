@@ -27,11 +27,11 @@ export default async function ShopPage() {
   }
 
   return (
-    <main className="min-h-screen bg-brand-grey">
+    <main className="min-h-screen bg-brand-grey grain-overlay">
       {/* ── Header ──────────────────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
-        <div className="mx-auto max-w-7xl border-b-2 border-brand-black pb-10 md:pb-16">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.3em] text-brand-black/50 mb-2">
+      <section className="px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
+        <div className="mx-auto max-w-7xl relative z-10 border-b-2 border-brand-black pb-10 md:pb-16">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-2">
             El Gato Negro
           </p>
           <h1 className="font-display font-bold text-5xl md:text-7xl uppercase tracking-tight text-brand-black">
@@ -45,13 +45,13 @@ export default async function ShopPage() {
 
       {/* ── Collections grid ────────────────────────────────────── */}
       <section className="px-4 md:px-6 pb-16">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl relative z-10">
           {collections.length === 0 ? (
             <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
               Coming soon.
             </p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-black/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {collections.map((collection) => (
                 <CollectionCard key={collection.id} collection={collection} />
               ))}
@@ -73,27 +73,27 @@ function CollectionCard({
   return (
     <Link
       href={`/shop/collections/${collection.handle}`}
-      className="group block bg-brand-grey overflow-hidden"
+      className="group block bg-brand-grey overflow-hidden rounded-sm"
     >
       {/* Image */}
-      <div className="aspect-[4/3] overflow-hidden bg-brand-black/5 relative">
+      <div className="aspect-[4/3] overflow-hidden bg-brand-black/5 relative grain-overlay-sm">
         {collection.image ? (
           <Image
             src={collection.image.url}
             alt={collection.image.altText ?? collection.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className="object-cover photo-treatment-sm group-hover:scale-[1.03] transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full bg-brand-black/10 grain-overlay" />
+          <div className="w-full h-full bg-brand-black/10 grain-overlay-sm" />
         )}
       </div>
 
       {/* Meta */}
-      <div className="px-6 py-5 flex items-center justify-between border-t border-brand-black/10">
+      <div className="px-5 py-4 flex items-center justify-between">
         <div>
-          <p className="font-sans font-extrabold text-sm uppercase tracking-[0.15em] text-brand-black">
+          <p className="font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-black">
             {collection.title}
           </p>
           {collection.description && (

@@ -69,6 +69,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
   useEffect(() => { Promise.resolve().then(() => setMounted(true)); }, []);
 
   const transitionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const goTo = useCallback(
     (index: number) => {
@@ -101,6 +102,27 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
     [current, slides.length, goTo]
   );
 
+  const previous = useCallback(
+    () => goTo((current - 1 + slides.length) % slides.length),
+    [current, slides.length, goTo]
+  );
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      if (touchStartX.current === null || transitionRef.current) return;
+      const delta = touchStartX.current - e.changedTouches[0].clientX;
+      touchStartX.current = null;
+      if (Math.abs(delta) < 50) return;
+      if (delta > 0) next();
+      else previous();
+    },
+    [next, previous]
+  );
+
   // Auto-advance
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -120,7 +142,11 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
   const slide = slides[current];
 
   return (
-    <section className="relative min-h-[100svh] bg-brand-black overflow-hidden">
+    <section
+      className="relative min-h-[100svh] bg-brand-black overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background images — 3-phase crossfade */}
       {slides.map((s, i) => {
         const isCurrent  = i === current;
@@ -159,7 +185,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               alt=""
               fill
               sizes="100vw"
-              className="object-cover object-center"
+              className="object-cover object-center photo-treatment"
               priority={i === 0}
               loading={i === 0 ? undefined : "lazy"}
             />
@@ -168,18 +194,28 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       })}
 
       {/* Overlays — z-[2] sits above images (max z:1) and below content (z-10) */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/30 to-transparent" />
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent" />
       <div className="absolute inset-0 z-[2] bg-gradient-to-r from-brand-black/50 to-transparent" />
-      <div className="absolute inset-0 z-[2] grain-overlay opacity-30" />
+      <div className="absolute inset-0 z-[20] grain-overlay-dark pointer-events-none" style={{ opacity: 0.85 }} />
 
       {/* Content */}
-      <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 max-w-7xl mx-auto w-full">
+      <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Content block — per-element staggered animation, no key remount */}
-        <div className="w-full [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]">
+        <div className="w-full [filter:blur(0.5px)]">
+
+          {/* Happening Now badge */}
+          {slide.isHappeningNow && (
+            <span
+              className="bg-brand-yellow text-brand-black px-3 py-1 rounded-sm font-accent text-sm md:text-base -rotate-2 inline-block mb-3"
+              style={textAnim(transitioning, "happeningNow", mounted)}
+            >
+              Happening Now
+            </span>
+          )}
 
           {/* Event type tag */}
           <p
-            className="font-sans font-extrabold text-sm uppercase tracking-[0.35em] text-brand-orange mb-4"
+            className="font-accent text-base md:text-lg uppercase tracking-[0.1em] text-brand-orange mb-3"
             style={textAnim(transitioning, "typeTag", mounted)}
           >
             {slide.type === "ticketed"
@@ -195,24 +231,11 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                       : "We're Serving"}
           </p>
 
-          {/* Happening Now badge */}
-          {slide.isHappeningNow && (
-            <div
-              className="flex items-center gap-2 mb-4"
-              style={textAnim(transitioning, "happeningNow", mounted)}
-            >
-              <span className="w-2 h-2 rounded-full bg-brand-yellow animate-pulse" />
-              <span className="font-sans font-semibold text-sm uppercase tracking-[0.3em] text-brand-yellow">
-                Happening Now
-              </span>
-            </div>
-          )}
-
           {/* Title */}
           <h1
-            className="font-display font-bold text-brand-grey leading-none uppercase tracking-tight mb-6"
+            className="font-display font-bold text-brand-grey leading-none uppercase tracking-[-0.03em] mb-6"
             style={{
-              fontSize: "clamp(2.5rem, 7vw, 6rem)",
+              fontSize: "clamp(3rem, 12vw, 10rem)",
               ...textAnim(transitioning, "title", mounted),
             }}
           >
@@ -225,10 +248,10 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
           {/* Date + time + location */}
           <div
-            className="flex flex-col gap-1 mb-8"
+            className="flex flex-col gap-1 mb-8 pl-3 border-l-2 border-brand-orange/40"
             style={textAnim(transitioning, "dateMeta", mounted)}
           >
-            <span className="font-sans font-extrabold text-base uppercase tracking-[0.15em] text-brand-grey/80">
+            <span className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
               {slide.recurrenceLabel
                 ? `${slide.recurrenceLabel} · ${slide.dateRange}`
                 : slide.dateRange}
@@ -248,19 +271,19 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           {/* View Event */}
           <Link
             href={slide.href}
-            className="group inline-flex items-center gap-2 font-sans font-extrabold text-sm uppercase tracking-[0.2em] text-brand-grey border-b border-brand-grey/30 hover:border-brand-grey pb-1 transition-colors"
+            className="group inline-flex items-center gap-3 bg-brand-orange text-brand-grey px-8 py-3.5 rounded-sm font-display font-bold text-sm uppercase tracking-[0.1em] hover:bg-brand-yellow transition-colors"
             style={textAnim(transitioning, "viewEvent", mounted)}
           >
             View Event
             <ArrowRight
-              size={14}
+              size={16}
               className="transition-transform group-hover:translate-x-1"
             />
           </Link>
 
-          {/* Segmented pill indicators — outside stagger, update instantly */}
+          {/* Segmented pill indicators */}
           {slides.length > 1 && (
-            <div className="flex items-center gap-[3px] mt-4">
+            <div className="flex items-center gap-[3px] mt-6">
               {slides.map((_, i) => {
                 const isActive = i === current;
                 return (
@@ -268,23 +291,27 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                     key={i}
                     onClick={() => goTo(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    className={[
-                      "overflow-hidden transition-all duration-500 [transition-timing-function:cubic-bezier(0.35,0.15,0.02,0.99)]",
-                      isActive
-                        ? "w-8 h-2 rounded-full bg-brand-grey/30"
-                        : "w-2 h-2 rounded-full bg-brand-grey/20",
-                    ].join(" ")}
+                    className="min-h-[44px] min-w-[44px] flex items-center justify-center"
                   >
                     <span
-                      key={isActive ? pillKey : i}
                       className={[
-                        "block h-full w-full bg-brand-orange [transform-origin:left]",
+                        "block overflow-hidden transition-all duration-500 [transition-timing-function:cubic-bezier(0.35,0.15,0.02,0.99)]",
                         isActive
-                          ? "[animation:pill-fill_6s_linear_0.46s_forwards]"
-                          : "",
+                          ? "w-8 h-2 rounded-full bg-brand-grey/30"
+                          : "w-2 h-2 rounded-full bg-brand-grey/20",
                       ].join(" ")}
-                      style={isActive ? undefined : { transform: "scaleX(0)" }}
-                    />
+                    >
+                      <span
+                        key={isActive ? pillKey : i}
+                        className={[
+                          "block h-full w-full bg-brand-orange [transform-origin:left]",
+                          isActive
+                            ? "[animation:pill-fill_6s_linear_0.46s_forwards]"
+                            : "",
+                        ].join(" ")}
+                        style={isActive ? undefined : { transform: "scaleX(0)" }}
+                      />
+                    </span>
                   </button>
                 );
               })}
@@ -292,6 +319,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           )}
         </div>
       </div>
+
     </section>
   );
 }

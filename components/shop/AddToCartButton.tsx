@@ -27,13 +27,13 @@ export function AddToCartButton({
       disabled={disabled}
       className={[
         "w-full flex items-center justify-center gap-3",
-        "font-sans font-extrabold text-sm uppercase tracking-[0.15em]",
-        "py-4 transition-colors",
+        "font-display font-bold text-sm uppercase tracking-[0.1em]",
+        "py-4 rounded-sm transition-colors",
         !availableForSale
           ? "bg-brand-black/10 text-brand-black/40 cursor-not-allowed"
           : disabled
           ? "bg-brand-orange/50 text-brand-grey cursor-not-allowed"
-          : "bg-brand-orange text-brand-grey hover:bg-brand-yellow hover:text-brand-black",
+          : "bg-brand-orange text-brand-grey hover:bg-brand-yellow",
       ].join(" ")}
     >
       <ShoppingBag size={16} />

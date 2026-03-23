@@ -56,12 +56,12 @@ export default async function CollectionPage({
   const products = collection.products.nodes;
 
   return (
-    <main className="min-h-screen bg-brand-grey">
+    <main className="min-h-screen bg-brand-grey grain-overlay">
       {/* ── Header ──────────────────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-14">
-        <div className="mx-auto max-w-7xl">
+      <section className="px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-14">
+        <div className="mx-auto max-w-7xl relative z-10">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 font-sans text-xs text-brand-black/40 mb-6">
+          <nav className="flex items-center gap-2 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-6">
             <Link href="/shop" className="hover:text-brand-orange transition-colors flex items-center gap-1.5">
               <ArrowLeft size={12} />
               Shop
@@ -88,7 +88,7 @@ export default async function CollectionPage({
 
       {/* ── Product grid ────────────────────────────────────────── */}
       <section className="px-4 md:px-6 pb-16">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl relative z-10">
           <CollectionGrid products={products} />
         </div>
       </section>

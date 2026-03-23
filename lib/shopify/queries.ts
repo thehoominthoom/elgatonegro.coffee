@@ -113,6 +113,12 @@ const PRODUCT_FRAGMENT = `
         }
       }
     }
+    collections(first: 1) {
+      nodes {
+        handle
+        title
+      }
+    }
   }
 `;
 

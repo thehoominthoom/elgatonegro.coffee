@@ -1,18 +1,29 @@
 import type { Metadata } from "next";
-import { Arya, Open_Sans } from "next/font/google";
+import {
+  Barlow_Semi_Condensed,
+  Outfit,
+  Permanent_Marker,
+} from "next/font/google";
 import "./globals.css";
 
-const arya = Arya({
+const barlowSemiCondensed = Barlow_Semi_Condensed({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-arya",
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-barlow",
   display: "swap",
 });
 
-const openSans = Open_Sans({
+const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-open-sans",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const permanentMarker = Permanent_Marker({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-marker",
   display: "swap",
 });
 
@@ -30,7 +41,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${arya.variable} ${openSans.variable}`}>
+    <html lang="en" className={`${barlowSemiCondensed.variable} ${outfit.variable} ${permanentMarker.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
       </body>

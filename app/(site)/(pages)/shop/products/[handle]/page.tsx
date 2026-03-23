@@ -68,14 +68,25 @@ export default async function ProductPage({
   if (!product) notFound();
 
   return (
-    <main className="min-h-screen bg-brand-grey">
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-8 md:py-12">
+    <main className="min-h-screen bg-brand-grey grain-overlay">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-8 md:py-12 relative z-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-sans text-xs text-brand-black/40 mb-8">
+        <nav className="flex items-center gap-2 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-8">
           <Link href="/shop" className="hover:text-brand-orange transition-colors flex items-center gap-1.5">
             <ArrowLeft size={12} />
             Shop
           </Link>
+          {product.collections.nodes[0] && (
+            <>
+              <span>/</span>
+              <Link
+                href={`/shop/collections/${product.collections.nodes[0].handle}`}
+                className="hover:text-brand-orange transition-colors"
+              >
+                {product.collections.nodes[0].title}
+              </Link>
+            </>
+          )}
           <span>/</span>
           <span className="text-brand-black/60">{product.title}</span>
         </nav>

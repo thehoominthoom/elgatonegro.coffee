@@ -45,7 +45,7 @@ export function VariantSelector({
 
         return (
           <div key={optionName}>
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60 mb-3">
+            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-3">
               {optionName}
               {selectedVariant && (
                 <span className="ml-2 text-brand-black normal-case font-normal tracking-normal">
@@ -76,7 +76,7 @@ export function VariantSelector({
                     aria-pressed={isSelected}
                     aria-label={`${optionName}: ${value}${!isAvailable ? " — sold out" : ""}`}
                     className={[
-                      "px-4 py-2 font-sans font-extrabold text-xs uppercase tracking-wider border transition-colors",
+                      "px-4 py-2 font-sans font-extrabold text-xs uppercase tracking-wider border rounded-sm transition-colors",
                       isSelected
                         ? "bg-brand-black text-brand-grey border-brand-black"
                         : isAvailable

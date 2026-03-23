@@ -27,13 +27,14 @@ export function SiteHeader() {
       <header className="sticky top-0 z-50 bg-brand-grey border-b border-brand-black/10">
         <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 relative flex items-center">
           {/* Logo — left */}
-          <Link href="/" className="block shrink-0">
+          <Link href="/" className="block shrink-0 transition-transform duration-300 hover:scale-105">
             <Image
               src="/brand/wordmark-orange-hori.svg"
               alt="El Gato Negro"
               width={160}
               height={20}
               priority
+              className="[filter:blur(0.4px)] transition-[filter] duration-300 hover:blur-0"
             />
           </Link>
 
@@ -56,7 +57,7 @@ export function SiteHeader() {
             {/* Desktop CTA */}
             <Link
               href="/inquiry"
-              className="hidden lg:inline-flex mr-6 bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-4 py-2 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
+              className="hidden lg:inline-flex mr-6 bg-brand-orange text-brand-grey text-xs font-display font-bold uppercase tracking-[0.1em] px-4 py-2 rounded-sm hover:bg-brand-yellow transition-colors"
             >
               Book the Cart
             </Link>
@@ -140,7 +141,7 @@ export function SiteHeader() {
         <Link
           href="/inquiry"
           onClick={closeDrawer}
-          className="w-full bg-brand-orange text-brand-grey font-sans font-extrabold text-sm uppercase tracking-wider py-3 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors flex items-center justify-center"
+          className="w-full bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] py-3 rounded-sm hover:bg-brand-yellow transition-colors flex items-center justify-center"
         >
           Book the Cart
         </Link>

@@ -22,7 +22,7 @@ interface Filters {
 const DEFAULT_FILTERS: Filters = { roast: "", country: "", vendor: "" };
 
 const SELECT_STYLES =
-  "font-sans text-xs uppercase tracking-wide text-brand-black bg-brand-grey border border-brand-black/20 px-3 py-1.5 pr-8 appearance-none cursor-pointer focus:outline-none focus:border-brand-black/40";
+  "font-sans text-xs uppercase tracking-wide text-brand-black bg-brand-grey border border-brand-black/20 px-3 py-1.5 pr-8 appearance-none cursor-pointer focus:outline-none focus:border-brand-black/40 rounded-sm";
 
 const CHEVRON_BG = {
   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -140,7 +140,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
         {/* Filters */}
         {filterOptions.roast.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
               Roast
             </span>
             <select
@@ -163,7 +163,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {filterOptions.country.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
               Country
             </span>
             <select
@@ -186,7 +186,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {filterOptions.vendor.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
               Vendor
             </span>
             <select
@@ -220,7 +220,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {/* Sort — pushed right */}
         <label className="flex items-center gap-2 ml-auto">
-          <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40">
+          <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
             Sort by
           </span>
           <select
@@ -240,12 +240,12 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
       {/* Filtered count */}
       {filtersActive && (
-        <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40 mb-3">
+        <p className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40 mb-3">
           Showing {result.length} of {products.length} products
         </p>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-brand-black/10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {result.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
