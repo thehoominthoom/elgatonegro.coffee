@@ -23,8 +23,6 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
     const href =
       e.eventPageType === "external" && e.externalUrl
         ? e.externalUrl
-        : e.slug
-        ? `/events/${e.slug}`
         : "/events";
     return {
       id: e._id,

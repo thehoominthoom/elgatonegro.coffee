@@ -138,8 +138,6 @@ export default async function Home() {
                 href={
                   event.eventPageType === "external" && event.externalUrl
                     ? event.externalUrl
-                    : event.slug
-                    ? `/events/${event.slug}`
                     : "/events"
                 }
                 className="group flex flex-col md:grid md:grid-cols-[8rem_1fr_auto] gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors"
