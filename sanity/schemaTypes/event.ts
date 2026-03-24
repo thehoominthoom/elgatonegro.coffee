@@ -1,5 +1,6 @@
 import { defineField, defineType, defineArrayMember } from "sanity";
 import { GooglePlacesInput } from "../components/GooglePlacesInput";
+import { HeicImageInput } from "../components/HeicImageInput";
 import { ScheduleInput } from "../components/ScheduleInput";
 
 // ─── Time options (every 30 min, 5:00 AM → 2:00 AM next day) ─────────────────
@@ -270,6 +271,7 @@ export const event = defineType({
       title: "Image",
       type: "image",
       options: { hotspot: true },
+      components: { input: HeicImageInput },
     }),
 
     defineField({
