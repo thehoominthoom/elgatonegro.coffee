@@ -6,6 +6,7 @@ import {
   GET_PRODUCT_BY_HANDLE_QUERY,
   GET_ALL_COLLECTIONS_QUERY,
   GET_COLLECTION_BY_HANDLE_QUERY,
+  GET_PRODUCT_RECOMMENDATIONS_QUERY,
 } from "./queries";
 import type { Product, Collection, CollectionSummary } from "./types";
 
@@ -29,6 +30,20 @@ export async function getProductByHandle(
     revalidate: 300,
   });
   return data.productByHandle;
+}
+
+export async function getProductRecommendations(
+  productId: string,
+  count = 8
+): Promise<Product[]> {
+  const data = await shopifyFetch<{
+    productRecommendations: Product[] | null;
+  }>({
+    query: GET_PRODUCT_RECOMMENDATIONS_QUERY,
+    variables: { productId },
+    revalidate: 300,
+  });
+  return (data.productRecommendations ?? []).slice(0, count);
 }
 
 // ─── Collections ──────────────────────────────────────────────────────────────

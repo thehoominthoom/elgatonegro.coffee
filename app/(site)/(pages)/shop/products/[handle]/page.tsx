@@ -5,8 +5,10 @@ import { ArrowLeft } from "lucide-react";
 import {
   getProductByHandle,
   getAllProducts,
+  getProductRecommendations,
 } from "@/lib/shopify/storefront";
 import { ProductDetail } from "@/components/shop/ProductDetail";
+import { ProductCard } from "@/components/shop/ProductCard";
 
 export const revalidate = 3600;
 
@@ -67,9 +69,16 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
+  let recommendations: Awaited<ReturnType<typeof getProductRecommendations>> = [];
+  try {
+    recommendations = await getProductRecommendations(product.id);
+  } catch {
+    // Recommendations failure shouldn't break the page
+  }
+
   return (
     <main className="min-h-screen bg-brand-grey grain-overlay">
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-8 md:py-12 relative z-10">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12 pb-16 md:pb-24 relative z-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-8">
           <Link href="/shop" className="hover:text-brand-orange transition-colors flex items-center gap-1.5">
@@ -93,6 +102,32 @@ export default async function ProductPage({
 
         {/* Product detail — interactive shell is client, data is server */}
         <ProductDetail product={product} />
+
+        {recommendations.length > 0 && (
+          <section className="mt-16 md:mt-24 pt-10 md:pt-14 border-t border-dashed border-brand-black/15">
+            <div className="mb-8 md:mb-10">
+              <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60">
+                You Might Also Like
+              </p>
+            </div>
+
+            {/* Mobile: horizontal scroll */}
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {recommendations.map((rec) => (
+                <div key={rec.id} className="w-[70vw] max-w-[280px] shrink-0 snap-start">
+                  <ProductCard product={rec} />
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: 4-column grid */}
+            <div className="hidden md:grid md:grid-cols-4 gap-4">
+              {recommendations.slice(0, 4).map((rec) => (
+                <ProductCard key={rec.id} product={rec} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );

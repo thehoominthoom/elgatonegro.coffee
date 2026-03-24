@@ -101,9 +101,9 @@ export function SiteHeader() {
       <div
         aria-hidden={!drawerOpen}
         className={[
-          "fixed inset-x-0 top-0 z-40 bg-brand-grey px-6 pt-6 pb-8",
-          "transition-all duration-300 ease-in-out",
-          drawerOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none",
+          "fixed inset-y-0 right-0 z-40 w-full max-w-sm bg-brand-grey flex flex-col px-6 pt-6 pb-8",
+          "transition-transform duration-300 ease-in-out",
+          drawerOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
       >
         {/* Close button */}

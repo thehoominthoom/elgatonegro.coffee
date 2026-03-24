@@ -207,6 +207,18 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = `
   ${MONEY_FRAGMENT}
 `;
 
+export const GET_PRODUCT_RECOMMENDATIONS_QUERY = `
+  query GetProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      ...ProductFragment
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+  ${PRODUCT_VARIANT_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+  ${MONEY_FRAGMENT}
+`;
+
 // ─── Collection queries ───────────────────────────────────────────────────────
 
 export const GET_ALL_COLLECTIONS_QUERY = `
