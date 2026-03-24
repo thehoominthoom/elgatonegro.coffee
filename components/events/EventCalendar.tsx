@@ -31,9 +31,17 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December",
 ];
 
-/** Today's date as YYYY-MM-DD in CT. */
 function todayInCT(): string {
-  return new Date().toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const y = parts.find((p) => p.type === "year")!.value;
+  const m = parts.find((p) => p.type === "month")!.value;
+  const d = parts.find((p) => p.type === "day")!.value;
+  return `${y}-${m}-${d}`;
 }
 
 /** Format YYYY-MM-DD → "Mar 17" without UTC shift. */
@@ -71,7 +79,15 @@ function getDaysInMonth(year: number, month: number): Date[] {
 
 /** YYYY-MM-DD from a local Date. */
 function toDateStr(d: Date): string {
-  return d.toLocaleDateString("en-CA");
+  const parts = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(d);
+  const y = parts.find((p) => p.type === "year")!.value;
+  const m = parts.find((p) => p.type === "month")!.value;
+  const day = parts.find((p) => p.type === "day")!.value;
+  return `${y}-${m}-${day}`;
 }
 
 /** Get the 7 days of the week containing `dateStr` (Sun–Sat). */
@@ -282,7 +298,7 @@ function MonthGrid({ events }: { events: CalendarEvent[] }) {
   const [selectedDate, setSelectedDate] = useState<string | null>(todayStr);
 
   const days = getDaysInMonth(viewYear, viewMonth);
-  const firstDow = days[0].getDay(); // 0=Sun — offset for grid
+  const firstDow = days[0]?.getDay() ?? 0;
 
   function prevMonth() {
     if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
