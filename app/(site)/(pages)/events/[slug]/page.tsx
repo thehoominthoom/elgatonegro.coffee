@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin, ExternalLink } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { formatEventDate } from "@/lib/home/dates";
@@ -72,15 +72,6 @@ const TYPE_LABELS: Record<EventDetail["type"], string> = {
   fundraiser: "Fundraiser",
   sale: "Sale",
   "new-swag": "New Swag",
-};
-
-const TYPE_COLORS: Record<EventDetail["type"], string> = {
-  open: "bg-brand-green",
-  ticketed: "bg-brand-orange",
-  private: "bg-brand-black",
-  fundraiser: "bg-brand-teal",
-  sale: "bg-brand-yellow text-brand-black",
-  "new-swag": "bg-brand-yellow text-brand-black",
 };
 
 function formatDayOfWeek(dateStr: string): string {
@@ -207,22 +198,20 @@ export default async function EventDetailPage({
         <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
-          <span
-            className={`self-start font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] px-2 py-1 rounded-sm mb-5 ${TYPE_COLORS[event.type]} text-brand-grey`}
-          >
-            {TYPE_LABELS[event.type]}
-          </span>
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+            {TYPE_LABELS[event.type] || "Event"}
+          </p>
 
           <h1
             className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-            style={{ fontSize: "clamp(2.5rem, 10vw, 10rem)" }}
+            style={{ fontSize: "clamp(3rem, 12vw, 10rem)" }}
           >
             {event.title}
           </h1>
 
-          <div className="mt-6 space-y-2">
+          <div className="mt-6 pl-3 border-l-2 border-brand-orange/40 space-y-1">
             {schedule.length > 0 && (
-              <p className="font-sans text-sm md:text-base text-brand-grey/70">
+              <p className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
                 {schedule.length === 1
                   ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} \u2014 ${schedule[0].openTime} \u2013 ${schedule[0].closeTime} CT`
                   : `${formatEventDate(schedule[0].date)} \u2013 ${formatEventDate(schedule[schedule.length - 1].date)}`}
@@ -252,24 +241,24 @@ export default async function EventDetailPage({
 
       {/* ── 2. Details ───────────────────────────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay">
-        <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.2em] text-brand-black/50 hover:text-brand-orange transition-colors mb-10"
+            className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.2em] text-brand-black/50 hover:text-brand-orange transition-colors mb-10"
           >
             <ArrowLeft size={14} />
             All Events
           </Link>
 
           {event.description && event.description.length > 0 && (
-            <div className="space-y-4 border-l-2 border-brand-orange pl-5 md:pl-6 mb-10">
+            <div className="space-y-4 border-l-2 border-brand-orange pl-4 md:pl-6 mb-10">
               {renderPortableText(event.description)}
             </div>
           )}
 
           {schedule.length > 1 && (
-            <div className="mb-10">
-              <h2 className="font-display font-bold text-lg uppercase tracking-tight text-brand-black mb-4">
+            <div className="border-t border-brand-black/10 pt-10 mb-10">
+              <h2 className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black mb-4">
                 Schedule
               </h2>
               <div className="space-y-2">
@@ -313,13 +302,32 @@ export default async function EventDetailPage({
                 href={event.mapLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.2em] text-brand-orange hover:text-brand-black transition-colors"
+                className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-orange hover:text-brand-black transition-colors"
               >
                 <MapPin size={14} />
                 View Map
               </a>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* ── 3. Closing CTA ─────────────────────────────────────────────── */}
+      <section className="bg-brand-orange grain-overlay">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
+          <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-4 md:mb-6">
+            More From EGN
+          </p>
+          <h2 className="font-display font-bold text-4xl md:text-6xl lg:text-7xl uppercase text-brand-black tracking-tight leading-[0.95] max-w-3xl mb-10 md:mb-12">
+            See what else is coming up.
+          </h2>
+          <Link
+            href="/events"
+            className="group inline-flex items-center gap-3 bg-brand-black text-brand-grey font-display font-bold uppercase tracking-[0.1em] text-sm px-8 py-4 md:px-10 md:py-5 rounded-sm hover:bg-brand-orange transition-colors duration-300"
+          >
+            All Events
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </section>
     </>
