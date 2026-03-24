@@ -44,5 +44,5 @@ export function buildStripRows(events: SanityEvent[], today: string): StripRow[]
   }
 
   rows.sort((a, b) => a.sortDate.localeCompare(b.sortDate));
-  return rows;
+  return rows.slice(0, 8);
 }
