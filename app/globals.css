@@ -143,17 +143,7 @@
     display: none;
   }
 
-  .grain-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse, #0000, #0003),
-      linear-gradient(0deg, #9711, #9711);
-    border-radius: inherit;
-    z-index: 1;
-  }
+  /* Light variant: grain texture only, no vignette */
 
   .grain-overlay::after {
     content: "";
@@ -180,8 +170,8 @@
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(ellipse, #0000, #0003),
-      linear-gradient(0deg, #9711, #9711);
+      radial-gradient(ellipse, #0000, #0005),
+      linear-gradient(0deg, #9722, #9722);
     border-radius: inherit;
     z-index: 1;
   }

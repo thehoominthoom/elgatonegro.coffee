@@ -62,7 +62,7 @@ export default async function OrdersPage() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
+            className="inline-flex bg-brand-orange text-brand-grey text-sm font-display font-bold uppercase tracking-[0.1em] px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
           >
             Start Shopping
           </Link>
@@ -122,7 +122,7 @@ export default async function OrdersPage() {
                   <p className="font-sans font-extrabold text-sm text-brand-black">
                     ${parseFloat(order.totalPrice.amount).toFixed(2)}
                   </p>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-brand-black/40 mt-0.5">
+                  <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40 mt-0.5">
                     {status.toLowerCase().replace(/_/g, " ")}
                   </p>
                 </div>

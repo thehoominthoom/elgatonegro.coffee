@@ -210,7 +210,7 @@ export default async function OrderDetailPage({
 
 function StatusBadge({ label }: { label: string }) {
   return (
-    <span className="inline-block font-sans font-extrabold text-[10px] uppercase tracking-wider text-brand-black/60 bg-brand-black/5 px-2.5 py-1 rounded-sm">
+    <span className="inline-block font-sans font-extrabold text-[10px] uppercase tracking-[0.2em] text-brand-black/60 bg-brand-black/5 px-2.5 py-1 rounded-sm">
       {label.toLowerCase().replace(/_/g, " ")}
     </span>
   );

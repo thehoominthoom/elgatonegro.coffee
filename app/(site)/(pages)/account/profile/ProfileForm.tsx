@@ -24,7 +24,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
         <div>
           <label
             htmlFor="firstName"
-            className="block font-sans text-xs text-brand-black/50 mb-1"
+            className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
           >
             First name
           </label>
@@ -40,7 +40,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
         <div>
           <label
             htmlFor="lastName"
-            className="block font-sans text-xs text-brand-black/50 mb-1"
+            className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
           >
             Last name
           </label>
@@ -58,7 +58,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
       <div>
         <label
           htmlFor="email"
-          className="block font-sans text-xs text-brand-black/50 mb-1"
+          className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
         >
           Email
         </label>
@@ -78,7 +78,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
       <div>
         <label
           htmlFor="birthday"
-          className="block font-sans text-xs text-brand-black/50 mb-1"
+          className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
         >
           Birthday
         </label>
@@ -118,7 +118,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors disabled:opacity-50"
+        className="bg-brand-orange text-brand-grey text-sm font-display font-bold uppercase tracking-[0.1em] px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors disabled:opacity-50"
       >
         {isPending ? "Saving..." : "Save Changes"}
       </button>

@@ -35,7 +35,7 @@ export function AddressForm() {
       <div>
         <label
           htmlFor="address1"
-          className="block font-sans text-xs text-brand-black/50 mb-1"
+          className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
         >
           Address
         </label>
@@ -53,7 +53,7 @@ export function AddressForm() {
       <div>
         <label
           htmlFor="phoneNumber"
-          className="block font-sans text-xs text-brand-black/50 mb-1"
+          className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
         >
           Phone
         </label>
@@ -70,7 +70,7 @@ export function AddressForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="bg-brand-orange text-brand-grey text-xs font-sans font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors disabled:opacity-50"
+        className="bg-brand-orange text-brand-grey text-sm font-display font-bold uppercase tracking-[0.1em] px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors disabled:opacity-50"
       >
         {isPending ? "Saving..." : "Add Address"}
       </button>
@@ -91,7 +91,7 @@ const InputField = forwardRef<
     <div>
       <label
         htmlFor={name}
-        className="block font-sans text-xs text-brand-black/50 mb-1"
+        className="block font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-1"
       >
         {label}
       </label>

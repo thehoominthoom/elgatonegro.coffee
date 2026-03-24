@@ -12,9 +12,9 @@ export default function ServicesPage() {
   return (
     <>
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
-        <div className="mx-auto max-w-7xl border-b-2 border-brand-black pb-10 md:pb-16">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-4">
+      <section className="bg-brand-grey grain-overlay px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
+        <div className="relative z-10 mx-auto max-w-7xl border-b-2 border-brand-black pb-10 md:pb-16">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
             WHAT WE DO
           </p>
           <h1 className="font-display text-5xl md:text-7xl font-bold uppercase tracking-tight text-brand-black">
@@ -27,8 +27,8 @@ export default function ServicesPage() {
       </section>
 
       {/* ── Service Preview Stack ──────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6">
-        <div className="mx-auto max-w-7xl">
+      <section className="bg-brand-grey grain-overlay px-4 md:px-6">
+        <div className="relative z-10 mx-auto max-w-7xl">
           {ALL_SERVICES.map((service, i) => {
             const isEven = i % 2 === 0;
             const isLast = i === ALL_SERVICES.length - 1;
@@ -83,7 +83,7 @@ export default function ServicesPage() {
       <section className="bg-brand-orange py-16 md:py-20 border-t-2 border-brand-black">
         <div className="mx-auto max-w-7xl px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/70 mb-2">
+            <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/70 mb-2">
               NOT SURE WHICH FITS?
             </p>
             <h2 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black">
@@ -92,7 +92,7 @@ export default function ServicesPage() {
           </div>
           <Link
             href="/inquiry"
-            className="group shrink-0 inline-flex items-center gap-2 border border-brand-black px-8 py-4 font-sans font-bold text-sm uppercase tracking-[0.15em] text-brand-black transition-colors hover:bg-brand-black hover:text-brand-grey whitespace-nowrap"
+            className="group shrink-0 inline-flex items-center gap-2 border border-brand-black px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm text-brand-black transition-colors hover:bg-brand-black hover:text-brand-grey whitespace-nowrap"
           >
             Get in Touch
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
@@ -112,7 +112,7 @@ function ServiceBlockContent({
 }) {
   return (
     <div>
-      <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-3">
+      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-3">
         {service.eyebrow}
       </p>
       <h2 className="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight text-brand-black mb-3">

@@ -23,7 +23,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-brand-grey/50">
+      <label className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/50">
         {label}
       </label>
       {children}
@@ -358,7 +358,7 @@ export function InquiryForm({ config }: { config: ServiceConfig }) {
           <button
             type="button"
             onClick={nextStep}
-            className="inline-flex items-center gap-3 bg-brand-orange px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black"
+            className="inline-flex items-center gap-3 rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black"
           >
             Continue
             <ArrowRight className="size-4" />
@@ -367,7 +367,7 @@ export function InquiryForm({ config }: { config: ServiceConfig }) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center gap-3 bg-brand-orange px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-3 rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-all duration-200 hover:bg-brand-yellow hover:text-brand-black disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSubmitting ? "Sending…" : "Send Inquiry"}
             <ArrowRight className="size-4" />

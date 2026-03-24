@@ -5,12 +5,21 @@ import { urlFor } from "@/sanity/lib/image";
 import { trimAddress } from "@/lib/utils";
 
 export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide[] {
-  return events.filter((e) => e.image).slice(0, 6).map((e) => {
-    const schedule = e.schedule ?? [];
-    const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
-    const isHappeningNow = sorted.some((d) => d.date === today);
-    const dateRange = sorted.length ? formatEventDateRange(sorted) : "";
-    const timeContext = sorted.length ? getHeroTimeContext(sorted, today, !!e.recurrenceLabel) : null;
+  // Filter to events with images, compute next upcoming date, sort by it
+  const withNextDate = events
+    .filter((e) => e.image)
+    .map((e) => {
+      const schedule = e.schedule ?? [];
+      const upcoming = schedule.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+      return { event: e, upcoming, nextDate: upcoming[0]?.date ?? "" };
+    })
+    .filter((e) => e.nextDate) // exclude events with no upcoming dates
+    .sort((a, b) => a.nextDate.localeCompare(b.nextDate));
+
+  return withNextDate.slice(0, 6).map(({ event: e, upcoming }) => {
+    const isHappeningNow = upcoming.some((d) => d.date === today);
+    const dateRange = upcoming.length ? formatEventDateRange(upcoming) : "";
+    const timeContext = upcoming.length ? getHeroTimeContext(upcoming, today, !!e.recurrenceLabel) : null;
     const href =
       e.eventPageType === "external" && e.externalUrl
         ? e.externalUrl

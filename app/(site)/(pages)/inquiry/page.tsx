@@ -44,7 +44,7 @@ export default async function InquiryPage({
         <div className="grain-overlay relative border-r border-brand-grey/10 bg-[#1a100d] px-8 py-16 lg:px-12 lg:py-24">
           <div className="sticky top-24">
             {/* Eyebrow */}
-            <p className="mb-3 font-sans text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">
+            <p className="mb-3 font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange">
               Book the Cart
             </p>
 
@@ -62,7 +62,7 @@ export default async function InquiryPage({
             <div className="my-8 h-px bg-brand-grey/10" />
 
             {/* What to expect */}
-            <p className="mb-4 font-sans text-xs font-bold uppercase tracking-[0.15em] text-brand-grey/30">
+            <p className="mb-4 font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30">
               What to expect
             </p>
             <ul className="space-y-3">
@@ -86,7 +86,7 @@ export default async function InquiryPage({
             <div className="my-8 h-px bg-brand-grey/10" />
 
             {/* Services reminder */}
-            <p className="mb-4 font-sans text-xs font-bold uppercase tracking-[0.15em] text-brand-grey/30">
+            <p className="mb-4 font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30">
               We serve
             </p>
             <ul className="space-y-2">

@@ -181,7 +181,7 @@ export default async function Home() {
           {/* See All Events row */}
           <Link
             href="/events"
-            className="flex items-center justify-between py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors group"
+            className="flex items-center justify-between py-5 md:py-6 transition-colors group"
           >
             <span className="font-display text-sm md:text-base uppercase tracking-[0.2em] text-brand-orange group-hover:text-brand-yellow transition-colors">
               See All Events

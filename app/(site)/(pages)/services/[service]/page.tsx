@@ -55,7 +55,7 @@ export default async function ServicePage({
                 <span className="text-brand-grey/60">{config.label}</span>
               </nav>
 
-              <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-orange mb-4">
+              <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
                 {config.eyebrow}
               </p>
               <h1 className="font-display font-bold text-5xl md:text-7xl lg:text-8xl uppercase leading-none tracking-tight text-brand-grey">
@@ -69,7 +69,7 @@ export default async function ServicePage({
               </p>
               <Link
                 href={`/inquiry?service=${config.slug}`}
-                className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-sans font-extrabold text-sm uppercase tracking-[0.15em] px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
+                className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
               >
                 Request a Quote
                 <ArrowRight size={16} />
@@ -91,7 +91,7 @@ export default async function ServicePage({
       {/* ── Section 3: What's Included (dark) ───────────────────── */}
       <section className="bg-brand-black grain-overlay">
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-24">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-orange mb-4">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             WHAT&apos;S INCLUDED
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-tight text-brand-grey">
@@ -121,9 +121,9 @@ export default async function ServicePage({
       </section>
 
       {/* ── Section 4: How It Works (light) ─────────────────────── */}
-      <section className="bg-brand-grey py-16 md:py-24">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-green mb-4">
+      <section className="bg-brand-grey grain-overlay py-16 md:py-24">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
             THE PROCESS
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-tight text-brand-black">
@@ -156,7 +156,7 @@ export default async function ServicePage({
       <section className="bg-brand-black grain-overlay">
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-24">
           <div className="border border-brand-orange/30 p-8 md:p-16">
-            <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-orange mb-4">
+            <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
               {content.cta.eyebrow}
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-bold uppercase leading-none tracking-tight text-brand-grey">
@@ -167,7 +167,7 @@ export default async function ServicePage({
             </p>
             <Link
               href={`/inquiry?service=${config.slug}`}
-              className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-sans font-extrabold text-sm uppercase tracking-[0.15em] px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
+              className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
             >
               Start Your Inquiry
               <ArrowRight size={16} />
@@ -230,9 +230,9 @@ function SocialProofSection({
 }) {
   if (content.socialProofType === "logos") {
     return (
-      <section className="bg-brand-grey py-10 md:py-14">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/40 mb-8">
+      <section className="bg-brand-grey grain-overlay py-10 md:py-14">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/40 mb-8">
             BRANDS WE&apos;VE SERVED
           </p>
 
@@ -279,8 +279,8 @@ function SocialProofSection({
   // Testimonial variant
   if (content.testimonial) {
     return (
-      <section className="bg-brand-grey py-12 md:py-16">
-        <div className="mx-auto max-w-3xl px-4 md:px-6 text-center">
+      <section className="bg-brand-grey grain-overlay py-12 md:py-16">
+        <div className="relative z-10 mx-auto max-w-3xl px-4 md:px-6 text-center">
           <p className="font-display text-2xl md:text-3xl text-brand-black tracking-tight">
             &ldquo;{content.testimonial.quote}&rdquo;
           </p>

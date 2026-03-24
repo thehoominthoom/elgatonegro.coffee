@@ -26,7 +26,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-brand-grey/50">
+      <label className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/50">
         {label}
       </label>
       {children}
@@ -224,7 +224,7 @@ export function InquiryForm({
       <button
         type="submit"
         disabled={isPending}
-        className="mt-1 inline-flex items-center gap-3 self-start bg-brand-orange px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.15em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow hover:text-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-1 inline-flex items-center gap-3 self-start rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow hover:text-brand-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isPending ? (
           <>

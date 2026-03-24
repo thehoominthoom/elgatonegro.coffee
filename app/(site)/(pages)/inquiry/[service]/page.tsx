@@ -44,7 +44,7 @@ export default async function InquiryPage({
               <span className="text-brand-grey/50">{config.label}</span>
             </nav>
 
-            <p className="mb-3 font-sans text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">
+            <p className="mb-3 font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange">
               {config.eyebrow}
             </p>
             <h1 className="font-display text-4xl font-black uppercase leading-none tracking-tight text-brand-grey lg:text-5xl">
@@ -60,7 +60,7 @@ export default async function InquiryPage({
             {/* Divider */}
             <div className="my-8 h-px bg-brand-grey/10" />
 
-            <p className="mb-4 font-sans text-xs font-bold uppercase tracking-[0.15em] text-brand-grey/30">
+            <p className="mb-4 font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30">
               What&rsquo;s included
             </p>
             <ul className="space-y-2">

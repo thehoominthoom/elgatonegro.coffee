@@ -14,7 +14,7 @@ export function AddressCard({ address, isDefault }: AddressCardProps) {
   return (
     <div className="border border-brand-black/10 rounded-sm px-4 py-4">
       {isDefault && (
-        <p className="font-sans font-extrabold text-[10px] uppercase tracking-wider text-brand-orange mb-2">
+        <p className="font-sans font-extrabold text-[10px] uppercase tracking-[0.2em] text-brand-orange mb-2">
           Default
         </p>
       )}
