@@ -260,3 +260,24 @@
   margin: 4px 12px 6px;
   opacity: 0.35;
 }
+
+/* Sanity Studio — larger text and fields for readability */
+[data-sanity-studio] {
+  font-size: 15px;
+}
+
+[data-sanity-studio] input,
+[data-sanity-studio] textarea,
+[data-sanity-studio] select {
+  font-size: 15px !important;
+  padding: 10px 12px !important;
+}
+
+[data-sanity-studio] label {
+  font-size: 13px !important;
+}
+
+[data-sanity-studio] [data-ui="Text"],
+[data-sanity-studio] [data-ui="Label"] {
+  font-size: 14px !important;
+}

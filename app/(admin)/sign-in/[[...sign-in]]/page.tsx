@@ -12,14 +12,7 @@ export default function AdminSignInPage() {
             Admin Dashboard
           </p>
         </div>
-        <SignIn
-          appearance={{
-            elements: {
-              rootBox: 'mx-auto',
-              card: 'bg-brand-black border border-brand-grey/10',
-            },
-          }}
-        />
+        <SignIn />
       </div>
     </div>
   );
