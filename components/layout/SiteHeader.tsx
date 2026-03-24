@@ -29,7 +29,7 @@ export function SiteHeader() {
             width={160}
             height={20}
             priority
-            className="[filter:blur(0.4px)] transition-[filter] duration-300 hover:blur-0"
+            className="[filter:blur(0.15px)] transition-[filter] duration-300 hover:blur-0"
           />
         </Link>
 
