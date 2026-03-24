@@ -8,7 +8,7 @@ import { EncryptJWT, jwtDecrypt } from "jose";
 
 const SESSION_SECRET = process.env.SESSION_SECRET!;
 const SESSION_COOKIE = "egn-customer-session";
-const AUTH_STATE_COOKIE = "egn-auth-state";
+export const AUTH_STATE_COOKIE = "egn-auth-state";
 
 // Validate SESSION_SECRET at startup
 if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
@@ -66,6 +66,15 @@ export interface AuthState {
   codeVerifier: string;
   state: string;
   nonce: string;
+}
+
+export async function encryptAuthState(authState: AuthState): Promise<string> {
+  const key = await getEncryptionKey();
+  return new EncryptJWT(authState as unknown as Record<string, unknown>)
+    .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+    .setIssuedAt()
+    .setExpirationTime("10m")
+    .encrypt(key);
 }
 
 export async function setAuthStateCookie(authState: AuthState): Promise<void> {

@@ -6,7 +6,7 @@ import {
   generateNonce,
   buildAuthorizationUrl,
 } from "@/lib/shopify/customer-auth";
-import { setAuthStateCookie } from "@/lib/shopify/session";
+import { encryptAuthState, AUTH_STATE_COOKIE } from "@/lib/shopify/session";
 
 export async function GET() {
   const codeVerifier = generateCodeVerifier();
@@ -14,14 +14,22 @@ export async function GET() {
   const state = generateState();
   const nonce = generateNonce();
 
-  // Store PKCE verifier + state + nonce in encrypted temp cookie
-  await setAuthStateCookie({ codeVerifier, state, nonce });
-
   const authUrl = await buildAuthorizationUrl({
     codeChallenge,
     state,
     nonce,
   });
 
-  return NextResponse.redirect(authUrl);
+  const encrypted = await encryptAuthState({ codeVerifier, state, nonce });
+
+  const response = NextResponse.redirect(authUrl);
+  response.cookies.set(AUTH_STATE_COOKIE, encrypted, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 600,
+    path: "/",
+  });
+
+  return response;
 }
