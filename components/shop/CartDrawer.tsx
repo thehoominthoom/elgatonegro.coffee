@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "./CartProvider";
-import { formatMoney } from "@/lib/shopify/utils";
+import { formatMoney, rewriteCheckoutUrl } from "@/lib/shopify/utils";
 import type { CartLine } from "@/lib/shopify/types";
 
 export function CartDrawer() {
@@ -136,7 +136,7 @@ export function CartDrawer() {
               Taxes and shipping calculated at checkout.
             </p>
             <a
-              href={cart.checkoutUrl}
+              href={rewriteCheckoutUrl(cart.checkoutUrl)}
               className={[
                 "block w-full bg-brand-orange text-brand-grey text-center",
                 "font-sans font-extrabold text-sm uppercase tracking-[0.15em]",

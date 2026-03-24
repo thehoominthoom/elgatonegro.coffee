@@ -25,6 +25,13 @@ function formatHandle(handle: string): string {
     .join(" ");
 }
 
+/** Rewrite Shopify checkout URL to use custom checkout subdomain. */
+export function rewriteCheckoutUrl(url: string): string {
+  const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+  if (!shopifyDomain) return url;
+  return url.replace(shopifyDomain, "checkout.elgatonegro.coffee");
+}
+
 /** Return true when min and max variant prices differ. */
 export function hasPriceRange(
   min: Money,
