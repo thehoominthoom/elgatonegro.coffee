@@ -80,143 +80,64 @@ export async function CartStatusBar() {
 
   const hasOpen = openEvents.length > 0;
 
+  const locationLabel = (event: Event) =>
+    event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : null);
+
   return (
     <div
-      className={`w-full border-b border-brand-black/10 ${
+      className={`w-full h-14 border-b border-brand-black/10 ${
         hasOpen ? "bg-brand-yellow" : "bg-brand-black"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row md:flex-wrap md:items-center gap-x-6 gap-y-2">
-        {/* Status label */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center gap-x-6 overflow-x-auto scrollbar-hide">
         <span
-          className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 text-left md:text-right ${
+          className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 ${
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >
-          {hasOpen ? (
-            <>
-              <span className="md:hidden">
-                {openEvents.length >= 2 ? `${openEvents.length} Serving Coffee` : "Serving Coffee"}
-              </span>
-              <span className="hidden md:block">
-                {openEvents.length >= 2 ? `${openEvents.length} Serving` : "Serving"}<br />Coffee
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="md:hidden">No Coffee Today</span>
-              <span className="hidden md:block">No Coffee<br />Today</span>
-            </>
-          )}
+          {hasOpen
+            ? openEvents.length >= 2
+              ? `${openEvents.length} Serving Coffee`
+              : "Serving Coffee"
+            : "No Coffee Today"}
         </span>
 
-        {/* Divider — desktop only */}
-        <span className={`hidden md:block self-stretch w-0.5 ${hasOpen ? "bg-brand-grey/30" : "bg-brand-grey/20"}`} />
+        {hasOpen && (
+          <>
+            <span className="hidden md:block self-stretch w-0.5 shrink-0 bg-brand-grey/30" />
 
-        {hasOpen ? (
-          openEvents.length >= 2 ? (
-            <>
-              {/* Mobile: horizontal scroll-snap carousel with right-edge peek */}
-              <div className="md:hidden h-[72px] min-w-0 flex-1">
-                <div className="snap-x snap-mandatory overflow-x-scroll scrollbar-hide flex gap-3 h-full items-center">
-                  {openEvents.map(({ event, schedule }) => (
-                    <div
-                      key={event._id}
-                      className="shrink-0 w-[calc(75%-12px)] snap-start pr-3 flex flex-col gap-1"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
-                        <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey">
-                          {schedule!.openTime} – {schedule!.closeTime} CT
-                        </span>
-                      </div>
-                      {(event.locationName || event.displayAddress || event.mapLink) && (
-                        <div className="flex items-center gap-3 pl-[18px]">
-                          {event.mapLink ? (
-                            <Link
-                              href={event.mapLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
-                            >
-                              {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                            </Link>
-                          ) : (event.locationName || event.displayAddress) ? (
-                            <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em]">
-                              {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                            </span>
-                          ) : null}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Desktop: existing inline layout */}
-              <div className="hidden md:contents">
-                {openEvents.map(({ event, schedule }) => (
-                  <div key={event._id} className="flex flex-col gap-1">
-                    <div className="flex items-center gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
-                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey">
-                        {schedule!.openTime} – {schedule!.closeTime} CT
-                      </span>
-                    </div>
-                    {(event.locationName || event.displayAddress || event.mapLink) && (
-                      <div className="flex items-center gap-3 pl-[18px]">
-                        {event.mapLink ? (
-                          <Link
-                            href={event.mapLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
-                          >
-                            {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                          </Link>
-                        ) : (event.locationName || event.displayAddress) ? (
-                          <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em]">
-                            {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                          </span>
-                        ) : null}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            /* Single cart — full-width, no carousel, both breakpoints */
-            openEvents.map(({ event, schedule }) => (
-              <div key={event._id} className="flex flex-col gap-1">
-                <div className="flex items-center gap-3">
+            {openEvents.map(({ event, schedule }) => {
+              const label = locationLabel(event);
+              return (
+                <div key={event._id} className="flex items-center gap-3 shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
-                  <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey">
+                  <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
                     {schedule!.openTime} – {schedule!.closeTime} CT
                   </span>
+                  {label && (
+                    <>
+                      <span className="text-brand-grey/40">·</span>
+                      {event.mapLink ? (
+                        <Link
+                          href={event.mapLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors whitespace-nowrap"
+                        >
+                          {label}
+                        </Link>
+                      ) : (
+                        <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] whitespace-nowrap">
+                          {label}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </div>
-                {(event.locationName || event.displayAddress || event.mapLink) && (
-                  <div className="flex items-center gap-3 pl-[18px]">
-                    {event.mapLink ? (
-                      <Link
-                        href={event.mapLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
-                      >
-                        {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                      </Link>
-                    ) : (event.locationName || event.displayAddress) ? (
-                      <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em]">
-                        {event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : "")}
-                      </span>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-            ))
-          )
-        ) : null}
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );
