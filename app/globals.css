@@ -210,18 +210,4 @@
 
 }
 
-/* ── Print-media blur ──────────────────────────────────────────────────────── */
-/* Editorial blur on block-level text for cohesive print feel */
-:where(h1, h2, h3, h4, h5, h6, p, a, blockquote, figcaption, li, dt, dd) {
-  filter: blur(0.28px);
-}
-
-/* Reduced blur for small text */
-:where(.text-xs, .text-\[11px\], .text-\[10px\], .text-\[9px\]) {
-  filter: blur(0.175px);
-}
-
-/* Exempt interactive/form elements */
-:where(input, textarea, select, option) {
-  filter: none;
-}
+/* Global text blur removed — too intense on retina/Apple displays */
