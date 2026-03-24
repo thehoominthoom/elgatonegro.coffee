@@ -58,6 +58,7 @@ const EVENTS_QUERY = `*[
   "mapLink": location.mapLink,
   type,
   schedule,
+  note,
   recurrenceLabel,
   eventPageType,
   externalUrl,

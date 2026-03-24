@@ -13,6 +13,7 @@ export interface CalendarEvent {
   displayAddress: string | null;
   mapLink: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  note: string | null;
   schedule: Array<{ _key: string; date: string; openTime: string; closeTime: string }> | null;
   recurrenceLabel: string | null;
   eventPageType: "internal" | "external" | null;
@@ -166,6 +167,11 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           {dayEntry && (
             <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60">
               {dayEntry.openTime} – {dayEntry.closeTime} CT
+            </span>
+          )}
+          {event.note && (
+            <span className="font-sans text-xs text-brand-black/50 italic">
+              {event.note}
             </span>
           )}
           {locationDisplay && (

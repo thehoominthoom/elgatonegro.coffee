@@ -18,6 +18,7 @@ interface Event {
   displayAddress: string | null;
   mapLink: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  note: string | null;
   schedule: ScheduleDay[] | null;
 }
 
@@ -37,7 +38,8 @@ const EVENTS_QUERY = `*[
   "displayAddress": location.displayAddress,
   "mapLink": location.mapLink,
   type,
-  schedule
+  schedule,
+  note
 }`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

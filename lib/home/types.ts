@@ -15,6 +15,7 @@ export interface SanityEvent {
   location: string | null;
   image: SanityImageSource | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  note: string | null;
   eventPageType: "internal" | "external" | null;
   externalUrl: string | null;
   description: unknown[] | null;

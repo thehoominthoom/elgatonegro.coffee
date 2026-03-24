@@ -259,6 +259,13 @@ export const event = defineType({
     }),
 
     defineField({
+      name: "note",
+      title: "Note",
+      type: "string",
+      description: "Optional note shown under the event time (e.g. 'Rain or shine', 'Doors open at 6')",
+    }),
+
+    defineField({
       name: "image",
       title: "Image",
       type: "image",

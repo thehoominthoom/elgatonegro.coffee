@@ -30,6 +30,7 @@ const EVENTS_QUERY = `*[
   "locationName": location.locationName,
   "location": location.displayAddress,
   schedule,
+  note,
   type,
   eventPageType,
   externalUrl,
@@ -163,6 +164,13 @@ export default async function Home() {
                     </span>
                   )}
                 </span>
+
+                {/* Note */}
+                {event.note && (
+                  <span className="md:col-start-2 font-sans text-xs text-brand-grey/50 italic">
+                    {event.note}
+                  </span>
+                )}
 
                 {/* Location — mobile */}
                 <span className="md:hidden font-sans text-[10px] uppercase tracking-[0.15em] text-brand-grey/50 mt-1">
