@@ -35,6 +35,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
       type: e.type ?? "open",
       isHappeningNow,
       recurrenceLabel: e.recurrenceLabel ?? null,
+      note: e.note ?? null,
       image: e.image
         ? urlFor(e.image).width(1440).url()
         : "/images/hero/hero-barista_roasting.webp",

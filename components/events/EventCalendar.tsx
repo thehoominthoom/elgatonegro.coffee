@@ -161,7 +161,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           <div className="flex flex-wrap items-center gap-2">
             <TypeBadge type={event.type} />
           </div>
-          <span className="font-display text-lg uppercase tracking-tight text-brand-black leading-tight">
+          <span className="font-display font-bold text-lg uppercase tracking-tight text-brand-black leading-tight">
             {event.title}
           </span>
           {dayEntry && (

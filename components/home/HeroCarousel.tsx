@@ -16,6 +16,7 @@ export interface HeroSlide {
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   isHappeningNow: boolean;
   recurrenceLabel: string | null;
+  note: string | null;
   image: string;
   href: string;
 }
@@ -264,6 +265,11 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             {slide.location && (
               <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
                 {slide.location}
+              </span>
+            )}
+            {slide.note && (
+              <span className="font-sans text-sm text-brand-grey/50 italic">
+                {slide.note}
               </span>
             )}
           </div>
