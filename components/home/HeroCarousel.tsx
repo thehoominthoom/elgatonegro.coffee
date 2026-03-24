@@ -201,7 +201,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       {/* Content */}
       <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto w-full">
         {/* Content block — per-element staggered animation, no key remount */}
-        <div className="w-full [filter:blur(0.5px)]">
+        <div className="w-full">
 
           {/* Happening Now badge */}
           {slide.isHappeningNow && (
