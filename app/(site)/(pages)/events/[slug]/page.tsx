@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, MapPin, ExternalLink } from "lucide-react";
+import { ArrowRight, MapPin, ExternalLink } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { formatEventDate } from "@/lib/home/dates";
@@ -98,7 +98,7 @@ function renderPortableText(
           return node;
         });
       return (
-        <p key={block._key} className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+        <p key={block._key} className="font-sans text-base md:text-lg leading-relaxed text-brand-black/80">
           {text}
         </p>
       );
@@ -194,8 +194,9 @@ export default async function EventDetailPage({
         ) : (
           <div className="absolute inset-0 bg-brand-black" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-brand-black/40 to-brand-black/30" />
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+        <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent" />
+        <div className="absolute inset-0 z-[2] bg-gradient-to-r from-brand-black/50 to-transparent" />
+        <div className="absolute inset-0 z-[20] grain-overlay-dark pointer-events-none" style={{ opacity: 0.85 }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
@@ -213,8 +214,8 @@ export default async function EventDetailPage({
             {schedule.length > 0 && (
               <p className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
                 {schedule.length === 1
-                  ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} \u2014 ${schedule[0].openTime} \u2013 ${schedule[0].closeTime} CT`
-                  : `${formatEventDate(schedule[0].date)} \u2013 ${formatEventDate(schedule[schedule.length - 1].date)}`}
+                  ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} — ${schedule[0].openTime} – ${schedule[0].closeTime} CT`
+                  : `${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`}
               </p>
             )}
             {event.recurrenceLabel && (
@@ -226,7 +227,7 @@ export default async function EventDetailPage({
               <p className="font-sans text-sm md:text-base text-brand-grey/70">
                 {event.locationName}
                 {event.displayAddress && (
-                  <span className="text-brand-grey/50"> \u2014 {event.displayAddress}</span>
+                  <span className="text-brand-grey/50"> — {event.displayAddress}</span>
                 )}
               </p>
             )}
@@ -242,14 +243,6 @@ export default async function EventDetailPage({
       {/* ── 2. Details ───────────────────────────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
-          <Link
-            href="/events"
-            className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.2em] text-brand-black/50 hover:text-brand-orange transition-colors mb-10"
-          >
-            <ArrowLeft size={14} />
-            All Events
-          </Link>
-
           {event.description && event.description.length > 0 && (
             <div className="space-y-4 border-l-2 border-brand-orange pl-4 md:pl-6 mb-10">
               {renderPortableText(event.description)}
@@ -258,17 +251,22 @@ export default async function EventDetailPage({
 
           {schedule.length > 1 && (
             <div className="border-t border-brand-black/10 pt-10 mb-10">
-              <h2 className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black mb-4">
+              <h2 className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black mb-6">
                 Schedule
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-0">
                 {schedule.map((s) => (
-                  <p
+                  <div
                     key={s._key}
-                    className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black"
+                    className="flex items-baseline gap-4 py-3 border-b border-brand-black/8 last:border-b-0"
                   >
-                    {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}: {s.openTime} \u2013 {s.closeTime} CT
-                  </p>
+                    <span className="font-display font-bold text-sm md:text-base uppercase tracking-tight text-brand-black min-w-[7rem]">
+                      {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
+                    </span>
+                    <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60">
+                      {s.openTime} – {s.closeTime} CT
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
