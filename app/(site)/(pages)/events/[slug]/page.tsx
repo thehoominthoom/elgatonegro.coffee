@@ -273,22 +273,20 @@ export default async function EventDetailPage({
 
           {/* Schedule strip */}
           {schedule.length > 1 && (
-            <div className="bg-brand-black grain-overlay-dark rounded-sm overflow-hidden mb-10">
-              <div className="relative z-10">
-                {schedule.map((s) => (
-                  <div
-                    key={s._key}
-                    className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 px-4 sm:px-6 border-b border-brand-grey/10 last:border-b-0"
-                  >
-                    <span className="font-sans font-extrabold text-[10px] sm:text-xs uppercase tracking-[0.15em] text-brand-grey/50 tabular-nums">
-                      {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
-                    </span>
-                    <span className="font-display font-bold text-base sm:text-lg uppercase tracking-tight text-brand-grey">
-                      {s.openTime} – {s.closeTime} CT
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div className="mb-10">
+              {schedule.map((s) => (
+                <div
+                  key={s._key}
+                  className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 border-b border-brand-black/10 last:border-b-0"
+                >
+                  <span className="font-sans font-extrabold text-[10px] sm:text-xs uppercase tracking-[0.15em] text-brand-black/50 tabular-nums">
+                    {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
+                  </span>
+                  <span className="font-display font-bold text-base sm:text-lg uppercase tracking-tight text-brand-black">
+                    {s.openTime} – {s.closeTime} CT
+                  </span>
+                </div>
+              ))}
             </div>
           )}
 
