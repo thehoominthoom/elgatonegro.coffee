@@ -85,7 +85,7 @@ export async function CartStatusBar() {
 
   return (
     <div
-      className={`w-full h-14 border-b border-brand-black/10 ${
+      className={`w-full min-h-14 py-2 border-b border-brand-black/10 ${
         hasOpen ? "bg-brand-yellow" : "bg-brand-black"
       }`}
     >
