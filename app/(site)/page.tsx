@@ -152,7 +152,7 @@ export default async function Home() {
 
                 {/* Title + badge */}
                 <span className="flex items-center gap-3">
-                  <span className="font-display font-bold text-xl md:text-3xl uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors">
+                  <span className="font-display font-bold text-lg md:text-2xl uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors">
                     {event.title}
                   </span>
                   {event.type === "ticketed" && (
