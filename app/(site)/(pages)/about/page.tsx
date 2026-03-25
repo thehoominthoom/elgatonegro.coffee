@@ -84,7 +84,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── 1. Hero — Full-viewport image + massive type ──────────────── */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden">
+      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36">
         <Image
           src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
           alt="El Gato Negro crew in front of the coffee cart"

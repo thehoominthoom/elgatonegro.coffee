@@ -188,7 +188,7 @@ export default async function EventDetailPage({
   return (
     <>
       {/* ── 1. Hero ──────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden">
+      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36">
         {event.image ? (
           <Image
             src={urlFor(event.image).width(1440).url()}
