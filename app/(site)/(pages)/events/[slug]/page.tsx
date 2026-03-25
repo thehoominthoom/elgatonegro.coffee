@@ -199,7 +199,7 @@ export default async function EventDetailPage({
         <div className="absolute inset-0 z-[20] grain-overlay-dark pointer-events-none" style={{ opacity: 0.85 }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
-          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+          <p className="font-accent text-base md:text-lg uppercase tracking-[0.1em] text-brand-orange mb-3">
             {TYPE_LABELS[event.type] || "Event"}
           </p>
 
@@ -210,31 +210,39 @@ export default async function EventDetailPage({
             {event.title}
           </h1>
 
-          <div className="mt-6 pl-3 border-l-2 border-brand-orange/40 space-y-1">
+          <div className="mt-6 pl-3 border-l-2 border-brand-orange/40 flex flex-col gap-1 mb-8">
+            {/* Line 1: recurrence + date range OR single-day date+time */}
             {schedule.length > 0 && (
-              <p className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
-                {schedule.length === 1
-                  ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} — ${schedule[0].openTime} – ${schedule[0].closeTime} CT`
-                  : `${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`}
-              </p>
+              <span className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
+                {event.recurrenceLabel
+                  ? `${event.recurrenceLabel} · ${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`
+                  : schedule.length === 1
+                    ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} — ${schedule[0].openTime} – ${schedule[0].closeTime} CT`
+                    : `${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`}
+              </span>
             )}
-            {event.recurrenceLabel && (
-              <p className="font-sans text-sm text-brand-grey/50 italic">
-                {event.recurrenceLabel}
-              </p>
-            )}
+            {/* Line 2: location — as a link if mapLink exists */}
             {event.locationName && (
-              <p className="font-sans text-sm md:text-base text-brand-grey/70">
-                {event.locationName}
-                {event.displayAddress && (
-                  <span className="text-brand-grey/50"> — {event.displayAddress}</span>
-                )}
-              </p>
+              event.mapLink ? (
+                <a
+                  href={event.mapLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em] hover:text-brand-grey transition-colors underline-offset-2 hover:underline"
+                >
+                  {event.locationName}
+                </a>
+              ) : (
+                <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
+                  {event.locationName}
+                </span>
+              )
             )}
+            {/* Line 3: note — smaller, italic */}
             {event.note && (
-              <p className="font-sans text-sm text-brand-orange italic mt-2">
+              <span className="font-sans text-sm text-brand-grey/50 italic">
                 {event.note}
-              </p>
+              </span>
             )}
           </div>
         </div>
@@ -243,27 +251,39 @@ export default async function EventDetailPage({
       {/* ── 2. Details ───────────────────────────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
+          {/* View Map — moved above description */}
+          {event.mapLink && (
+            <a
+              href={event.mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-orange hover:text-brand-black transition-colors mb-8"
+            >
+              <MapPin size={14} />
+              View Map
+            </a>
+          )}
+
+          {/* Description */}
           {event.description && event.description.length > 0 && (
             <div className="space-y-4 border-l-2 border-brand-orange pl-4 md:pl-6 mb-10">
               {renderPortableText(event.description)}
             </div>
           )}
 
+          {/* Schedule strip */}
           {schedule.length > 1 && (
-            <div className="border-t border-brand-black/10 pt-10 mb-10">
-              <h2 className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black mb-6">
-                Schedule
-              </h2>
-              <div className="space-y-0">
+            <div className="bg-brand-black grain-overlay-dark rounded-sm overflow-hidden mb-10">
+              <div className="relative z-10">
                 {schedule.map((s) => (
                   <div
                     key={s._key}
-                    className="flex items-baseline gap-4 py-3 border-b border-brand-black/8 last:border-b-0"
+                    className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 px-4 sm:px-6 border-b border-brand-grey/10 last:border-b-0"
                   >
-                    <span className="font-display font-bold text-sm md:text-base uppercase tracking-tight text-brand-black min-w-[7rem]">
+                    <span className="font-sans font-extrabold text-[10px] sm:text-xs uppercase tracking-[0.15em] text-brand-grey/50 tabular-nums">
                       {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
                     </span>
-                    <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60">
+                    <span className="font-display font-bold text-base sm:text-lg uppercase tracking-tight text-brand-grey">
                       {s.openTime} – {s.closeTime} CT
                     </span>
                   </div>
@@ -272,6 +292,7 @@ export default async function EventDetailPage({
             </div>
           )}
 
+          {/* CTA buttons */}
           <div className="flex flex-wrap gap-4">
             {event.ticketUrl && (
               <a
@@ -293,17 +314,6 @@ export default async function EventDetailPage({
               >
                 {event.ctaLabel}
                 <ExternalLink size={14} />
-              </a>
-            )}
-            {event.mapLink && (
-              <a
-                href={event.mapLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-orange hover:text-brand-black transition-colors"
-              >
-                <MapPin size={14} />
-                View Map
               </a>
             )}
           </div>
