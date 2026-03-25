@@ -109,30 +109,29 @@ export async function CartStatusBar() {
             {openEvents.map(({ event, schedule }) => {
               const label = locationLabel(event);
               return (
-                <div key={event._id} className="flex items-center gap-3 shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
-                  <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
-                    {schedule!.openTime} – {schedule!.closeTime} CT
-                  </span>
-                  {label && (
-                    <>
-                      <span className="text-brand-grey/40">·</span>
-                      {event.mapLink ? (
+                <div key={event._id} className="flex items-start gap-3 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0 mt-1.5" />
+                  <div className="flex flex-col">
+                    <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
+                      {schedule!.openTime} – {schedule!.closeTime} CT
+                    </span>
+                    {label && (
+                      event.mapLink ? (
                         <Link
                           href={event.mapLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors whitespace-nowrap"
+                          className="font-sans font-semibold text-[10px] text-brand-grey/70 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors whitespace-nowrap"
                         >
                           {label}
                         </Link>
                       ) : (
-                        <span className="font-sans font-semibold text-xs text-brand-grey/80 uppercase tracking-[0.1em] whitespace-nowrap">
+                        <span className="font-sans font-semibold text-[10px] text-brand-grey/70 uppercase tracking-[0.1em] whitespace-nowrap">
                           {label}
                         </span>
-                      )}
-                    </>
-                  )}
+                      )
+                    )}
+                  </div>
                 </div>
               );
             })}

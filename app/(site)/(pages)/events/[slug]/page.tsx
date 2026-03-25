@@ -5,7 +5,12 @@ import { notFound } from "next/navigation";
 import { ArrowRight, MapPin, ExternalLink } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { formatEventDate } from "@/lib/home/dates";
+import {
+  formatEventDate,
+  formatEventDateRange,
+  getHeroTimeContext,
+  todayInCT,
+} from "@/lib/home/dates";
 
 // ─── ISR ──────────────────────────────────────────────────────────────────────
 
@@ -177,6 +182,8 @@ export default async function EventDetailPage({
   const schedule = event.schedule
     ? [...event.schedule].sort((a, b) => a.date.localeCompare(b.date))
     : [];
+  const today = todayInCT();
+  const upcoming = schedule.filter((d) => d.date >= today);
 
   return (
     <>
@@ -211,17 +218,24 @@ export default async function EventDetailPage({
           </h1>
 
           <div className="mt-6 pl-3 border-l-2 border-brand-orange/40 flex flex-col gap-1 mb-8">
-            {/* Line 1: recurrence + date range OR single-day date+time */}
-            {schedule.length > 0 && (
+            {/* Line 1: recurrence + date range — matches homepage hero */}
+            {upcoming.length > 0 && (
               <span className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
                 {event.recurrenceLabel
-                  ? `${event.recurrenceLabel} · ${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`
-                  : schedule.length === 1
-                    ? `${formatDayOfWeek(schedule[0].date)}, ${formatEventDate(schedule[0].date)} — ${schedule[0].openTime} – ${schedule[0].closeTime} CT`
-                    : `${formatEventDate(schedule[0].date)} – ${formatEventDate(schedule[schedule.length - 1].date)}`}
+                  ? `${event.recurrenceLabel} · ${formatEventDateRange(upcoming)}`
+                  : formatEventDateRange(upcoming)}
               </span>
             )}
-            {/* Line 2: location — as a link if mapLink exists */}
+            {/* Line 2: time context — "Today: 9AM–3PM CT" or "Next: Mon 11AM–2PM CT" */}
+            {upcoming.length > 0 && (() => {
+              const timeContext = getHeroTimeContext(upcoming, today, !!event.recurrenceLabel);
+              return timeContext ? (
+                <span className="font-sans font-semibold text-sm text-brand-grey/70 tracking-[0.05em] uppercase">
+                  {timeContext}
+                </span>
+              ) : null;
+            })()}
+            {/* Line 3: location — as a link if mapLink exists */}
             {event.locationName && (
               event.mapLink ? (
                 <a
@@ -238,7 +252,7 @@ export default async function EventDetailPage({
                 </span>
               )
             )}
-            {/* Line 3: note — smaller, italic */}
+            {/* Line 4: note — smaller, italic */}
             {event.note && (
               <span className="font-sans text-sm text-brand-grey/50 italic">
                 {event.note}
@@ -272,9 +286,9 @@ export default async function EventDetailPage({
           )}
 
           {/* Schedule strip */}
-          {schedule.length > 1 && (
+          {upcoming.length > 1 && (
             <div className="mb-10">
-              {schedule.map((s) => (
+              {upcoming.map((s) => (
                 <div
                   key={s._key}
                   className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 border-b border-brand-black/10 last:border-b-0"
