@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { EncryptJWT, jwtDecrypt } from "jose";
 import { shopifyFetch } from "./client";
+import { deriveEncryptionKey } from "./session";
 import {
   CREATE_CART_MUTATION,
   ADD_TO_CART_MUTATION,
@@ -13,34 +14,9 @@ import {
 import type { Cart } from "./types";
 
 const CART_COOKIE = "egn-cart-id";
-const SESSION_SECRET = process.env.SESSION_SECRET!;
-
-// Derive a 256-bit key from the session secret using HKDF (same pattern as session.ts)
-let _derivedKey: Uint8Array | null = null;
 
 async function getEncryptionKey(): Promise<Uint8Array> {
-  if (_derivedKey) return _derivedKey;
-
-  const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(SESSION_SECRET),
-    "HKDF",
-    false,
-    ["deriveBits"]
-  );
-  const derived = await crypto.subtle.deriveBits(
-    {
-      name: "HKDF",
-      hash: "SHA-256",
-      salt: new Uint8Array(32),
-      info: encoder.encode("egn-cart-encryption"),
-    },
-    keyMaterial,
-    256
-  );
-  _derivedKey = new Uint8Array(derived);
-  return _derivedKey;
+  return deriveEncryptionKey("egn-cart-encryption");
 }
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────

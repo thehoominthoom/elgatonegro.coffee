@@ -1,13 +1,29 @@
 import type { NextConfig } from "next";
 
 // ─── Security headers ──────────────────────────────────────────────────────
+
+// unsafe-eval required by Next.js in development (react-refresh uses eval for HMR).
+// Neither Clerk nor Sanity Studio require it at runtime — safe to omit in production.
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
+  "https://*.clerk.accounts.dev",
+  "https://clerk.elgatonegro.coffee",
+  "https://accounts.elgatonegro.coffee",
+  "https://*.clerk.com",
+  "https://challenges.cloudflare.com",
+  "https://maps.googleapis.com",
+  "https://vercel.live",
+].join(" ");
+
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
       // Scripts: self + Clerk (dev + prod) + Turnstile + Google Maps + Vercel preview
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee https://*.clerk.com https://challenges.cloudflare.com https://maps.googleapis.com https://vercel.live",
+      `script-src ${scriptSrc}`,
       // Styles: self + unsafe-inline (Tailwind + Clerk inject styles)
       "style-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://clerk.elgatonegro.coffee https://accounts.elgatonegro.coffee",
       // Images: self + data URIs + all CDNs used

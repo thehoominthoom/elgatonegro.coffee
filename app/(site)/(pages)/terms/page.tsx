@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function TermsOfServicePage() {
   return (
-    <main className="min-h-screen bg-brand-grey">
+    <main className="min-h-screen bg-brand-grey grain-overlay">
       {/* ── Header ──────────────────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
+      <section className="relative z-10 bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
         <div className="mx-auto max-w-7xl border-b-2 border-brand-black pb-10 md:pb-16">
           <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-2">
             LEGAL
@@ -26,7 +26,7 @@ export default function TermsOfServicePage() {
       </section>
 
       {/* ── Content ─────────────────────────────────────────────── */}
-      <section className="px-4 md:px-6 pb-16 md:pb-24">
+      <section className="relative z-10 px-4 md:px-6 pb-16 md:pb-24">
         <div className="mx-auto max-w-3xl space-y-12">
           {/* Introduction */}
           <div>
@@ -326,7 +326,7 @@ export default function TermsOfServicePage() {
                 If informal resolution fails, any remaining dispute shall be
                 resolved by binding arbitration in accordance with the rules of
                 the American Arbitration Association. Arbitration shall take place
-                in the State of Texas.
+                in the State of Tennessee.
               </li>
               <li>
                 <strong className="text-brand-black/90">Class action waiver:</strong>{" "}
@@ -344,10 +344,10 @@ export default function TermsOfServicePage() {
             </h2>
             <p className="font-sans text-sm leading-relaxed text-brand-black/70">
               These Terms shall be governed by and construed in accordance with
-              the laws of the State of Texas, United States, without regard to
+              the laws of the State of Tennessee, United States, without regard to
               its conflict of law provisions. Any legal action or proceeding not
               subject to arbitration shall be brought exclusively in the state or
-              federal courts located in Texas.
+              federal courts located in Tennessee.
             </p>
           </div>
 

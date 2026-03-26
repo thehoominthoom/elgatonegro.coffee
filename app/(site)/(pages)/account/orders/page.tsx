@@ -51,7 +51,7 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-black mb-6">
+      <h2 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black mb-6">
         Order History
       </h2>
 
@@ -62,7 +62,7 @@ export default async function OrdersPage() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex bg-brand-orange text-brand-grey text-sm font-display font-bold uppercase tracking-[0.1em] px-5 py-2.5 rounded-sm hover:bg-brand-yellow hover:text-brand-black transition-colors"
+            className="inline-flex bg-brand-orange text-brand-grey text-sm font-display font-bold uppercase tracking-[0.1em] px-5 py-2.5 rounded-sm hover:bg-brand-yellow transition-colors"
           >
             Start Shopping
           </Link>
@@ -96,7 +96,7 @@ export default async function OrdersPage() {
                           alt={li.image.altText ?? li.title}
                           width={44}
                           height={44}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover photo-treatment-sm"
                         />
                       )}
                     </div>

@@ -70,6 +70,18 @@ const EVENT_QUERY = `*[_type == "event" && slug.current == $slug][0] {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Convert "9:00 AM" / "3:00 PM" to "09:00" / "15:00" for ISO 8601 */
+function convertTo24h(time: string): string {
+  const match = time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return "00:00";
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const period = match[3].toUpperCase();
+  if (period === "PM" && hours !== 12) hours += 12;
+  if (period === "AM" && hours === 12) hours = 0;
+  return `${String(hours).padStart(2, "0")}:${minutes}`;
+}
+
 const TYPE_LABELS: Record<EventDetail["type"], string> = {
   open: "Open Event",
   ticketed: "Ticketed",
@@ -185,8 +197,45 @@ export default async function EventDetailPage({
   const today = todayInCT();
   const upcoming = schedule.filter((d) => d.date >= today);
 
+  const descriptionPlainText = event.description
+    ?.filter((b) => b._type === "block")
+    .flatMap((b) => b.children?.map((c) => c.text) ?? [])
+    .join(" ")
+    .slice(0, 200) || "";
+
+  const eventJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    ...(descriptionPlainText && { description: descriptionPlainText }),
+    ...(event.image && { image: urlFor(event.image).width(1200).height(630).url() }),
+    ...(schedule[0] && {
+      startDate: `${schedule[0].date}T${convertTo24h(schedule[0].openTime)}`,
+    }),
+    ...(schedule.length > 0 && {
+      endDate: `${schedule[schedule.length - 1].date}T${convertTo24h(schedule[schedule.length - 1].closeTime)}`,
+    }),
+    ...(event.locationName && {
+      location: {
+        "@type": "Place",
+        name: event.locationName,
+        ...(event.displayAddress && { address: event.displayAddress }),
+      },
+    }),
+    organizer: {
+      "@type": "Organization",
+      name: "El Gato Negro Coffee",
+      url: "https://www.elgatonegro.coffee",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+      />
+
       {/* ── 1. Hero ──────────────────────────────────────────────────────── */}
       <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36">
         {event.image ? (

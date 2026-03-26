@@ -9,7 +9,7 @@ import { EncryptJWT, jwtDecrypt } from "jose";
 const SESSION_COOKIE = "egn-customer-session";
 export const AUTH_STATE_COOKIE = "egn-auth-state";
 
-function getSessionSecret(): string {
+export function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 32) {
     throw new Error(
@@ -19,11 +19,14 @@ function getSessionSecret(): string {
   return secret;
 }
 
-// Derive a 256-bit key from the session secret using HKDF (Web Crypto API)
-let _derivedKey: Uint8Array | null = null;
+// Derive a 256-bit key from the session secret using HKDF (Web Crypto API).
+// Accepts an `info` string to derive distinct keys for different purposes
+// (e.g. "egn-session-encryption" vs "egn-cart-encryption").
+const _derivedKeys = new Map<string, Uint8Array>();
 
-async function getEncryptionKey(): Promise<Uint8Array> {
-  if (_derivedKey) return _derivedKey;
+export async function deriveEncryptionKey(info: string): Promise<Uint8Array> {
+  const cached = _derivedKeys.get(info);
+  if (cached) return cached;
 
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
@@ -38,13 +41,18 @@ async function getEncryptionKey(): Promise<Uint8Array> {
       name: "HKDF",
       hash: "SHA-256",
       salt: new Uint8Array(32),
-      info: encoder.encode("egn-session-encryption"),
+      info: encoder.encode(info),
     },
     keyMaterial,
     256
   );
-  _derivedKey = new Uint8Array(derived);
-  return _derivedKey;
+  const key = new Uint8Array(derived);
+  _derivedKeys.set(info, key);
+  return key;
+}
+
+async function getEncryptionKey(): Promise<Uint8Array> {
+  return deriveEncryptionKey("egn-session-encryption");
 }
 
 // ─── Session payload ────────────────────────────────────────────────────────

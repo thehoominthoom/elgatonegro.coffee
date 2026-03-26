@@ -79,18 +79,26 @@ export default async function EventsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-brand-grey grain-overlay">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-10">
-        <div className="mb-10 pb-6 border-b-2 border-brand-black">
-          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-2">
-            What&apos;s Coming Up
+    <>
+      {/* ── Hero header ──────────────────────────────────────────── */}
+      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
+        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+            WHAT&apos;S HAPPENING
           </p>
-          <h1 className="font-display font-bold text-5xl md:text-7xl uppercase tracking-tight text-brand-black">
+          <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight">
             Events
           </h1>
         </div>
-        <EventCalendar events={events} />
-      </div>
-    </main>
+      </section>
+
+      {/* ── Calendar ─────────────────────────────────────────────── */}
+      <main className="min-h-screen bg-brand-grey grain-overlay">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-10">
+          <EventCalendar events={events} />
+        </div>
+      </main>
+    </>
   );
 }

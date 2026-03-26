@@ -37,7 +37,7 @@ import {
   updateProductOption,
 } from "@/lib/shopify/ai-tools";
 
-const SYSTEM_PROMPT = `You are an internal business assistant for El Gato Negro, a mobile coffee cart business in San Antonio, TX.
+const SYSTEM_PROMPT = `You are an internal business assistant for El Gato Negro, a mobile coffee cart business in Nashville, TN.
 
 You help the owner manage their Shopify store by looking up products, orders, inventory, customers, and sales data.
 

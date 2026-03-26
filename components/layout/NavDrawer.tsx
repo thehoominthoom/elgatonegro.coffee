@@ -58,44 +58,46 @@ export function NavDrawer() {
       <div
         inert={!isOpen ? true : undefined}
         className={[
-          "fixed top-[7.5rem] bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey flex flex-col px-6 pt-6 pb-8",
+          "fixed top-[7.5rem] bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey grain-overlay flex flex-col px-6 pt-6 pb-8",
           "transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
       >
-        {/* Nav links */}
-        <nav>
-          <ul className="list-none m-0 p-0">
-            {navLinks.map(({ label, href }) => (
-              <li key={href} className="border-b border-brand-black/10 last:border-b-0">
-                <Link
-                  href={href}
-                  onClick={close}
-                  className="font-sans font-extrabold text-2xl uppercase tracking-wide text-brand-black py-4 block w-full"
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="relative z-10 flex flex-col flex-1">
+          {/* Nav links */}
+          <nav>
+            <ul className="list-none m-0 p-0">
+              {navLinks.map(({ label, href }) => (
+                <li key={href} className="border-b border-brand-black/10 last:border-b-0">
+                  <Link
+                    href={href}
+                    onClick={close}
+                    className="font-sans font-extrabold text-2xl uppercase tracking-wide text-brand-black py-4 block w-full"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        {/* Divider */}
-        <div className="border-t border-brand-black/10 mt-6 mb-6" />
+          {/* Divider */}
+          <div className="border-t border-brand-black/10 mt-6 mb-6" />
 
-        {/* Book the Cart CTA */}
-        <Link
-          href="/inquiry"
-          onClick={close}
-          className="w-full bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] py-3 rounded-sm hover:bg-brand-yellow transition-colors flex items-center justify-center"
-        >
-          Book the Cart
-        </Link>
+          {/* Book the Cart CTA */}
+          <Link
+            href="/inquiry"
+            onClick={close}
+            className="w-full bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] py-3 rounded-sm hover:bg-brand-yellow transition-colors flex items-center justify-center"
+          >
+            Book the Cart
+          </Link>
 
-        {/* Contact line */}
-        <p className="text-xs font-sans text-brand-black/60 tracking-wide text-center mt-4">
-          sales@elgatonegro.coffee
-        </p>
+          {/* Contact line */}
+          <p className="text-xs font-sans text-brand-black/60 tracking-wide text-center mt-4">
+            sales@elgatonegro.coffee
+          </p>
+        </div>
       </div>
 
       {/* Backdrop — closes drawer on tap, no dimming */}

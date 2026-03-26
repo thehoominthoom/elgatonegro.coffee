@@ -69,7 +69,7 @@ export default async function ServicePage({
               </p>
               <Link
                 href={`/inquiry?service=${config.slug}`}
-                className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
+                className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow transition-colors"
               >
                 Request a Quote
                 <ArrowRight size={16} />
@@ -167,7 +167,7 @@ export default async function ServicePage({
             </p>
             <Link
               href={`/inquiry?service=${config.slug}`}
-              className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors"
+              className="mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 hover:bg-brand-yellow transition-colors"
             >
               Start Your Inquiry
               <ArrowRight size={16} />
@@ -215,9 +215,13 @@ function ServiceHeroMedia({
     );
   }
 
-  // No media — render placeholder
+  // No media — render branded placeholder
   return (
-    <div className="aspect-[16/10] md:aspect-[3/4] bg-brand-black/40" />
+    <div className="relative aspect-[16/10] md:aspect-[3/4] bg-brand-black overflow-hidden">
+      <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
+      <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
+    </div>
   );
 }
 

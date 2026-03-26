@@ -125,8 +125,32 @@ export default async function Home() {
   const today = todayInCT();
   const heroSlides = buildHeroSlides(sanityEvents, today);
 
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "El Gato Negro Coffee",
+    url: "https://www.elgatonegro.coffee",
+    logo: "https://www.elgatonegro.coffee/brand/hellcat-color.svg",
+    sameAs: [
+      "https://www.instagram.com/elgatonegro.coffee/",
+      "https://www.tiktok.com/@el.gato.negro.coffee",
+    ],
+    description: "Nashville's mobile espresso cart — coffee that shows up.",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Nashville",
+      addressRegion: "TN",
+      addressCountry: "US",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+
       {/* ── 1. Culture — Hero Carousel ────────────────────────────────────── */}
       <HeroCarousel slides={heroSlides} />
 

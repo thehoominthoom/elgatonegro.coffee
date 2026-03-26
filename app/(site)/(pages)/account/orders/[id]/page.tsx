@@ -95,7 +95,7 @@ export default async function OrderDetailPage({
 
       {/* Order header */}
       <div className="mb-8">
-        <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-black">
+        <h2 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black">
           {order.name}
         </h2>
         <p className="font-sans text-sm text-brand-black/50 mt-1">
@@ -135,7 +135,7 @@ export default async function OrderDetailPage({
                   alt={item.image.altText ?? item.title}
                   width={64}
                   height={64}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover photo-treatment-sm"
                 />
               )}
             </div>

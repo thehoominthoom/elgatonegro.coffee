@@ -76,8 +76,61 @@ export default async function ProductPage({
     // Recommendations failure shouldn't break the page
   }
 
+  const firstVariant = product.variants.nodes[0];
+  const collection = product.collections.nodes[0];
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description,
+    ...(product.featuredImage && { image: product.featuredImage.url }),
+    brand: {
+      "@type": "Brand",
+      name: product.vendor,
+    },
+    offers: {
+      "@type": "Offer",
+      price: firstVariant?.price.amount ?? product.priceRange.minVariantPrice.amount,
+      priceCurrency: firstVariant?.price.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
+      availability: product.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `https://www.elgatonegro.coffee/shop/products/${handle}`,
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Shop", item: "https://www.elgatonegro.coffee/shop" },
+      ...(collection
+        ? [{
+            "@type": "ListItem" as const,
+            position: 2,
+            name: collection.title,
+            item: `https://www.elgatonegro.coffee/shop/collections/${collection.handle}`,
+          }]
+        : []),
+      {
+        "@type": "ListItem",
+        position: collection ? 3 : 2,
+        name: product.title,
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-brand-grey grain-overlay">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12 pb-16 md:pb-24 relative z-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 min-w-0 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-8">

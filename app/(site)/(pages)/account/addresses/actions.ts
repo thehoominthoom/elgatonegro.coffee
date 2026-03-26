@@ -58,12 +58,12 @@ export async function createAddress(
   }
 }
 
-export async function setDefaultAddress(formData: FormData): Promise<void> {
+export async function setDefaultAddress(formData: FormData): Promise<AddressActionState> {
   const addressId = formData.get("addressId") as string;
-  if (!addressId) return;
+  if (!addressId) return { success: false, error: "No address selected." };
 
   try {
-    await customerFetch<{
+    const data = await customerFetch<{
       customerAddressUpdate: {
         customerAddress: { id: string } | null;
         userErrors: Array<{ message: string }>;
@@ -73,19 +73,27 @@ export async function setDefaultAddress(formData: FormData): Promise<void> {
       variables: { addressId },
     });
 
+    if (data.customerAddressUpdate.userErrors.length) {
+      return {
+        success: false,
+        error: data.customerAddressUpdate.userErrors[0].message,
+      };
+    }
+
     revalidatePath("/account/addresses");
     revalidatePath("/account");
+    return { success: true, error: null };
   } catch {
-    // Silently fail
+    return { success: false, error: "Failed to set default address. Please try again." };
   }
 }
 
-export async function deleteAddress(formData: FormData): Promise<void> {
+export async function deleteAddress(formData: FormData): Promise<AddressActionState> {
   const addressId = formData.get("addressId") as string;
-  if (!addressId) return;
+  if (!addressId) return { success: false, error: "No address selected." };
 
   try {
-    await customerFetch<{
+    const data = await customerFetch<{
       customerAddressDelete: {
         deletedAddressId: string | null;
         userErrors: Array<{ message: string }>;
@@ -95,8 +103,16 @@ export async function deleteAddress(formData: FormData): Promise<void> {
       variables: { addressId },
     });
 
+    if (data.customerAddressDelete.userErrors.length) {
+      return {
+        success: false,
+        error: data.customerAddressDelete.userErrors[0].message,
+      };
+    }
+
     revalidatePath("/account/addresses");
+    return { success: true, error: null };
   } catch {
-    // Silently fail — page will refresh with current state
+    return { success: false, error: "Failed to delete address. Please try again." };
   }
 }

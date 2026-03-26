@@ -27,39 +27,39 @@ export default async function ShopPage() {
   }
 
   return (
-    <main className="min-h-screen bg-brand-grey grain-overlay">
-      {/* ── Header ──────────────────────────────────────────────── */}
-      <section className="px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
-        <div className="mx-auto max-w-7xl relative z-10 border-b-2 border-brand-black pb-10 md:pb-16">
-          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-2">
-            El Gato Negro
+    <>
+      {/* ── Hero header ──────────────────────────────────────────── */}
+      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
+        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+            WHAT WE&apos;RE SELLING
           </p>
-          <h1 className="font-display font-bold text-5xl md:text-7xl uppercase tracking-tight text-brand-black">
-            The Shop
+          <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight">
+            Shop
           </h1>
-          <p className="font-sans text-base text-brand-black/60 mt-3 max-w-md">
-            Beans, merch, and gear. Everything brewed with intention.
-          </p>
         </div>
       </section>
 
       {/* ── Collections grid ────────────────────────────────────── */}
-      <section className="px-4 md:px-6 pb-16">
-        <div className="mx-auto max-w-7xl relative z-10">
-          {collections.length === 0 ? (
-            <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
-              Coming soon.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {collections.map((collection) => (
-                <CollectionCard key={collection.id} collection={collection} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-    </main>
+      <main className="min-h-screen bg-brand-grey grain-overlay">
+        <section className="px-4 md:px-6 py-8 md:py-10 pb-16">
+          <div className="mx-auto max-w-7xl relative z-10">
+            {collections.length === 0 ? (
+              <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
+                Coming soon.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {collections.map((collection) => (
+                  <CollectionCard key={collection.id} collection={collection} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
 

@@ -8,11 +8,11 @@ import { ArrowRight } from "lucide-react";
 export const metadata: Metadata = {
   title: "About — El Gato Negro Coffee",
   description:
-    "El Gato Negro is a San Antonio mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters. Meet the team behind the brand.",
+    "El Gato Negro is a Nashville mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters. Meet the team behind the brand.",
   openGraph: {
     title: "About — El Gato Negro Coffee",
     description:
-      "San Antonio mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters.",
+      "Nashville mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters.",
     type: "website",
     images: [
       {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About — El Gato Negro Coffee",
     description:
-      "San Antonio mobile coffee cart. Specialty espresso, bold energy, community first.",
+      "Nashville mobile coffee cart. Specialty espresso, bold energy, community first.",
     images: ["/images/about/crew_in_front_of_cart_exchange-260110.webp"],
   },
 };
@@ -71,10 +71,10 @@ const approach = [
       "We do not just show up with a cart. We work with organizers to match the energy, the branding, and the flow of the event. Coffee is the product. Experience is the point.",
   },
   {
-    eyebrow: "San Antonio Built Us",
+    eyebrow: "Nashville Built Us",
     title: "Community Roots",
     description:
-      "San Antonio built us. We show up for local events, support the community, and keep the relationships that matter close. This is not a franchise play. This is home.",
+      "Nashville built us. We show up for local events, support the community, and keep the relationships that matter close. This is not a franchise play. This is home.",
   },
 ];
 
@@ -166,7 +166,7 @@ export default function AboutPage() {
                   was happening around it.
                 </p>
                 <p className="font-sans text-sm md:text-base leading-relaxed text-brand-grey/70">
-                  EGN is San Antonio through and through. The name, the look, the
+                  EGN is Nashville through and through. The name, the look, the
                   attitude — it all comes from here. We pull from skate culture,
                   Mexican cowboy roots, and a deep belief that coffee should hit
                   different when it is made by people who actually care.

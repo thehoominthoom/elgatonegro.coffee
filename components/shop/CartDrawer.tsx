@@ -138,9 +138,9 @@ export function CartDrawer() {
             <a
               href={rewriteCheckoutUrl(cart.checkoutUrl)}
               className={[
-                "block w-full bg-brand-orange text-brand-grey text-center",
-                "font-sans font-extrabold text-sm uppercase tracking-[0.15em]",
-                "py-4 hover:bg-brand-yellow hover:text-brand-black transition-colors",
+                "block w-full bg-brand-orange text-brand-grey text-center rounded-sm",
+                "font-display font-bold text-sm uppercase tracking-[0.1em]",
+                "py-4 hover:bg-brand-yellow transition-colors",
                 isPending ? "opacity-60 pointer-events-none" : "",
               ].join(" ")}
             >

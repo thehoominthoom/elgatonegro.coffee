@@ -45,7 +45,10 @@ export default async function AddressesPage() {
 
   return (
     <div>
-      <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-black mb-6">
+      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/50 mb-2">
+        Your Addresses
+      </p>
+      <h2 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black mb-6">
         Addresses
       </h2>
 

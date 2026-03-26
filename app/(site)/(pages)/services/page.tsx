@@ -51,7 +51,10 @@ export default function ServicesPage() {
                 >
                   {isEven ? (
                     <>
-                      <div className="aspect-[4/3] bg-brand-black/[0.04] overflow-hidden">
+                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden">
+                        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                        {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
+                        <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                         <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />
                       </div>
                       <ServiceBlockContent service={service} />
@@ -59,7 +62,10 @@ export default function ServicesPage() {
                   ) : (
                     <>
                       <ServiceBlockContent service={service} />
-                      <div className="aspect-[4/3] bg-brand-black/[0.04] overflow-hidden">
+                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden">
+                        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                        {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
+                        <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                         <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />
                       </div>
                     </>
@@ -68,7 +74,10 @@ export default function ServicesPage() {
 
                 {/* Mobile: stacked */}
                 <div className="md:hidden">
-                  <div className="aspect-[16/10] bg-brand-black/[0.04] overflow-hidden w-full mb-6">
+                  <div className="relative aspect-[16/10] bg-brand-black overflow-hidden w-full mb-6">
+                    <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                    {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
+                    <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                     <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <ServiceBlockContent service={service} />
@@ -92,7 +101,7 @@ export default function ServicesPage() {
           </div>
           <Link
             href="/inquiry"
-            className="group shrink-0 inline-flex items-center gap-2 border border-brand-black px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm text-brand-black transition-colors hover:bg-brand-black hover:text-brand-grey whitespace-nowrap"
+            className="group shrink-0 inline-flex items-center gap-2 border border-brand-black bg-brand-black text-brand-grey px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm transition-colors hover:bg-brand-orange hover:border-brand-orange whitespace-nowrap"
           >
             Get in Touch
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />

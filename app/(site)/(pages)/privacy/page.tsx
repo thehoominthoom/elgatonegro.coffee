@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-brand-grey">
+    <main className="min-h-screen bg-brand-grey grain-overlay">
       {/* ── Header ──────────────────────────────────────────────── */}
-      <section className="bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
+      <section className="relative z-10 bg-brand-grey px-4 md:px-6 pt-4 pb-10 md:pt-8 md:pb-16">
         <div className="mx-auto max-w-7xl border-b-2 border-brand-black pb-10 md:pb-16">
           <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-2">
             LEGAL
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* ── Content ─────────────────────────────────────────────── */}
-      <section className="px-4 md:px-6 pb-16 md:pb-24">
+      <section className="relative z-10 px-4 md:px-6 pb-16 md:pb-24">
         <div className="mx-auto max-w-3xl space-y-12">
           {/* Introduction */}
           <div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { deleteAddress, setDefaultAddress } from "./actions";
+import { useActionState } from "react";
+import { deleteAddress, setDefaultAddress, type AddressActionState } from "./actions";
 
 interface AddressCardProps {
   address: {
@@ -10,9 +11,22 @@ interface AddressCardProps {
   isDefault: boolean;
 }
 
+const initialState: AddressActionState = { success: false, error: null };
+
 export function AddressCard({ address, isDefault }: AddressCardProps) {
+  const [defaultState, defaultAction] = useActionState(
+    (_prev: AddressActionState, formData: FormData) => setDefaultAddress(formData),
+    initialState
+  );
+  const [deleteState, deleteAction] = useActionState(
+    (_prev: AddressActionState, formData: FormData) => deleteAddress(formData),
+    initialState
+  );
+
+  const error = defaultState.error || deleteState.error;
+
   return (
-    <div className="border border-brand-black/10 rounded-sm px-4 py-4">
+    <div className="border border-brand-black/10 rounded-sm px-4 py-4 hover:border-brand-orange/30 transition-colors">
       {isDefault && (
         <p className="font-sans font-extrabold text-[10px] uppercase tracking-[0.2em] text-brand-orange mb-2">
           Default
@@ -21,9 +35,12 @@ export function AddressCard({ address, isDefault }: AddressCardProps) {
       <p className="font-sans text-sm text-brand-black/70 whitespace-pre-line">
         {address.formatted.join("\n")}
       </p>
+      {error && (
+        <p className="font-sans text-xs text-red-600 mt-2">{error}</p>
+      )}
       <div className="flex gap-3 mt-3">
         {!isDefault && (
-          <form action={setDefaultAddress}>
+          <form action={defaultAction}>
             <input type="hidden" name="addressId" value={address.id} />
             <button
               type="submit"
@@ -33,7 +50,7 @@ export function AddressCard({ address, isDefault }: AddressCardProps) {
             </button>
           </form>
         )}
-        <form action={deleteAddress}>
+        <form action={deleteAction}>
           <input type="hidden" name="addressId" value={address.id} />
           <button
             type="submit"

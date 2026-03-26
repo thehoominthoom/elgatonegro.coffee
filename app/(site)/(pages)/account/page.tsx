@@ -69,7 +69,7 @@ export default async function AccountPage() {
     <div>
       {/* Welcome */}
       <div className="mb-10">
-        <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-black">
+        <h2 className="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight text-brand-black">
           Welcome back, {displayName}
         </h2>
         <p className="font-sans text-sm text-brand-black/50 mt-1">
@@ -78,7 +78,7 @@ export default async function AccountPage() {
       </div>
 
       {/* Quick links grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-brand-black/10 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-brand-black/10 rounded-sm mb-10">
         <QuickLink
           href="/account/orders"
           label="Order History"
@@ -198,10 +198,10 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between bg-brand-grey px-5 py-5 hover:bg-brand-black/[0.02] transition-colors"
+      className="group flex items-center justify-between bg-brand-grey px-5 py-5 border border-transparent rounded-sm hover:border-brand-orange/30 hover:bg-brand-black/[0.02] transition-colors"
     >
       <div>
-        <p className="font-sans font-extrabold text-sm uppercase tracking-[0.1em] text-brand-black">
+        <p className="font-display font-bold text-sm uppercase tracking-tight text-brand-black">
           {label}
         </p>
         <p className="font-sans text-xs text-brand-black/50 mt-1">

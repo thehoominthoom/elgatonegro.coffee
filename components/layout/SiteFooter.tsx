@@ -44,8 +44,8 @@ function FooterColumn({ title, links }: FooterColumnProps) {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-brand-black text-brand-grey">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer className="bg-brand-black text-brand-grey grain-overlay-dark">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         {/* Column 1 — Brand */}
         <div className="col-span-2 md:col-span-1">
           <p className="font-display text-xl font-bold text-brand-grey uppercase tracking-widest">
@@ -107,7 +107,7 @@ export function SiteFooter() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-brand-grey/20">
+      <div className="relative z-10 border-t border-brand-grey/20">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-xs text-brand-grey/70">
             &copy; {new Date().getFullYear()} El Gato Negro Coffee. All rights
