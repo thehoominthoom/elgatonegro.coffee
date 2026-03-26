@@ -198,6 +198,13 @@ export const menu = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "isMainMenu",
+      title: "Main Menu",
+      type: "boolean",
+      description: "The menu displayed on /menu. Only one menu should have this enabled.",
+      initialValue: false,
+    }),
+    defineField({
       name: "blocks",
       title: "Layout Blocks",
       type: "array",

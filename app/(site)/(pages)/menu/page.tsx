@@ -38,7 +38,7 @@ interface MenuBlock {
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-const MENU_QUERY = `*[_type == "menu"][0]{
+const MENU_QUERY = `*[_type == "menu" && isMainMenu == true][0]{
   title,
   blocks[]{
     _type,
