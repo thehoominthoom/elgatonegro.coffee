@@ -26,10 +26,13 @@ interface MenuBlock {
   _type: string;
   _key: string;
   sectionName?: string;
+  sectionPrice?: number;
   items?: MenuItem[];
   leftSectionName?: string;
+  leftSectionPrice?: number;
   leftItems?: MenuItem[];
   rightSectionName?: string;
+  rightSectionPrice?: number;
   rightItems?: MenuItem[];
 }
 
@@ -41,10 +44,13 @@ const MENU_QUERY = `*[_type == "menu"][0]{
     _type,
     _key,
     sectionName,
+    sectionPrice,
     items[]{_type, _key, text, price},
     leftSectionName,
+    leftSectionPrice,
     leftItems[]{_type, _key, text, price},
     rightSectionName,
+    rightSectionPrice,
     rightItems[]{_type, _key, text, price}
   }
 }`;
@@ -55,9 +61,6 @@ function formatPrice(price: number): string {
   return `$${price.toFixed(2)}`;
 }
 
-function formatAddonPrice(price: number): string {
-  return `+$${price.toFixed(2)}`;
-}
 
 // ─── Item renderers ───────────────────────────────────────────────────────────
 
@@ -72,20 +75,6 @@ function MenuItemRow({ item }: { item: MenuItem }) {
             </h3>
             <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
               {item.price != null && formatPrice(item.price)}
-            </span>
-          </div>
-        </div>
-      );
-
-    case "menuHeaderAddon":
-      return (
-        <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
-              {item.text}
-            </h3>
-            <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
-              {item.price != null && formatAddonPrice(item.price)}
             </span>
           </div>
         </div>
@@ -108,23 +97,6 @@ function MenuItemRow({ item }: { item: MenuItem }) {
         </div>
       );
 
-    case "menuAddonItem":
-      return (
-        <div className="flex items-baseline gap-2 py-2 md:py-2.5">
-          <span className="font-sans text-sm md:text-base text-brand-grey/80">
-            {item.text}
-          </span>
-          {item.price != null && (
-            <>
-              <span className="flex-1 border-b border-dotted border-brand-grey/15 mx-2 self-end mb-[3px]" />
-              <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap tabular-nums">
-                {formatAddonPrice(item.price)}
-              </span>
-            </>
-          )}
-        </div>
-      );
-
     case "menuDivider":
       return <hr className="my-6 border-t border-dashed border-brand-grey/10" />;
 
@@ -133,13 +105,20 @@ function MenuItemRow({ item }: { item: MenuItem }) {
   }
 }
 
-function SectionColumn({ name, items }: { name: string; items: MenuItem[] }) {
+function SectionColumn({ name, price, items }: { name: string; price?: number; items: MenuItem[] }) {
   return (
     <div>
       <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
-        <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
-          {name}
-        </h3>
+        <div className="flex items-baseline justify-between gap-4">
+          <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
+            {name}
+          </h3>
+          {price != null && (
+            <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
+              {formatPrice(price)}
+            </span>
+          )}
+        </div>
       </div>
       {items.map((item) => (
         <MenuItemRow key={item._key} item={item} />
@@ -188,6 +167,7 @@ export default async function MenuPage() {
                     <SectionColumn
                       key={block._key}
                       name={block.sectionName || ""}
+                      price={block.sectionPrice}
                       items={block.items ?? []}
                     />
                   );
@@ -201,12 +181,14 @@ export default async function MenuPage() {
                       <div className="md:border-r md:border-dashed md:border-brand-grey/10 md:pr-12 lg:pr-16">
                         <SectionColumn
                           name={block.leftSectionName || ""}
+                          price={block.leftSectionPrice}
                           items={block.leftItems ?? []}
                         />
                       </div>
                       <div>
                         <SectionColumn
                           name={block.rightSectionName || ""}
+                          price={block.rightSectionPrice}
                           items={block.rightItems ?? []}
                         />
                       </div>

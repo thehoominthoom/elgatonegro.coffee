@@ -32,35 +32,6 @@ const menuProductItem = defineArrayMember({
   },
 });
 
-const menuAddonItem = defineArrayMember({
-  name: "menuAddonItem",
-  title: "Add-On Item",
-  type: "object",
-  fields: [
-    defineField({
-      name: "text",
-      title: "Add-On Name",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "price",
-      title: "Price",
-      type: "number",
-      validation: (Rule) => Rule.required().min(0),
-    }),
-  ],
-  preview: {
-    select: { text: "text", price: "price" },
-    prepare({ text, price }: { text?: string; price?: number }) {
-      return {
-        title: text || "Untitled Add-On",
-        subtitle: price != null ? `+$${price.toFixed(2)}` : "No price",
-      };
-    },
-  },
-});
-
 const menuHeaderWithPrice = defineArrayMember({
   name: "menuHeaderWithPrice",
   title: "Header with Price",
@@ -85,35 +56,6 @@ const menuHeaderWithPrice = defineArrayMember({
       return {
         title: text || "Untitled Header",
         subtitle: price != null ? `$${price.toFixed(2)} (Header)` : "Header",
-      };
-    },
-  },
-});
-
-const menuHeaderAddon = defineArrayMember({
-  name: "menuHeaderAddon",
-  title: "Header Add-On (with + price)",
-  type: "object",
-  fields: [
-    defineField({
-      name: "text",
-      title: "Header Text",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "price",
-      title: "Price",
-      type: "number",
-      validation: (Rule) => Rule.required().min(0),
-    }),
-  ],
-  preview: {
-    select: { text: "text", price: "price" },
-    prepare({ text, price }: { text?: string; price?: number }) {
-      return {
-        title: text || "Untitled Header",
-        subtitle: price != null ? `+$${price.toFixed(2)} (Header)` : "Header",
       };
     },
   },
@@ -144,9 +86,7 @@ const menuDivider = defineArrayMember({
 
 const blockItemTypes = [
   menuProductItem,
-  menuAddonItem,
   menuHeaderWithPrice,
-  menuHeaderAddon,
   menuDivider,
 ];
 
@@ -164,6 +104,13 @@ const menuFullWidthSection = defineArrayMember({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "sectionPrice",
+      title: "Section Price",
+      type: "number",
+      description: "Optional price shown next to the section header",
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
       name: "items",
       title: "Items",
       type: "array",
@@ -171,11 +118,11 @@ const menuFullWidthSection = defineArrayMember({
     }),
   ],
   preview: {
-    select: { sectionName: "sectionName" },
-    prepare({ sectionName }: { sectionName?: string }) {
+    select: { sectionName: "sectionName", sectionPrice: "sectionPrice" },
+    prepare({ sectionName, sectionPrice }: { sectionName?: string; sectionPrice?: number }) {
       return {
         title: sectionName || "Untitled Section",
-        subtitle: "Full-width",
+        subtitle: sectionPrice != null ? `$${sectionPrice.toFixed(2)} · Full-width` : "Full-width",
       };
     },
   },
@@ -193,6 +140,13 @@ const menuTwoColumnSplit = defineArrayMember({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "leftSectionPrice",
+      title: "Left Column Price",
+      type: "number",
+      description: "Optional price shown next to the left column header",
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
       name: "leftItems",
       title: "Left Column Items",
       type: "array",
@@ -203,6 +157,13 @@ const menuTwoColumnSplit = defineArrayMember({
       title: "Right Column Header",
       type: "string",
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "rightSectionPrice",
+      title: "Right Column Price",
+      type: "number",
+      description: "Optional price shown next to the right column header",
+      validation: (Rule) => Rule.min(0),
     }),
     defineField({
       name: "rightItems",
