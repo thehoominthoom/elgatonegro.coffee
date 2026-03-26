@@ -62,9 +62,9 @@ const EVENTS_QUERY = `*[
   recurrenceLabel,
   eventPageType,
   externalUrl,
-  description,
-  "ctaLabel": cta.ctaLabel,
-  "ctaUrl": cta.ctaUrl,
+  internalPath,
+  "slug": slug.current,
+  cta,
   image
 }`;
 

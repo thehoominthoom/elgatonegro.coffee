@@ -16,11 +16,10 @@ export interface SanityEvent {
   image: SanityImageSource | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   note: string | null;
-  eventPageType: "internal" | "external" | null;
+  eventPageType: "internal" | "internal-link" | "external" | null;
   externalUrl: string | null;
+  internalPath: string | null;
   description: unknown[] | null;
-  ctaLabel: string | null;
-  ctaUrl: string | null;
   slug: string | null;
   recurrenceLabel: string | null;
 }

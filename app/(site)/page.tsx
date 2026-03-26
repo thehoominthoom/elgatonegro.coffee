@@ -34,9 +34,7 @@ const EVENTS_QUERY = `*[
   type,
   eventPageType,
   externalUrl,
-  "description": description,
-  "ctaLabel": cta.ctaLabel,
-  "ctaUrl": cta.ctaUrl,
+  internalPath,
   image,
   "slug": slug.current,
   recurrenceLabel
@@ -163,6 +161,8 @@ export default async function Home() {
                 href={
                   event.eventPageType === "external" && event.externalUrl
                     ? event.externalUrl
+                    : event.eventPageType === "internal-link" && event.internalPath
+                    ? event.internalPath
                     : event.eventPageType === "internal" && event.slug
                     ? `/events/${event.slug}`
                     : "/events"

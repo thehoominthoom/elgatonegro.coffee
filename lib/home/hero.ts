@@ -23,6 +23,8 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
     const href =
       e.eventPageType === "external" && e.externalUrl
         ? e.externalUrl
+        : e.eventPageType === "internal-link" && e.internalPath
+        ? e.internalPath
         : e.eventPageType === "internal" && e.slug
         ? `/events/${e.slug}`
         : "/events";

@@ -29,6 +29,14 @@ export function generateTimeOptions(): Array<{ title: string; value: string }> {
   return options;
 }
 
+// ─── Hero button text mapping (for frontend reference) ───────────────────────
+// open       → "View Details"
+// ticketed   → "Get Tickets"
+// private    → (no public page)
+// fundraiser → "Donate"
+// sale       → "Shop Now"
+// new-swag   → "Shop Now"
+
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
 export const event = defineType({
@@ -36,6 +44,7 @@ export const event = defineType({
   title: "Event",
   type: "document",
   fields: [
+    // 1. Title
     defineField({
       name: "title",
       title: "Title",
@@ -43,6 +52,84 @@ export const event = defineType({
       validation: (Rule) => Rule.required(),
     }),
 
+    // 2. Show on Website
+    defineField({
+      name: "isPublic",
+      title: "Show on Website",
+      type: "boolean",
+      description:
+        "Show on the website events strip and hero carousel. Auto-checked for Open and Ticketed events — uncheck to hide.",
+      initialValue: true,
+    }),
+
+    // 3. Event Type (badge/label only — no structural logic)
+    defineField({
+      name: "type",
+      title: "Event Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Open", value: "open" },
+          { title: "Ticketed", value: "ticketed" },
+          { title: "Private", value: "private" },
+          { title: "Fundraiser", value: "fundraiser" },
+          { title: "Sale", value: "sale" },
+          { title: "New Swag", value: "new-swag" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "open",
+      validation: (Rule) => Rule.required(),
+    }),
+
+    // 4. Event Page Type
+    defineField({
+      name: "eventPageType",
+      title: "Event Page",
+      type: "string",
+      options: {
+        list: [
+          { title: "Build event page", value: "internal" },
+          { title: "Link to internal page", value: "internal-link" },
+          { title: "Link to external site", value: "external" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "internal",
+      hidden: ({ parent }: { parent: { type?: string } }) =>
+        parent?.type === "private",
+    }),
+
+    // 5. Internal Path (only when eventPageType === "internal-link")
+    defineField({
+      name: "internalPath",
+      title: "Internal Page Path",
+      type: "string",
+      description: "Internal page path (e.g., /run/summer-2026)",
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "internal-link",
+    }),
+
+    // 6. External URL (only when eventPageType === "external")
+    defineField({
+      name: "externalUrl",
+      title: "External Event URL",
+      type: "url",
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "external",
+    }),
+
+    // 7. Opens in new tab (only when eventPageType === "external")
+    defineField({
+      name: "externalNewTab",
+      title: "Opens in new tab",
+      type: "boolean",
+      initialValue: true,
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "external",
+    }),
+
+    // 8. Location
     defineField({
       name: "location",
       title: "Location",
@@ -73,123 +160,7 @@ export const event = defineType({
       ],
     }),
 
-    defineField({
-      name: "type",
-      title: "Event Type",
-      type: "string",
-      options: {
-        list: [
-          { title: "Open", value: "open" },
-          { title: "Ticketed", value: "ticketed" },
-          { title: "Private", value: "private" },
-          { title: "Fundraiser", value: "fundraiser" },
-          { title: "Sale", value: "sale" },
-          { title: "New Swag", value: "new-swag" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "open",
-      validation: (Rule) => Rule.required(),
-    }),
-
-    defineField({
-      name: "isPublic",
-      title: "Show on Website",
-      type: "boolean",
-      description:
-        "Show on the website events strip and hero carousel. Auto-checked for Open and Ticketed events — uncheck to hide.",
-      initialValue: true,
-    }),
-
-    defineField({
-      name: "eventPageType",
-      title: "Event Page",
-      type: "string",
-      options: {
-        list: [
-          { title: "Internal page (build a page on this site)", value: "internal" },
-          { title: "External link (redirect to another site)", value: "external" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "internal",
-      hidden: ({ parent }: { parent: { type?: string } }) =>
-        parent?.type === "private",
-    }),
-
-    defineField({
-      name: "externalUrl",
-      title: "External Event URL",
-      type: "url",
-      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
-        parent?.eventPageType !== "external",
-    }),
-
-    defineField({
-      name: "description",
-      title: "Event Description",
-      type: "array",
-      of: [
-        defineArrayMember({
-          type: "block",
-          styles: [{ title: "Normal", value: "normal" }],
-          marks: {
-            decorators: [
-              { title: "Bold", value: "strong" },
-              { title: "Italic", value: "em" },
-            ],
-            annotations: [
-              defineField({
-                name: "link",
-                type: "object",
-                title: "Link",
-                fields: [
-                  defineField({
-                    name: "href",
-                    type: "url",
-                    title: "URL",
-                  }),
-                ],
-              }),
-            ],
-          },
-          lists: [{ title: "Bullet", value: "bullet" }],
-        }),
-      ],
-      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
-        parent?.eventPageType !== "internal",
-    }),
-
-    defineField({
-      name: "cta",
-      title: "Call to Action",
-      type: "object",
-      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
-        parent?.eventPageType !== "internal",
-      fields: [
-        defineField({
-          name: "ctaLabel",
-          title: "Button Text",
-          type: "string",
-        }),
-        defineField({
-          name: "ctaUrl",
-          title: "Destination URL",
-          type: "string",
-          description: "Internal path (e.g. /inquiry?service=weddings) or external URL",
-        }),
-      ],
-    }),
-
-    defineField({
-      name: "ticketUrl",
-      title: "Ticket URL",
-      type: "url",
-      description: "Link to ticket purchase page",
-      hidden: ({ parent }: { parent: { type?: string } }) =>
-        parent?.type !== "ticketed",
-    }),
-
+    // 9. Schedule
     defineField({
       name: "schedule",
       title: "Schedule",
@@ -259,6 +230,7 @@ export const event = defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
 
+    // 10. Note
     defineField({
       name: "note",
       title: "Note",
@@ -266,6 +238,112 @@ export const event = defineType({
       description: "Optional note shown under the event time (e.g. 'Rain or shine', 'Doors open at 6')",
     }),
 
+    // 11. Description (only when eventPageType === "internal")
+    defineField({
+      name: "description",
+      title: "Event Description",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+            ],
+            annotations: [
+              defineField({
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  defineField({
+                    name: "href",
+                    type: "url",
+                    title: "URL",
+                  }),
+                ],
+              }),
+            ],
+          },
+          lists: [{ title: "Bullet", value: "bullet" }],
+        }),
+      ],
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "internal",
+    }),
+
+    // 12. CTAs (array — only when eventPageType === "internal")
+    defineField({
+      name: "cta",
+      title: "Calls to Action",
+      type: "array",
+      description: "Add buttons or links below the event description.",
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "internal",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Label",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "url",
+              title: "URL",
+              type: "string",
+              description: "Internal path (e.g. /inquiry) or external URL",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "style",
+              title: "Style",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Primary Button", value: "primary" },
+                  { title: "Text Link", value: "link" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "primary",
+            }),
+            defineField({
+              name: "newTab",
+              title: "Opens in new tab",
+              type: "boolean",
+              initialValue: false,
+            }),
+          ],
+          preview: {
+            select: { label: "label", style: "style" },
+            prepare({ label, style }: { label?: string; style?: string }) {
+              return {
+                title: label || "Untitled CTA",
+                subtitle: style === "link" ? "Text Link" : "Primary Button",
+              };
+            },
+          },
+        }),
+      ],
+    }),
+
+    // 13. Event Menu (optional reference — only when eventPageType === "internal")
+    defineField({
+      name: "menu",
+      title: "Event Menu",
+      type: "reference",
+      to: [{ type: "menu" }],
+      description: "Optional — link a menu to display on this event page",
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "internal",
+    }),
+
+    // 14. Image
     defineField({
       name: "image",
       title: "Image",
@@ -274,17 +352,13 @@ export const event = defineType({
       components: { input: HeicImageInput },
     }),
 
-    defineField({
-      name: "recurrenceLabel",
-      title: "Recurrence Label",
-      type: "string",
-      hidden: true,
-    }),
-
+    // 15. Slug (only when eventPageType === "internal")
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
+      hidden: ({ parent }: { parent: { eventPageType?: string } }) =>
+        parent?.eventPageType !== "internal",
       options: {
         source: "title",
         maxLength: 96,
@@ -312,6 +386,14 @@ export const event = defineType({
           return `${baseSlug}-${suffix}`;
         },
       },
+    }),
+
+    // 16. Recurrence Label (hidden)
+    defineField({
+      name: "recurrenceLabel",
+      title: "Recurrence Label",
+      type: "string",
+      hidden: true,
     }),
   ],
 

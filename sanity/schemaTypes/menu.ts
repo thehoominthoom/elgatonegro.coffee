@@ -1,29 +1,6 @@
 import { defineField, defineType, defineArrayMember } from "sanity";
 
-// ─── Item types within the menu array ────────────────────────────────────────
-
-const menuHeader = defineArrayMember({
-  name: "menuHeader",
-  title: "Section Header",
-  type: "object",
-  fields: [
-    defineField({
-      name: "text",
-      title: "Header Text",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-  ],
-  preview: {
-    select: { text: "text" },
-    prepare({ text }: { text?: string }) {
-      return {
-        title: text || "Untitled Header",
-        subtitle: "Header",
-      };
-    },
-  },
-});
+// ─── Item types used within layout blocks ────────────────────────────────────
 
 const menuProductItem = defineArrayMember({
   name: "menuProductItem",
@@ -163,23 +140,84 @@ const menuDivider = defineArrayMember({
   },
 });
 
-const menuColumnBreak = defineArrayMember({
-  name: "menuColumnBreak",
-  title: "Column Break",
+// ─── Shared item types for block arrays ──────────────────────────────────────
+
+const blockItemTypes = [
+  menuProductItem,
+  menuAddonItem,
+  menuHeaderWithPrice,
+  menuHeaderAddon,
+  menuDivider,
+];
+
+// ─── Layout block types ──────────────────────────────────────────────────────
+
+const menuFullWidthSection = defineArrayMember({
+  name: "menuFullWidthSection",
+  title: "Full-Width Section",
   type: "object",
-  description: "Splits the menu into a new column at this point",
   fields: [
     defineField({
-      name: "placeholder",
-      title: "Column break marker (no editing needed)",
+      name: "sectionName",
+      title: "Section Name",
       type: "string",
-      initialValue: "\u2B05 Column Break \u27A1",
-      readOnly: true,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "items",
+      title: "Items",
+      type: "array",
+      of: blockItemTypes,
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "\u2B05 Column Break \u27A1" };
+    select: { sectionName: "sectionName" },
+    prepare({ sectionName }: { sectionName?: string }) {
+      return {
+        title: sectionName || "Untitled Section",
+        subtitle: "Full-width",
+      };
+    },
+  },
+});
+
+const menuTwoColumnSplit = defineArrayMember({
+  name: "menuTwoColumnSplit",
+  title: "Two-Column Split",
+  type: "object",
+  fields: [
+    defineField({
+      name: "leftSectionName",
+      title: "Left Column Header",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "leftItems",
+      title: "Left Column Items",
+      type: "array",
+      of: blockItemTypes,
+    }),
+    defineField({
+      name: "rightSectionName",
+      title: "Right Column Header",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "rightItems",
+      title: "Right Column Items",
+      type: "array",
+      of: blockItemTypes,
+    }),
+  ],
+  preview: {
+    select: { left: "leftSectionName", right: "rightSectionName" },
+    prepare({ left, right }: { left?: string; right?: string }) {
+      return {
+        title: `${left || "Left"} | ${right || "Right"}`,
+        subtitle: "Two-column",
+      };
     },
   },
 });
@@ -199,19 +237,11 @@ export const menu = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "items",
-      title: "Menu Items",
+      name: "blocks",
+      title: "Layout Blocks",
       type: "array",
-      description: "Drag to reorder. Use Column Break to split into columns.",
-      of: [
-        menuHeader,
-        menuProductItem,
-        menuAddonItem,
-        menuHeaderWithPrice,
-        menuHeaderAddon,
-        menuDivider,
-        menuColumnBreak,
-      ],
+      description: "Build your menu with full-width sections and two-column splits.",
+      of: [menuFullWidthSection, menuTwoColumnSplit],
     }),
   ],
   preview: {

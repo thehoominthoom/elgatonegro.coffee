@@ -57,6 +57,15 @@ function textAnim(transitioning: boolean, delayKey: keyof typeof OUT_DELAYS, mou
   };
 }
 
+const HERO_BUTTON_TEXT: Record<HeroSlide["type"], string> = {
+  open: "View Details",
+  ticketed: "Get Tickets",
+  private: "View Details",
+  fundraiser: "Donate",
+  sale: "Shop Now",
+  "new-swag": "Shop Now",
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function HeroCarousel({ slides }: HeroCarouselProps) {
@@ -280,7 +289,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             className="group inline-flex items-center gap-3 bg-brand-orange text-brand-grey px-8 py-3.5 rounded-sm font-display font-bold text-sm uppercase tracking-[0.1em] hover:bg-brand-yellow transition-colors"
             style={textAnim(transitioning, "viewEvent", mounted)}
           >
-            View Event
+            {HERO_BUTTON_TEXT[slide.type] || "View Details"}
             <ArrowRight
               size={16}
               className="transition-transform group-hover:translate-x-1"

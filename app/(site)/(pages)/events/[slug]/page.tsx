@@ -25,6 +25,32 @@ interface ScheduleEntry {
   closeTime: string;
 }
 
+interface CtaItem {
+  _key: string;
+  label: string;
+  url: string;
+  style?: "primary" | "link";
+  newTab?: boolean;
+}
+
+interface MenuItem {
+  _type: string;
+  _key: string;
+  text?: string;
+  price?: number;
+}
+
+interface MenuBlock {
+  _type: string;
+  _key: string;
+  sectionName?: string;
+  items?: MenuItem[];
+  leftSectionName?: string;
+  leftItems?: MenuItem[];
+  rightSectionName?: string;
+  rightItems?: MenuItem[];
+}
+
 interface EventDetail {
   _id: string;
   title: string;
@@ -42,10 +68,9 @@ interface EventDetail {
     style?: string;
     children?: Array<{ _key: string; _type: string; text: string; marks?: string[] }>;
   }> | null;
-  ctaLabel: string | null;
-  ctaUrl: string | null;
-  ticketUrl: string | null;
-  eventPageType: "internal" | "external" | null;
+  cta: CtaItem[] | null;
+  menu: { title: string; blocks: MenuBlock[] | null } | null;
+  eventPageType: "internal" | "internal-link" | "external" | null;
 }
 
 // ─── Query ────────────────────────────────────────────────────────────────────
@@ -62,9 +87,20 @@ const EVENT_QUERY = `*[_type == "event" && slug.current == $slug][0] {
   recurrenceLabel,
   image,
   description,
-  "ctaLabel": cta.ctaLabel,
-  "ctaUrl": cta.ctaUrl,
-  ticketUrl,
+  cta,
+  menu->{
+    title,
+    blocks[]{
+      _type,
+      _key,
+      sectionName,
+      items[]{_type, _key, text, price},
+      leftSectionName,
+      leftItems[]{_type, _key, text, price},
+      rightSectionName,
+      rightItems[]{_type, _key, text, price}
+    }
+  },
   eventPageType
 }`;
 
@@ -89,6 +125,15 @@ const TYPE_LABELS: Record<EventDetail["type"], string> = {
   fundraiser: "Fundraiser",
   sale: "Sale",
   "new-swag": "New Swag",
+};
+
+const HERO_BUTTON_TEXT: Record<EventDetail["type"], string> = {
+  open: "View Details",
+  ticketed: "Get Tickets",
+  private: "View Details",
+  fundraiser: "Donate",
+  sale: "Shop Now",
+  "new-swag": "Shop Now",
 };
 
 function formatDayOfWeek(dateStr: string): string {
@@ -120,6 +165,148 @@ function renderPortableText(
         </p>
       );
     });
+}
+
+// ─── Menu renderers ──────────────────────────────────────────────────────────
+
+function formatPrice(price: number): string {
+  return `$${price.toFixed(2)}`;
+}
+
+function formatAddonPrice(price: number): string {
+  return `+$${price.toFixed(2)}`;
+}
+
+function MenuItemRow({ item }: { item: MenuItem }) {
+  switch (item._type) {
+    case "menuHeaderWithPrice":
+      return (
+        <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-black">
+              {item.text}
+            </h3>
+            <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
+              {item.price != null && formatPrice(item.price)}
+            </span>
+          </div>
+        </div>
+      );
+
+    case "menuHeaderAddon":
+      return (
+        <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-black">
+              {item.text}
+            </h3>
+            <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
+              {item.price != null && formatAddonPrice(item.price)}
+            </span>
+          </div>
+        </div>
+      );
+
+    case "menuProductItem":
+      return (
+        <div className="flex items-baseline gap-2 py-2 md:py-2.5">
+          <span className="font-sans text-sm md:text-base text-brand-black/80">
+            {item.text}
+          </span>
+          {item.price != null && (
+            <>
+              <span className="flex-1 border-b border-dotted border-brand-black/15 mx-2 self-end mb-[3px]" />
+              <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap tabular-nums">
+                {formatPrice(item.price)}
+              </span>
+            </>
+          )}
+        </div>
+      );
+
+    case "menuAddonItem":
+      return (
+        <div className="flex items-baseline gap-2 py-2 md:py-2.5">
+          <span className="font-sans text-sm md:text-base text-brand-black/80">
+            {item.text}
+          </span>
+          {item.price != null && (
+            <>
+              <span className="flex-1 border-b border-dotted border-brand-black/15 mx-2 self-end mb-[3px]" />
+              <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap tabular-nums">
+                {formatAddonPrice(item.price)}
+              </span>
+            </>
+          )}
+        </div>
+      );
+
+    case "menuDivider":
+      return <hr className="my-6 border-t border-dashed border-brand-black/10" />;
+
+    default:
+      return null;
+  }
+}
+
+function MenuSection({ name, items }: { name: string; items: MenuItem[] }) {
+  return (
+    <div>
+      <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
+        <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-black">
+          {name}
+        </h3>
+      </div>
+      {items.map((item) => (
+        <MenuItemRow key={item._key} item={item} />
+      ))}
+    </div>
+  );
+}
+
+function EventMenu({ menu }: { menu: { title: string; blocks: MenuBlock[] | null } }) {
+  const blocks = menu.blocks ?? [];
+  if (!blocks.length) return null;
+
+  return (
+    <section className="bg-brand-grey grain-overlay border-t border-brand-black/10">
+      <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
+        <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-black/50 mb-8">
+          Event Menu
+        </p>
+        {blocks.map((block) => {
+          if (block._type === "menuFullWidthSection") {
+            return (
+              <MenuSection
+                key={block._key}
+                name={block.sectionName || ""}
+                items={block.items ?? []}
+              />
+            );
+          }
+          if (block._type === "menuTwoColumnSplit") {
+            return (
+              <div key={block._key} className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-0">
+                <div className="md:border-r md:border-dashed md:border-brand-black/10 md:pr-12 lg:pr-16">
+                  <MenuSection
+                    name={block.leftSectionName || ""}
+                    items={block.leftItems ?? []}
+                  />
+                </div>
+                <div>
+                  <MenuSection
+                    name={block.rightSectionName || ""}
+                    items={block.rightItems ?? []}
+                  />
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
+    </section>
+  );
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -229,6 +416,9 @@ export default async function EventDetailPage({
     },
   };
 
+  const heroButtonText = HERO_BUTTON_TEXT[event.type] || "View Details";
+  const ctaItems = event.cta ?? [];
+
   return (
     <>
       <script
@@ -308,11 +498,20 @@ export default async function EventDetailPage({
               </span>
             )}
           </div>
+
+          {/* Hero button — text mapped from event type */}
+          <a
+            href="#details"
+            className="self-start inline-flex items-center gap-2 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-3.5 hover:bg-brand-yellow transition-colors"
+          >
+            {heroButtonText}
+            <ArrowRight size={14} />
+          </a>
         </div>
       </section>
 
       {/* ── 2. Details ───────────────────────────────────────────────────── */}
-      <section className="bg-brand-grey grain-overlay">
+      <section id="details" className="bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
           {/* View Map — moved above description */}
           {event.mapLink && (
@@ -354,34 +553,51 @@ export default async function EventDetailPage({
           )}
 
           {/* CTA buttons */}
-          <div className="flex flex-wrap gap-4">
-            {event.ticketUrl && (
-              <a
-                href={event.ticketUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-3.5 hover:bg-brand-black transition-colors"
-              >
-                Get Tickets
-                <ExternalLink size={14} />
-              </a>
-            )}
-            {event.ctaLabel && event.ctaUrl && (
-              <a
-                href={event.ctaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand-black text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-3.5 hover:bg-brand-orange transition-colors"
-              >
-                {event.ctaLabel}
-                <ExternalLink size={14} />
-              </a>
-            )}
-          </div>
+          {ctaItems.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {ctaItems.map((cta) => {
+                const isExternal = cta.url.startsWith("http");
+                const linkProps = {
+                  ...(cta.newTab || isExternal
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {}),
+                };
+
+                if (cta.style === "link") {
+                  return (
+                    <a
+                      key={cta._key}
+                      href={cta.url}
+                      {...linkProps}
+                      className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-orange hover:text-brand-black transition-colors underline-offset-4 hover:underline"
+                    >
+                      {cta.label}
+                      {(cta.newTab || isExternal) && <ExternalLink size={14} />}
+                    </a>
+                  );
+                }
+
+                return (
+                  <a
+                    key={cta._key}
+                    href={cta.url}
+                    {...linkProps}
+                    className="inline-flex items-center gap-2 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-3.5 hover:bg-brand-black transition-colors"
+                  >
+                    {cta.label}
+                    {(cta.newTab || isExternal) && <ExternalLink size={14} />}
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ── 3. Closing CTA ─────────────────────────────────────────────── */}
+      {/* ── 3. Event Menu (optional) ─────────────────────────────────────── */}
+      {event.menu && <EventMenu menu={event.menu} />}
+
+      {/* ── 4. Closing CTA ─────────────────────────────────────────────── */}
       <section className="bg-brand-orange grain-overlay">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
           <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-4 md:mb-6">

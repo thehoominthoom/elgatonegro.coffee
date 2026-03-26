@@ -22,15 +22,30 @@ interface MenuItem {
   price?: number;
 }
 
+interface MenuBlock {
+  _type: string;
+  _key: string;
+  sectionName?: string;
+  items?: MenuItem[];
+  leftSectionName?: string;
+  leftItems?: MenuItem[];
+  rightSectionName?: string;
+  rightItems?: MenuItem[];
+}
+
 // ─── Query ────────────────────────────────────────────────────────────────────
 
 const MENU_QUERY = `*[_type == "menu"][0]{
   title,
-  items[]{
+  blocks[]{
     _type,
     _key,
-    text,
-    price
+    sectionName,
+    items[]{_type, _key, text, price},
+    leftSectionName,
+    leftItems[]{_type, _key, text, price},
+    rightSectionName,
+    rightItems[]{_type, _key, text, price}
   }
 }`;
 
@@ -44,40 +59,10 @@ function formatAddonPrice(price: number): string {
   return `+$${price.toFixed(2)}`;
 }
 
-/**
- * Splits items into columns based on menuColumnBreak markers.
- * Each segment is everything between breaks (or start/end of the array).
- */
-function splitIntoColumns(items: MenuItem[]): MenuItem[][] {
-  const columns: MenuItem[][] = [];
-  let current: MenuItem[] = [];
-
-  for (const item of items) {
-    if (item._type === "menuColumnBreak") {
-      columns.push(current);
-      current = [];
-    } else {
-      current.push(item);
-    }
-  }
-  columns.push(current);
-
-  return columns.filter((col) => col.length > 0);
-}
-
 // ─── Item renderers ───────────────────────────────────────────────────────────
 
 function MenuItemRow({ item }: { item: MenuItem }) {
   switch (item._type) {
-    case "menuHeader":
-      return (
-        <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
-          <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
-            {item.text}
-          </h3>
-        </div>
-      );
-
     case "menuHeaderWithPrice":
       return (
         <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
@@ -148,19 +133,33 @@ function MenuItemRow({ item }: { item: MenuItem }) {
   }
 }
 
+function SectionColumn({ name, items }: { name: string; items: MenuItem[] }) {
+  return (
+    <div>
+      <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
+        <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
+          {name}
+        </h3>
+      </div>
+      {items.map((item) => (
+        <MenuItemRow key={item._key} item={item} />
+      ))}
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function MenuPage() {
-  let menuData: { title?: string; items?: MenuItem[] } | null = null;
+  let menuData: { title?: string; blocks?: MenuBlock[] } | null = null;
   try {
     menuData = await client.fetch(MENU_QUERY, {});
   } catch {
     // Sanity unavailable — render empty state
   }
 
-  const items = menuData?.items ?? [];
-  const columns = splitIntoColumns(items);
-  const hasContent = columns.length > 0;
+  const blocks = menuData?.blocks ?? [];
+  const hasContent = blocks.length > 0;
 
   return (
     <>
@@ -182,27 +181,40 @@ export default async function MenuPage() {
         <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 pb-20 md:pb-28">
           {hasContent ? (
-            <div
-              className={
-                columns.length > 1
-                  ? "grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-0"
-                  : "max-w-lg"
-              }
-            >
-              {columns.map((column, colIdx) => (
-                <div
-                  key={colIdx}
-                  className={
-                    colIdx < columns.length - 1
-                      ? "md:border-r md:border-dashed md:border-brand-grey/10 md:pr-12 lg:pr-16"
-                      : undefined
-                  }
-                >
-                  {column.map((item) => (
-                    <MenuItemRow key={item._key} item={item} />
-                  ))}
-                </div>
-              ))}
+            <div className="space-y-0">
+              {blocks.map((block) => {
+                if (block._type === "menuFullWidthSection") {
+                  return (
+                    <SectionColumn
+                      key={block._key}
+                      name={block.sectionName || ""}
+                      items={block.items ?? []}
+                    />
+                  );
+                }
+                if (block._type === "menuTwoColumnSplit") {
+                  return (
+                    <div
+                      key={block._key}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-0"
+                    >
+                      <div className="md:border-r md:border-dashed md:border-brand-grey/10 md:pr-12 lg:pr-16">
+                        <SectionColumn
+                          name={block.leftSectionName || ""}
+                          items={block.leftItems ?? []}
+                        />
+                      </div>
+                      <div>
+                        <SectionColumn
+                          name={block.rightSectionName || ""}
+                          items={block.rightItems ?? []}
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })}
             </div>
           ) : (
             <div className="py-20 text-center">

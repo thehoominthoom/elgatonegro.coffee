@@ -16,11 +16,12 @@ export interface CalendarEvent {
   note: string | null;
   schedule: Array<{ _key: string; date: string; openTime: string; closeTime: string }> | null;
   recurrenceLabel: string | null;
-  eventPageType: "internal" | "external" | null;
+  eventPageType: "internal" | "internal-link" | "external" | null;
   externalUrl: string | null;
+  internalPath: string | null;
+  slug: string | null;
   description: unknown;
-  ctaLabel: string | null;
-  ctaUrl: string | null;
+  cta: Array<{ _key: string; label: string; url: string; style?: string; newTab?: boolean }> | null;
   image: unknown;
 }
 
@@ -247,7 +248,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
             </p>
           )}
 
-          {/* External link / CTA */}
+          {/* Link to event page */}
           {event.eventPageType === "external" && event.externalUrl && (
             <a
               href={event.externalUrl}
@@ -256,16 +257,25 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
-              {event.ctaLabel || "Get Tickets"} <ExternalLink size={11} />
+              View Event <ExternalLink size={11} />
             </a>
           )}
-          {event.eventPageType === "internal" && event.ctaLabel && event.ctaUrl && (
+          {event.eventPageType === "internal-link" && event.internalPath && (
             <a
-              href={event.ctaUrl}
+              href={event.internalPath}
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
-              {event.ctaLabel}
+              View Event
+            </a>
+          )}
+          {event.eventPageType === "internal" && event.slug && (
+            <a
+              href={`/events/${event.slug}`}
+              onClick={(e) => e.stopPropagation()}
+              className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
+            >
+              View Event
             </a>
           )}
         </div>
