@@ -306,7 +306,7 @@ export default function AboutPage() {
               <div
                 key={item.title}
                 className={[
-                  "relative py-7 md:py-9 border-b border-dashed border-brand-grey/10",
+                  "relative overflow-hidden py-7 md:py-9 border-b border-dashed border-brand-grey/10",
                   i === 0
                     ? "border-t border-dashed border-brand-grey/10"
                     : "",

@@ -80,7 +80,7 @@ export default async function ProductPage({
     <main className="min-h-screen bg-brand-grey grain-overlay">
       <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12 pb-16 md:pb-24 relative z-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-8">
+        <nav className="flex items-center gap-2 min-w-0 font-sans text-xs font-extrabold uppercase tracking-[0.2em] text-brand-black/40 mb-8">
           <Link href="/shop" className="hover:text-brand-orange transition-colors flex items-center gap-1.5">
             <ArrowLeft size={12} />
             Shop
@@ -97,7 +97,7 @@ export default async function ProductPage({
             </>
           )}
           <span>/</span>
-          <span className="text-brand-black/60">{product.title}</span>
+          <span className="text-brand-black/60 truncate min-w-0">{product.title}</span>
         </nav>
 
         {/* Product detail — interactive shell is client, data is server */}

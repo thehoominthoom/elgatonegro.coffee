@@ -27,7 +27,7 @@ export function AddressCard({ address, isDefault }: AddressCardProps) {
             <input type="hidden" name="addressId" value={address.id} />
             <button
               type="submit"
-              className="font-sans text-xs text-brand-black/40 hover:text-brand-orange transition-colors underline underline-offset-2"
+              className="font-sans text-xs text-brand-black/40 hover:text-brand-orange transition-colors underline underline-offset-2 py-1.5"
             >
               Set as default
             </button>
@@ -37,7 +37,7 @@ export function AddressCard({ address, isDefault }: AddressCardProps) {
           <input type="hidden" name="addressId" value={address.id} />
           <button
             type="submit"
-            className="font-sans text-xs text-brand-black/40 hover:text-brand-orange transition-colors underline underline-offset-2"
+            className="font-sans text-xs text-brand-black/40 hover:text-brand-orange transition-colors underline underline-offset-2 py-1.5"
           >
             Remove
           </button>

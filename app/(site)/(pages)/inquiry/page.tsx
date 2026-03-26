@@ -42,7 +42,7 @@ export default async function InquiryPage({
 
         {/* ── Left: Context panel ─────────────────────────────────────── */}
         <div className="grain-overlay relative border-r border-brand-grey/10 bg-[#1a100d] px-8 py-16 lg:px-12 lg:py-24">
-          <div className="sticky top-24">
+          <div className="lg:sticky lg:top-24">
             {/* Eyebrow */}
             <p className="mb-3 font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange">
               Book the Cart

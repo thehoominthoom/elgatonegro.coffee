@@ -26,12 +26,12 @@ function FooterColumn({ title, links }: FooterColumnProps) {
       <h3 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-yellow mb-3">
         {title}
       </h3>
-      <ul className="space-y-2">
+      <ul className="space-y-0">
         {links.map(({ label, href }) => (
           <li key={href}>
             <Link
               href={href}
-              className="text-sm text-brand-grey/70 hover:text-brand-grey transition-colors"
+              className="text-sm text-brand-grey/70 hover:text-brand-grey transition-colors min-h-[44px] inline-flex items-center"
             >
               {label}
             </Link>
@@ -60,7 +60,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="text-brand-grey/60 hover:text-brand-yellow transition-colors"
+              className="text-brand-grey/60 hover:text-brand-yellow transition-colors min-w-[44px] min-h-[44px] inline-flex items-center justify-center"
             >
               <Instagram size={18} />
             </a>
@@ -69,7 +69,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="TikTok"
-              className="text-brand-grey/60 hover:text-brand-yellow transition-colors"
+              className="text-brand-grey/60 hover:text-brand-yellow transition-colors min-w-[44px] min-h-[44px] inline-flex items-center justify-center"
             >
               <TikTokIcon size={18} />
             </a>
@@ -116,19 +116,19 @@ export function SiteFooter() {
           <div className="flex items-center gap-4">
             <Link
               href="/privacy"
-              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors min-h-[44px] inline-flex items-center"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors min-h-[44px] inline-flex items-center"
             >
               Terms
             </Link>
             <Link
               href="/refund-policy"
-              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors"
+              className="text-xs text-brand-grey/70 hover:text-brand-grey transition-colors min-h-[44px] inline-flex items-center"
             >
               Refund Policy
             </Link>

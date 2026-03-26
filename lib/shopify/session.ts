@@ -6,15 +6,17 @@
 import { cookies } from "next/headers";
 import { EncryptJWT, jwtDecrypt } from "jose";
 
-const SESSION_SECRET = process.env.SESSION_SECRET!;
 const SESSION_COOKIE = "egn-customer-session";
 export const AUTH_STATE_COOKIE = "egn-auth-state";
 
-// Validate SESSION_SECRET at startup
-if (!SESSION_SECRET || SESSION_SECRET.length < 32) {
-  throw new Error(
-    "SESSION_SECRET must be set and at least 32 characters long."
-  );
+function getSessionSecret(): string {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error(
+      "SESSION_SECRET must be set and at least 32 characters long."
+    );
+  }
+  return secret;
 }
 
 // Derive a 256-bit key from the session secret using HKDF (Web Crypto API)
@@ -26,7 +28,7 @@ async function getEncryptionKey(): Promise<Uint8Array> {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
-    encoder.encode(SESSION_SECRET),
+    encoder.encode(getSessionSecret()),
     "HKDF",
     false,
     ["deriveBits"]

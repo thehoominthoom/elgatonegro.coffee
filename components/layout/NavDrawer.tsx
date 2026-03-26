@@ -58,7 +58,7 @@ export function NavDrawer() {
       <div
         inert={!isOpen ? true : undefined}
         className={[
-          "fixed top-16 bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey flex flex-col px-6 pt-6 pb-8",
+          "fixed top-[7.5rem] bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey flex flex-col px-6 pt-6 pb-8",
           "transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}

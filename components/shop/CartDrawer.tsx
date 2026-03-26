@@ -96,7 +96,7 @@ export function CartDrawer() {
           <button
             onClick={closeCart}
             aria-label="Close cart"
-            className="text-brand-black/60 hover:text-brand-black transition-colors p-1"
+            className="text-brand-black/60 hover:text-brand-black transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <X size={18} />
           </button>
@@ -148,7 +148,7 @@ export function CartDrawer() {
             </a>
             <button
               onClick={closeCart}
-              className="block w-full text-center font-sans text-sm text-brand-black/50 hover:text-brand-black transition-colors py-1"
+              className="block w-full text-center font-sans text-sm text-brand-black/50 hover:text-brand-black transition-colors py-3"
             >
               Continue Shopping
             </button>
@@ -222,7 +222,7 @@ function CartLineItem({
             onClick={() => onUpdate(quantity - 1)}
             disabled={disabled}
             aria-label="Decrease quantity"
-            className="w-7 h-7 flex items-center justify-center border border-brand-black/20 hover:border-brand-black/60 transition-colors disabled:opacity-40"
+            className="w-11 h-11 flex items-center justify-center border border-brand-black/20 hover:border-brand-black/60 transition-colors disabled:opacity-40"
           >
             <Minus size={12} />
           </button>
@@ -233,7 +233,7 @@ function CartLineItem({
             onClick={() => onUpdate(quantity + 1)}
             disabled={disabled}
             aria-label="Increase quantity"
-            className="w-7 h-7 flex items-center justify-center border border-brand-black/20 hover:border-brand-black/60 transition-colors disabled:opacity-40"
+            className="w-11 h-11 flex items-center justify-center border border-brand-black/20 hover:border-brand-black/60 transition-colors disabled:opacity-40"
           >
             <Plus size={12} />
           </button>
@@ -241,7 +241,7 @@ function CartLineItem({
             onClick={onRemove}
             disabled={disabled}
             aria-label="Remove item"
-            className="ml-auto text-brand-black/30 hover:text-brand-orange transition-colors disabled:opacity-40"
+            className="ml-auto text-brand-black/30 hover:text-brand-orange transition-colors disabled:opacity-40 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <Trash2 size={14} />
           </button>

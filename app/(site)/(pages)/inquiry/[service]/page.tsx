@@ -35,7 +35,7 @@ export default async function InquiryPage({
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-0 lg:grid-cols-2">
         {/* ── Left: Context panel ──────────────────────────────────── */}
         <div className="grain-overlay relative border-r border-brand-grey/10 bg-[#1a100d] px-8 py-16 lg:px-12 lg:py-24">
-          <div className="sticky top-24">
+          <div className="lg:sticky lg:top-24">
             <nav className="mb-10 flex items-center gap-2 font-sans text-xs text-brand-grey/30">
               <Link href="/services" className="hover:text-brand-orange transition-colors">
                 Services

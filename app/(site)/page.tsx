@@ -133,7 +133,7 @@ export default async function Home() {
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12">
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative overflow-hidden">
-          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate }) => (
+          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate }, i) => (
               <Link
                 key={key}
                 href={
@@ -143,7 +143,7 @@ export default async function Home() {
                     ? `/events/${event.slug}`
                     : "/events"
                 }
-                className="group flex flex-col md:grid md:grid-cols-[8rem_1fr_auto] gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors"
+                className={`group gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors${i >= 5 ? " hidden md:grid" : " flex flex-col md:grid"} md:grid-cols-[8rem_1fr_auto]`}
               >
                 {/* Date */}
                 <span className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.15em] text-brand-grey/50 tabular-nums">
@@ -278,23 +278,16 @@ export default async function Home() {
                       </div>
                     );
                   })()}
-                  <Link
-                    href={`/shop/products/${featuredProducts[0].handle}`}
-                    className="mt-8 w-full flex items-center justify-between bg-brand-black text-brand-grey font-display font-bold uppercase tracking-[0.1em] text-sm px-6 py-4 rounded-sm hover:bg-brand-orange transition-colors"
-                  >
-                    {featuredProducts[0].availableForSale ? "Shop Now" : "View Product"}
-                    <ArrowRight size={16} />
-                  </Link>
                 </div>
               </div>
 
               {/* Remaining products — 4-column grid */}
               <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                {featuredProducts.slice(1, 5).map((product) => (
+                {featuredProducts.slice(1, 5).map((product, i) => (
                   <Link
                     key={product.id}
                     href={`/shop/products/${product.handle}`}
-                    className="group block"
+                    className={`group${i >= 2 ? " hidden md:block" : " block"}`}
                   >
                     <div className="relative overflow-hidden aspect-square bg-brand-black grain-overlay-sm">
                       {product.featuredImage ? (
