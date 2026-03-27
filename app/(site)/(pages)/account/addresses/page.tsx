@@ -26,7 +26,7 @@ interface CustomerData {
 }
 
 export const metadata = {
-  title: "Addresses",
+  title: "Addresses | My Account",
 };
 
 export default async function AddressesPage() {

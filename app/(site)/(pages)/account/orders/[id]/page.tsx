@@ -49,7 +49,7 @@ interface OrderData {
 }
 
 export const metadata = {
-  title: "Order Detail",
+  title: "Order Detail | My Account",
 };
 
 export default async function OrderDetailPage({

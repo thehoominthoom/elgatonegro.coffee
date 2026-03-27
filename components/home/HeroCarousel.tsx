@@ -216,7 +216,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           {/* Happening Now badge */}
           {slide.isHappeningNow && (
             <span
-              className="bg-brand-yellow text-white px-3 py-1 rounded-sm font-accent text-sm md:text-base -rotate-2 inline-block mb-3"
+              className="bg-brand-yellow text-brand-grey px-3 py-1 rounded-sm font-accent text-sm md:text-base -rotate-2 inline-block mb-3"
               style={textAnim(transitioning, "happeningNow", mounted)}
             >
               Happening Now

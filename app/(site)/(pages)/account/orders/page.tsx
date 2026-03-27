@@ -31,7 +31,7 @@ interface OrdersData {
 }
 
 export const metadata = {
-  title: "Orders",
+  title: "Orders | My Account",
 };
 
 export default async function OrdersPage() {

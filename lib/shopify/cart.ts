@@ -63,6 +63,7 @@ export async function createCart(): Promise<Cart> {
   }>({
     query: CREATE_CART_MUTATION,
     variables: { lines: [] },
+    cache: "no-store",
   });
 
   if (data.cartCreate.userErrors.length) {
@@ -81,6 +82,7 @@ export async function getCart(): Promise<Cart | null> {
     const data = await shopifyFetch<{ cart: Cart | null }>({
       query: GET_CART_QUERY,
       variables: { cartId },
+      cache: "no-store",
     });
     return data.cart;
   } catch {
@@ -108,6 +110,7 @@ export async function addToCart(
       cartId,
       lines: [{ merchandiseId: variantId, quantity }],
     },
+    cache: "no-store",
   });
 
   if (data.cartLinesAdd.userErrors.length) {
@@ -132,6 +135,7 @@ export async function updateCartLine(
       cartId,
       lines: [{ id: lineId, quantity }],
     },
+    cache: "no-store",
   });
 
   if (data.cartLinesUpdate.userErrors.length) {
@@ -150,6 +154,7 @@ export async function removeCartLine(lineId: string): Promise<Cart> {
   }>({
     query: REMOVE_CART_LINE_MUTATION,
     variables: { cartId, lineIds: [lineId] },
+    cache: "no-store",
   });
 
   if (data.cartLinesRemove.userErrors.length) {

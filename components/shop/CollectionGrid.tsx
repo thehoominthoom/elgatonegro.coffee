@@ -245,11 +245,26 @@ export function CollectionGrid({ products }: CollectionGridProps) {
         </p>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {result.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {result.length === 0 ? (
+        <div className="text-center py-16 border border-brand-black/10 rounded-sm">
+          <p className="font-sans text-sm text-brand-black/50 mb-1">
+            No products match your filters.
+          </p>
+          <button
+            type="button"
+            onClick={() => setFilters(DEFAULT_FILTERS)}
+            className="font-sans text-xs uppercase tracking-[0.15em] text-brand-orange hover:text-brand-yellow transition-colors mt-2"
+          >
+            Clear all filters
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {result.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

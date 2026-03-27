@@ -388,10 +388,13 @@ export async function POST(request: NextRequest) {
       }
     }
   } catch (error) {
-    // Log the error but still return 200 to prevent Helcim from retrying endlessly
     console.error(
       `[helcim-webhook] Error processing transaction ${payload.id}:`,
       error instanceof Error ? error.message : error
+    );
+    return NextResponse.json(
+      { error: "Internal processing error" },
+      { status: 500 }
     );
   }
 

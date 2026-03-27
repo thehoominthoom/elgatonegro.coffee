@@ -217,7 +217,7 @@ TURNSTILE_SECRET_KEY=
 Recommended implementation sequence:
 
 1. Tailwind config + globals + fonts + shadcn/ui setup
-2. Root layout, SiteHeader, SiteFooter, shared UI primitives (Button, Card, PolaroidCard)
+2. Root layout, SiteHeader, SiteFooter, shared UI primitives (Button, Card)
 3. Homepage (establishes all visual patterns)
 4. `/services/*` + inquiry flow (primary revenue driver)
 5. `/shop/*` + cart + Shopify hosted checkout

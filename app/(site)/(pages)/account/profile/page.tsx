@@ -25,7 +25,7 @@ interface MarketingConsentData {
 }
 
 export const metadata = {
-  title: "Profile",
+  title: "Profile | My Account",
 };
 
 export default async function ProfilePage() {

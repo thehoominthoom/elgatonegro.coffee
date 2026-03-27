@@ -29,7 +29,7 @@ export async function shopifyFetch<T>({
   query,
   variables,
   usePublicToken = false,
-  cache = "no-store",
+  cache = "force-cache",
   revalidate,
 }: ShopifyFetchOptions): Promise<T> {
   const token = usePublicToken ? PUBLIC_TOKEN : PRIVATE_TOKEN;
