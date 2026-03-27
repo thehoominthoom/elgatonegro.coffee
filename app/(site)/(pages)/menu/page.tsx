@@ -70,7 +70,7 @@ function MenuItemRow({ item }: { item: MenuItem }) {
       return (
         <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
           <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
+            <h3 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-[0.25em] text-brand-grey">
               {item.text}
             </h3>
             <span className="font-sans font-extrabold text-sm md:text-base text-brand-orange whitespace-nowrap">
@@ -110,7 +110,7 @@ function SectionColumn({ name, price, items }: { name: string; price?: number; i
     <div>
       <div className="pt-10 pb-3 first:pt-0 border-b-2 border-brand-orange mb-1">
         <div className="flex items-baseline justify-between gap-4">
-          <h3 className="font-display font-bold text-xl md:text-2xl uppercase tracking-[0.15em] text-brand-grey">
+          <h3 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-[0.25em] text-brand-grey">
             {name}
           </h3>
           {price != null && (
@@ -145,11 +145,11 @@ export default async function MenuPage() {
       {/* ── Hero header ──────────────────────────────────────────── */}
       <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
         <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
-        <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-16 md:pb-24">
-          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             What We Serve
           </p>
-          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl uppercase text-brand-grey tracking-tight leading-[0.9]">
+          <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight leading-[0.9]">
             The Menu
           </h1>
         </div>
@@ -158,7 +158,7 @@ export default async function MenuPage() {
       {/* ── Menu body ────────────────────────────────────────────── */}
       <section className="relative bg-brand-black overflow-hidden">
         <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
-        <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 pb-20 md:pb-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-20 md:pb-28">
           {hasContent ? (
             <div className="space-y-0">
               {blocks.map((block) => {

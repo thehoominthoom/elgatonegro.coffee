@@ -45,7 +45,7 @@ function FooterColumn({ title, links }: FooterColumnProps) {
 export function SiteFooter() {
   return (
     <footer className="bg-brand-black text-brand-grey grain-overlay-dark">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-5 gap-8">
         {/* Column 1 — Brand */}
         <div className="col-span-2 md:col-span-1">
           <p className="font-display text-xl font-bold text-brand-grey uppercase tracking-widest">
@@ -91,6 +91,14 @@ export function SiteFooter() {
             { label: "Community & Conventions", href: "/services/community-conventions" },
             { label: "Weddings & Celebrations", href: "/services/weddings-celebrations" },
             { label: "Private Events", href: "/services/private-events" },
+          ]}
+        />
+
+        <FooterColumn
+          title="Company"
+          links={[
+            { label: "Media Resources", href: "/media" },
+            { label: "Opportunities", href: "/opportunities" },
           ]}
         />
 
