@@ -217,8 +217,7 @@ function ServiceHeroMedia({
 
   // No media — render branded placeholder
   return (
-    <div className="relative aspect-[16/10] md:aspect-[3/4] bg-brand-black overflow-hidden">
-      <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+    <div className="relative aspect-[16/10] md:aspect-[3/4] bg-brand-black overflow-hidden grain-overlay-dark">
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
       <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
     </div>

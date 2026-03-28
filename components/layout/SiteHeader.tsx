@@ -48,7 +48,7 @@ export function SiteHeader() {
         </ul>
 
         {/* Actions — right */}
-        <div className="ml-auto flex items-center gap-5">
+        <div className="ml-auto flex items-center gap-3 md:gap-5">
           {/* Desktop CTA */}
           <Link
             href="/inquiry"
@@ -58,7 +58,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Cart + account icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <button
               aria-label={`Cart${itemCount > 0 ? ` — ${itemCount} item${itemCount === 1 ? "" : "s"}` : ""}`}
               onClick={openCart}
@@ -66,7 +66,7 @@ export function SiteHeader() {
             >
               <ShoppingBag size={22} className="text-brand-black/70" />
               {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-brand-orange text-brand-grey text-[10px] font-sans font-extrabold rounded-full flex items-center justify-center leading-none">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-brand-orange text-brand-grey text-[10px] font-sans font-extrabold rounded-full flex items-center justify-center leading-none">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               )}

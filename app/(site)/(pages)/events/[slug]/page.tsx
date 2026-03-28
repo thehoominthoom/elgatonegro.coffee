@@ -408,7 +408,7 @@ export default async function EventDetailPage({
       />
 
       {/* ── 1. Hero ──────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36">
+      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36 grain-overlay-dark">
         {event.image ? (
           <Image
             src={urlFor(event.image).width(1440).url()}
@@ -423,7 +423,6 @@ export default async function EventDetailPage({
         )}
         <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent" />
         <div className="absolute inset-0 z-[2] bg-gradient-to-r from-brand-black/50 to-transparent" />
-        <div className="absolute inset-0 z-[20] grain-overlay-dark pointer-events-none" style={{ opacity: 0.85 }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
           <p className="font-accent text-base md:text-lg uppercase tracking-[0.1em] text-brand-orange mb-3">

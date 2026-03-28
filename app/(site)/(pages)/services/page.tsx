@@ -51,8 +51,7 @@ export default function ServicesPage() {
                 >
                   {isEven ? (
                     <>
-                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden">
-                        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden grain-overlay-dark">
                         {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
                         <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                         <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />
@@ -62,8 +61,7 @@ export default function ServicesPage() {
                   ) : (
                     <>
                       <ServiceBlockContent service={service} />
-                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden">
-                        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                      <div className="relative aspect-[4/3] bg-brand-black overflow-hidden grain-overlay-dark">
                         {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
                         <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                         <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />
@@ -74,8 +72,7 @@ export default function ServicesPage() {
 
                 {/* Mobile: stacked */}
                 <div className="md:hidden">
-                  <div className="relative aspect-[16/10] bg-brand-black overflow-hidden w-full mb-6">
-                    <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+                  <div className="relative aspect-[16/10] bg-brand-black overflow-hidden w-full mb-6 grain-overlay-dark">
                     {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark */}
                     <img src="/brand/hellcat-color.svg" alt="" className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]" />
                     <div className="w-full h-full transition-transform duration-500 group-hover:scale-105" />

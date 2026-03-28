@@ -153,7 +153,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   return (
     <section
-      className="relative min-h-[100svh] bg-brand-black overflow-hidden"
+      className="relative min-h-[100svh] bg-brand-black overflow-hidden grain-overlay-dark"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -206,7 +206,6 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       {/* Overlays — z-[2] sits above images (max z:1) and below content (z-10) */}
       <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent" />
       <div className="absolute inset-0 z-[2] bg-gradient-to-r from-brand-black/50 to-transparent" />
-      <div className="absolute inset-0 z-[20] grain-overlay-dark pointer-events-none" style={{ opacity: 0.85 }} />
 
       {/* Content */}
       <div className="relative z-10 h-full min-h-[100svh] flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto w-full">
@@ -298,7 +297,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
           {/* Segmented pill indicators */}
           {slides.length > 1 && (
-            <div className="flex items-center gap-[3px] mt-6">
+            <div className="flex items-center gap-[2px] mt-2">
               {slides.map((_, i) => {
                 const isActive = i === current;
                 return (
@@ -306,7 +305,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                     key={i}
                     onClick={() => goTo(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    className="min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    className="min-h-[32px] min-w-[32px] flex items-center justify-center"
                   >
                     <span
                       className={[

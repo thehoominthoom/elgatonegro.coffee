@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { getAllCollections } from "@/lib/shopify/storefront";
 
 export const revalidate = 3600;
 
@@ -18,95 +16,68 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ShopPage() {
-  let collections: Awaited<ReturnType<typeof getAllCollections>> = [];
-  try {
-    collections = await getAllCollections(20);
-  } catch {
-    // Shopify unavailable — render empty state
-  }
+const SHOP_CATEGORIES = [
+  { title: "Coffee\nBeans", href: "/shop/collections/coffee-beans", image: "/images/hero/hero-barista_roasting.webp" },
+  { title: "Apparel", href: "/shop/collections/apparel", image: "/images/about/phil_and_juan_making_coffee_exchange-260110.webp" },
+  { title: "Merchandise", href: "/shop/collections/merchandise", image: "/images/hero/juan-stamping-cups.webp" },
+  { title: "Best\nSellers", href: "/shop/collections/best-sellers", image: "/images/hero/juan-phil-serving.webp" },
+];
 
+export default function ShopPage() {
   return (
-    <>
-      {/* ── Hero header ──────────────────────────────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
-          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
-            WHAT WE&apos;RE SELLING
+    <section className="relative w-full -mt-44 md:-mt-36 pt-[7.5rem] md:pt-[5.75rem]">
+      {/* ── Mobile hero header ──────────────────────────────────── */}
+      <section className="md:hidden relative bg-brand-black overflow-hidden grain-overlay-dark">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-12">
+          <p className="font-display font-bold text-base uppercase tracking-[0.25em] text-brand-orange mb-4">
+            What We&apos;re Selling
           </p>
-          <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight">
+          <h1 className="font-display font-bold text-5xl uppercase text-brand-grey tracking-tight">
             Shop
           </h1>
         </div>
       </section>
 
-      {/* ── Collections grid ────────────────────────────────────── */}
-      <main className="min-h-screen bg-brand-grey grain-overlay">
-        <section className="px-4 md:px-6 py-8 md:py-10 pb-16">
-          <div className="mx-auto max-w-7xl relative z-10">
-            {collections.length === 0 ? (
-              <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
-                Coming soon.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {collections.map((collection) => (
-                  <CollectionCard key={collection.id} collection={collection} />
+      {/* ── Category grid ──────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {SHOP_CATEGORIES.map((cat) => (
+          <Link
+            key={cat.href}
+            href={cat.href}
+            className="group relative block overflow-hidden aspect-[3/2] md:aspect-auto md:h-[calc((100vh-5.75rem)/2)] grain-overlay-dark"
+          >
+            <Image
+              src={cat.image}
+              alt={cat.title.replace("\n", " ")}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover photo-treatment group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/30 to-brand-black/20 group-hover:from-brand-black/80 group-hover:via-brand-black/40 transition-all duration-500" />
+            <div className="absolute inset-0 z-10 flex items-center justify-center px-6">
+              <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl uppercase text-brand-grey tracking-tight text-center leading-[0.9]">
+                {cat.title.split("\n").map((line, i) => (
+                  <span key={i} className="block">{line}</span>
                 ))}
-              </div>
-            )}
-          </div>
-        </section>
-      </main>
-    </>
-  );
-}
-
-// ─── CollectionCard ───────────────────────────────────────────────────────────
-
-function CollectionCard({
-  collection,
-}: {
-  collection: Awaited<ReturnType<typeof getAllCollections>>[number];
-}) {
-  return (
-    <Link
-      href={`/shop/collections/${collection.handle}`}
-      className="group block bg-brand-grey overflow-hidden rounded-sm"
-    >
-      {/* Image */}
-      <div className="aspect-[4/3] overflow-hidden bg-brand-black/5 relative grain-overlay-sm">
-        {collection.image ? (
-          <Image
-            src={collection.image.url}
-            alt={collection.image.altText ?? collection.title}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover photo-treatment-sm group-hover:scale-[1.03] transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full bg-brand-black/10 grain-overlay-sm" />
-        )}
+              </h2>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Meta */}
-      <div className="px-5 py-4 flex items-center justify-between">
-        <div>
-          <p className="font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-black">
-            {collection.title}
-          </p>
-          {collection.description && (
-            <p className="font-sans text-xs text-brand-black/50 mt-1 line-clamp-1">
-              {collection.description}
-            </p>
-          )}
-        </div>
-        <ArrowRight
-          size={16}
-          className="text-brand-black/30 group-hover:text-brand-orange group-hover:translate-x-1 transition-all shrink-0"
-        />
+      {/* ── Centered "SHOP" overlay — desktop only, sits at the grid intersection */}
+      <div className="hidden md:flex absolute inset-0 top-[5.75rem] z-20 items-center justify-center pointer-events-none">
+        <h1
+          className="font-display font-bold uppercase text-brand-grey tracking-tight"
+          style={{
+            fontSize: "clamp(3rem, 12vw, 10rem)",
+            textShadow: "0 4px 30px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)",
+          }}
+        >
+          Shop
+        </h1>
       </div>
-    </Link>
+
+    </section>
   );
 }

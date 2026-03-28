@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 
 function TikTokIcon({ size = 24 }: { size?: number }) {
   return (
@@ -45,16 +45,16 @@ function FooterColumn({ title, links }: FooterColumnProps) {
 export function SiteFooter() {
   return (
     <footer className="bg-brand-black text-brand-grey grain-overlay-dark">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-12 gap-8">
         {/* Column 1 — Brand */}
-        <div className="col-span-2 md:col-span-1">
+        <div className="col-span-2 md:col-span-6">
           <p className="font-display text-xl font-bold text-brand-grey uppercase tracking-widest">
             El Gato Negro
           </p>
           <p className="text-sm text-brand-grey/70 mt-1">
             Coffee that shows up.
           </p>
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex items-center gap-2 mt-4">
             <a
               href="https://www.instagram.com/elgatonegro.coffee/"
               target="_blank"
@@ -76,42 +76,35 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <FooterColumn
-          title="Visit"
-          links={[
-            { label: "Find Us", href: "/events" },
-          ]}
-        />
+        <div className="col-span-1 md:col-span-3">
+          <FooterColumn
+            title="Visit"
+            links={[
+              { label: "Find Us", href: "/events" },
+            ]}
+          />
+        </div>
 
-        <FooterColumn
-          title="Work With Us"
-          links={[
-            { label: "Services", href: "/services" },
-            { label: "Brand Activations", href: "/services/brand-activations" },
-            { label: "Community & Conventions", href: "/services/community-conventions" },
-            { label: "Weddings & Celebrations", href: "/services/weddings-celebrations" },
-            { label: "Private Events", href: "/services/private-events" },
-          ]}
-        />
+        <div className="col-span-1 md:col-span-3">
+          <FooterColumn
+            title="Company"
+            links={[
+              { label: "Media Resources", href: "/media" },
+              { label: "Opportunities", href: "/opportunities" },
+            ]}
+          />
+        </div>
 
-        <FooterColumn
-          title="Company"
-          links={[
-            { label: "Media Resources", href: "/media" },
-            { label: "Opportunities", href: "/opportunities" },
-          ]}
-        />
-
-        <FooterColumn
-          title="Shop"
-          links={[
-            { label: "All Products", href: "/shop" },
-            { label: "Coffee Beans", href: "/shop/collections/coffee-beans" },
-            { label: "Apparel", href: "/shop/collections/apparel" },
-            { label: "Merchandise", href: "/shop/collections/merchandise" },
-          ]}
-        />
-
+        {/* Book the Cart CTA */}
+        <div className="col-span-2 md:col-span-12 mt-6 md:mt-10 pt-6 md:pt-8 border-t border-dashed border-brand-grey/10">
+          <Link
+            href="/inquiry"
+            className="group inline-flex items-center gap-3 bg-brand-orange text-brand-grey px-8 py-4 rounded-sm font-display font-bold text-sm uppercase tracking-[0.1em] hover:bg-brand-yellow transition-colors duration-200 active:scale-[0.98]"
+          >
+            Book the Cart
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
 
       {/* Bottom bar */}

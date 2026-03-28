@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Download, FileText } from "lucide-react";
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
@@ -61,9 +62,23 @@ export default function MediaPage() {
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
+      <section className="relative overflow-hidden -mt-44 md:-mt-36">
+        {/* Background image */}
+        <Image
+          src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center photo-treatment"
+        />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/50 to-brand-black/40" />
+
+        {/* Grain overlay */}
         <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             Brand Resources
           </p>
@@ -134,14 +149,14 @@ export default function MediaPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {BRAND_COLORS.map((color) => (
-              <div key={color.token} className="border border-brand-grey/10">
+              <div key={color.token} className="border border-brand-grey/10 flex flex-col">
                 {/* Color swatch */}
                 <div
                   className="aspect-square"
                   style={{ backgroundColor: color.hex }}
                 />
                 {/* Info */}
-                <div className="px-3 py-3 bg-brand-grey/5">
+                <div className="px-3 py-3 bg-brand-grey/5 flex-1">
                   <p className="font-display font-bold text-xs uppercase tracking-wide text-brand-grey">
                     {color.name}
                   </p>

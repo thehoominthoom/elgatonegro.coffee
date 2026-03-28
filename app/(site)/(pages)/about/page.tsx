@@ -84,7 +84,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── 1. Hero — Full-viewport image + massive type ──────────────── */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36">
+      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36 grain-overlay-dark">
         <Image
           src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
           alt="El Gato Negro crew in front of the coffee cart"
@@ -94,7 +94,6 @@ export default function AboutPage() {
           className="object-cover photo-treatment"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-brand-black/40 to-brand-black/30" />
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
@@ -120,8 +119,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 2. Story — Magazine spread ─────────────────────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+      <section className="relative bg-brand-black overflow-hidden grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
           {/* Mobile-only heading above grid */}
           <div className="md:hidden mb-8">
@@ -202,8 +200,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. Hellcat Logo Breakdown ──────────────────────────────────── */}
-      <section className="relative bg-brand-yellow overflow-hidden">
-        <div className="absolute inset-0 grain-overlay pointer-events-none" />
+      <section className="relative bg-brand-yellow overflow-hidden grain-overlay">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-12 md:mb-16">
             The Mark
@@ -291,8 +288,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 5. Our Approach — Stacked editorial strips ─────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+      <section className="relative bg-brand-black overflow-hidden grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-yellow mb-3">
             What Drives Us

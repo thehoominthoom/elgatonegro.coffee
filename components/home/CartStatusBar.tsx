@@ -95,11 +95,22 @@ export async function CartStatusBar() {
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >
-          {hasOpen
-            ? openEvents.length >= 2
-              ? `${openEvents.length} Serving Coffee`
-              : "Serving Coffee"
-            : "No Coffee Today"}
+          {hasOpen ? (
+            <>
+              {openEvents.length >= 2 && (
+                <span className="block text-[10px] tracking-[0.2em] text-brand-grey/70">
+                  {openEvents.length} Carts
+                </span>
+              )}
+              <span className="block">Serving</span>
+              <span className="block">Coffee</span>
+            </>
+          ) : (
+            <>
+              <span className="block">No Coffee</span>
+              <span className="block">Today</span>
+            </>
+          )}
         </span>
 
         {hasOpen && (

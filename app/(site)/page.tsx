@@ -376,7 +376,7 @@ export default async function Home() {
       </section>
 
       {/* ── 4a. Clients ────────────────────────────────────────────────── */}
-      <section className="relative bg-brand-black py-14 md:py-20 overflow-hidden">
+      <section className="relative bg-brand-black py-14 md:py-20 overflow-hidden grain-overlay-dark">
         {/* Background image */}
         <Image
           src="/images/hero/juan-stamping-cups.webp"
@@ -388,8 +388,6 @@ export default async function Home() {
         />
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-brand-black/80" aria-hidden="true" />
-        {/* Grain */}
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" aria-hidden="true" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-grey/60 mb-10">

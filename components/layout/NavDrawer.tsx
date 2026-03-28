@@ -58,12 +58,12 @@ export function NavDrawer() {
       <div
         inert={!isOpen ? true : undefined}
         className={[
-          "fixed top-[7.5rem] bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey grain-overlay flex flex-col px-6 pt-6 pb-8",
+          "fixed top-[7.5rem] bottom-0 right-0 z-[55] w-full max-w-md bg-brand-grey flex flex-col px-6 pt-6 pb-8",
           "transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
       >
-        <div className="relative z-10 flex flex-col flex-1">
+        <div className="relative z-10 flex flex-col flex-1 grain-overlay">
           {/* Nav links */}
           <nav>
             <ul className="list-none m-0 p-0">

@@ -143,8 +143,7 @@ export default async function MenuPage() {
   return (
     <>
       {/* ── Hero header ──────────────────────────────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36">
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+      <section className="relative bg-brand-black overflow-hidden -mt-44 md:-mt-36 grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-12 md:pb-16">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             What We Serve
@@ -156,8 +155,7 @@ export default async function MenuPage() {
       </section>
 
       {/* ── Menu body ────────────────────────────────────────────── */}
-      <section className="relative bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
+      <section className="relative bg-brand-black overflow-hidden grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-20 md:pb-28">
           {hasContent ? (
             <div className="space-y-0">
