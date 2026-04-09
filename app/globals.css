@@ -45,6 +45,11 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
+  /* Fluid type scale — genuine scaling across 1280px–2560px desktop range */
+  --text-hero:    clamp(3.5rem, 5.5vw, 9rem);
+  --text-display: clamp(2.75rem, 4.5vw, 7rem);
+  --text-section: clamp(2rem, 3vw, 5rem);
+
   /* Brand colors */
   --color-brand-orange: #b43620;
   --color-brand-yellow: #d09324;

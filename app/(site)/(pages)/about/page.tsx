@@ -101,7 +101,7 @@ export default function AboutPage() {
           </p>
           <h1
             className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-            style={{ fontSize: "clamp(3.5rem, 15vw, 14rem)" }}
+            style={{ fontSize: "var(--text-hero)" }}
           >
             Not Your
             <br />

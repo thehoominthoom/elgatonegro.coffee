@@ -431,7 +431,7 @@ export default async function EventDetailPage({
 
           <h1
             className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-            style={{ fontSize: "clamp(3rem, 12vw, 10rem)" }}
+            style={{ fontSize: "var(--text-hero)" }}
           >
             {event.title}
           </h1>

@@ -244,7 +244,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           <h1
             className="font-display font-bold text-brand-grey leading-none uppercase tracking-[-0.03em] mb-6"
             style={{
-              fontSize: "clamp(3rem, 12vw, 10rem)",
+              fontSize: "var(--text-hero)",
               ...textAnim(transitioning, "title", mounted),
             }}
           >
