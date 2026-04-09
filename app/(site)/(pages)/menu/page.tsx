@@ -4,9 +4,16 @@ import { client } from "@/sanity/lib/client";
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Menu | El Gato Negro Coffee",
+  title: "Menu — El Gato Negro Coffee",
   description:
     "Browse El Gato Negro's drink menu — espresso, specialty drinks, add-ons, and more from Nashville's mobile coffee cart.",
+  openGraph: {
+    images: [{ url: '/images/hero/juan-stamping-cups.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/hero/juan-stamping-cups.webp'],
+  },
 };
 
 // ─── ISR ──────────────────────────────────────────────────────────────────────

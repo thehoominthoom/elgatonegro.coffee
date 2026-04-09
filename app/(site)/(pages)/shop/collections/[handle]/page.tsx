@@ -31,6 +31,15 @@ export async function generateMetadata({
     return {
       title: `${collection.title} — El Gato Negro Shop`,
       description: collection.description || `Shop ${collection.title} from El Gato Negro Coffee.`,
+      openGraph: {
+        images: collection.image?.url
+          ? [{ url: collection.image.url, width: collection.image.width ?? 1200, height: collection.image.height ?? 630 }]
+          : [{ url: '/images/hero/hero-barista_roasting.webp', width: 1200, height: 630 }],
+      },
+      twitter: {
+        card: 'summary_large_image' as const,
+        images: [collection.image?.url ?? '/images/hero/hero-barista_roasting.webp'],
+      },
     };
   } catch {
     return {};

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Refund Policy — El Gato Negro Coffee",
   description:
     "How returns, refunds, and replacements work for everything sold by El Gato Negro Coffee.",
+  robots: { index: false },
 };
 
 export default function RefundPolicyPage() {

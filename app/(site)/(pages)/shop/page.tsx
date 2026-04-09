@@ -13,6 +13,11 @@ export const metadata: Metadata = {
     description:
       "Coffee beans, merchandise, and more from Nashville's mobile espresso cart.",
     type: "website",
+    images: [{ url: '/images/hero/hero-barista_roasting.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/hero/hero-barista_roasting.webp'],
   },
 };
 
@@ -70,7 +75,7 @@ export default function ShopPage() {
         <h1
           className="font-display font-bold uppercase text-brand-grey tracking-tight"
           style={{
-            fontSize: "clamp(3rem, 12vw, 10rem)",
+            fontSize: "var(--text-hero)",
             textShadow: "0 4px 30px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)",
           }}
         >

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Terms of Service — El Gato Negro Coffee",
   description:
     "Terms and conditions governing your use of the El Gato Negro Coffee website and services.",
+  robots: { index: false },
 };
 
 export default function TermsOfServicePage() {

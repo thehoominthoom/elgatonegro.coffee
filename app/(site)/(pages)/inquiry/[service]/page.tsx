@@ -18,6 +18,13 @@ export async function generateMetadata({
   return {
     title: `Book ${config.label} — El Gato Negro`,
     description: `Request a quote for ${config.label.toLowerCase()} coffee service.`,
+    openGraph: {
+      images: [{ url: '/images/hero/juan-phil-serving.webp', width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      images: ['/images/hero/juan-phil-serving.webp'],
+    },
   };
 }
 

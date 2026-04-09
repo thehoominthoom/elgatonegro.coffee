@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Book the Cart — El Gato Negro",
   description:
     "Ready to bring El Gato Negro to your event? Fill out an inquiry and we'll be in touch within 1–2 business days.",
+  openGraph: {
+    images: [{ url: '/images/hero/juan-phil-serving.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/hero/juan-phil-serving.webp'],
+  },
 };
 
 // ─── Valid service slugs ───────────────────────────────────────────────────────

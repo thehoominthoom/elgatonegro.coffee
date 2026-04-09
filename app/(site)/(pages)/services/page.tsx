@@ -1,11 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ALL_SERVICES } from "@/lib/inquiry/config";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Services — El Gato Negro",
   description:
     "Mobile espresso bar for weddings, corporate events, conventions, and private gatherings. Four ways we show up.",
+  openGraph: {
+    images: [{ url: '/images/hero/hero-brewery_drinks-001.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/hero/hero-brewery_drinks-001.webp'],
+  },
 };
 
 export default function ServicesPage() {

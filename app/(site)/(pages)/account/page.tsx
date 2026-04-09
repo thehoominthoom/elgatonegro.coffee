@@ -40,6 +40,7 @@ interface OrdersData {
 
 export const metadata = {
   title: "Overview | My Account",
+  robots: { index: false },
 };
 
 export default async function AccountPage() {

@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Media Resources — El Gato Negro",
   description:
     "Download El Gato Negro brand assets — logos, color palette, and brand guidelines for partners and press.",
+  openGraph: {
+    images: [{ url: '/images/about/crew_in_front_of_cart_exchange-260110.webp', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/about/crew_in_front_of_cart_exchange-260110.webp'],
+  },
 };
 
 // ── Logo variants ────────────────────────────────────────────────────────────

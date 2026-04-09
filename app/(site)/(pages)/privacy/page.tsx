@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — El Gato Negro Coffee",
   description:
     "How El Gato Negro Coffee collects, uses, and protects your personal information.",
+  robots: { index: false },
 };
 
 export default function PrivacyPolicyPage() {
