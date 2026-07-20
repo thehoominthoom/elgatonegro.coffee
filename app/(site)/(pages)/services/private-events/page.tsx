@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -107,11 +108,13 @@ export default function PrivateEventsPage() {
 
             <div className="order-1 md:order-2">
               <div className="relative aspect-[4/5] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
-                {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark placeholder */}
-                <img
-                  src="/brand/hellcat-color.svg"
-                  alt=""
-                  className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]"
+                <Image
+                  src="/images/services/private-events-hero.webp"
+                  alt="Phil and Juan setting up the El Gato Negro cart in an intimate private-event setting"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover photo-treatment"
                 />
               </div>
             </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -69,12 +70,13 @@ export default function WeddingsCelebrationsPage() {
 
       {/* ── 1. Hero — full-viewport, warmer image ─────────────────── */}
       <section className="relative w-full min-h-[85svh] overflow-hidden -mt-44 md:-mt-36 bg-brand-black grain-overlay-dark">
-        {/* Branded placeholder — confirmed wedding image not yet on disk */}
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark placeholder */}
-        <img
-          src="/brand/hellcat-color.svg"
-          alt=""
-          className="absolute inset-0 w-1/3 h-1/3 m-auto object-contain opacity-[0.04] select-none pointer-events-none"
+        <Image
+          src="/images/services/weddings-celebrations-hero.webp"
+          alt="Close-up of an El Gato Negro espresso drink with wedding flowers, styled for a Nashville reception"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover photo-treatment"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/40 to-brand-black/20" />
 

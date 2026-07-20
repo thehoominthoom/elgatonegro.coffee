@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -119,13 +120,14 @@ export default function CommunityConventionsPage() {
             </div>
 
             <div className="md:col-span-7 order-1 md:order-2">
-              {/* Branded placeholder — confirmed image not yet on disk */}
               <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
-                {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark placeholder */}
-                <img
-                  src="/brand/hellcat-color.svg"
-                  alt=""
-                  className="absolute inset-0 w-1/2 h-1/2 m-auto object-contain opacity-[0.04]"
+                <Image
+                  src="/images/services/community-conventions-hero.webp"
+                  alt="Wide shot of RAD 100 community setup with the El Gato Negro cart serving a multi-day event"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 58vw"
+                  className="object-cover photo-treatment"
                 />
               </div>
             </div>

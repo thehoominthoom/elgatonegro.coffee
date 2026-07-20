@@ -32,8 +32,8 @@ export const SIGNATURE_MOMENTS: Partial<
     ],
     attribution: "— Juan",
     image: {
-      src: null,
-      alt: "El Gato Negro coffee cart set up in the 1111 Church leasing office lobby, Juan pulling shots",
+      src: "/images/services/brand-activations-signature.webp",
+      alt: "Phil setting up the espresso cart at 1111 Church for a weekday morning residence pop-up",
     },
     imageOnLeft: false,
     surface: "dark",
@@ -46,8 +46,8 @@ export const SIGNATURE_MOMENTS: Partial<
     ],
     attribution: "— Phil",
     image: {
-      src: null,
-      alt: "Phil and Juan working the cart at a busy multi-day convention morning",
+      src: "/images/services/community-conventions-signature.webp",
+      alt: "Phil and Juan working the cart at RAD 100 during a busy convention morning",
     },
     imageOnLeft: true,
     surface: "dark",
@@ -59,7 +59,7 @@ export const SIGNATURE_MOMENTS: Partial<
       "Then one drink ends up with your name on it, and the first three people in line order it because they saw it on the board.",
     ],
     image: {
-      src: null,
+      src: "/images/services/weddings-celebrations-signature.webp",
       alt: "El Gato Negro cart set up with wedding florals, barista ready to serve reception guests",
     },
     imageOnLeft: false,

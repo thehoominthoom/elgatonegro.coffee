@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -74,12 +75,13 @@ export default function BrandActivationsPage() {
 
       {/* ── 1. Hero — full-viewport, About §1 pattern ──────────────── */}
       <section className="relative w-full min-h-[85svh] overflow-hidden -mt-44 md:-mt-36 bg-brand-black grain-overlay-dark">
-        {/* Branded placeholder — confirmed image not yet on disk */}
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative watermark placeholder */}
-        <img
-          src="/brand/hellcat-color.svg"
-          alt=""
-          className="absolute inset-0 w-1/3 h-1/3 m-auto object-contain opacity-[0.04] select-none pointer-events-none"
+        <Image
+          src="/images/services/brand-activations-hero.webp"
+          alt="El Gato Negro coffee cart set up in the 1111 Church leasing office lobby, Juan pulling shots"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover photo-treatment"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/40 to-brand-black/20" />
 
