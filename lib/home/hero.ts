@@ -40,7 +40,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
       note: e.note ?? null,
       image: e.image
         ? urlFor(e.image).width(1440).url()
-        : "/images/hero/hero-barista_roasting.webp",
+        : "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
       href,
     };
   });

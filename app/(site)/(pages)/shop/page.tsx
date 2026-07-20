@@ -22,10 +22,10 @@ export const metadata: Metadata = {
 };
 
 const SHOP_CATEGORIES = [
-  { title: "Coffee\nBeans", href: "/shop/collections/coffee-beans", image: "/images/hero/hero-barista_roasting.webp" },
-  { title: "Apparel", href: "/shop/collections/apparel", image: "/images/about/phil_and_juan_making_coffee_exchange-260110.webp" },
-  { title: "Merchandise", href: "/shop/collections/merchandise", image: "/images/hero/juan-stamping-cups.webp" },
-  { title: "Best\nSellers", href: "/shop/collections/best-sellers", image: "/images/hero/juan-phil-serving.webp" },
+  { title: "Coffee\nBeans", href: "/shop/collections/coffee-beans", image: "/images/shop/lakehouse-coffeebeans.coffee_beans-close_up-moongoat-03.webp" },
+  { title: "Apparel", href: "/shop/collections/apparel", image: "/images/shop/the_exchange.bpn.moon_goat-cart.coffee_beans.swag-close_up-none-01.webp" },
+  { title: "Merchandise", href: "/shop/collections/merchandise", image: "/images/shop/the_exchange-retail-setup-go_get_em_tiger-01.webp" },
+  { title: "Best\nSellers", href: "/shop/collections/best-sellers", image: "/images/shop/misc-syrups.portrait-close_up-none-02.webp" },
 ];
 
 export default function ShopPage() {

@@ -82,10 +82,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero/hero-barista_roasting.webp",
+        url: "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
         width: 1200,
         height: 630,
-        alt: "El Gato Negro Coffee — barista roasting",
+        alt: "Phil and Juan setting up the El Gato Negro cart at The Exchange before service",
       },
     ],
   },
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
     description:
       "Nashville mobile espresso cart. Pop-ups, weddings, brand activations, and private events.",
-    images: ["/images/hero/hero-barista_roasting.webp"],
+    images: ["/images/hero/the_exchange-cart-setup-phil.juan-01.webp"],
   },
 };
 

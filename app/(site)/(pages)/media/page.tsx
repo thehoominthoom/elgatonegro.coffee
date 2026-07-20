@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   description:
     "Download El Gato Negro brand assets — logos, color palette, and brand guidelines for partners and press.",
   openGraph: {
-    images: [{ url: '/images/about/crew_in_front_of_cart_exchange-260110.webp', width: 1200, height: 630 }],
+    images: [{ url: '/images/media/the_exchange-cart-setup-none-02.webp', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    images: ['/images/about/crew_in_front_of_cart_exchange-260110.webp'],
+    images: ['/images/media/the_exchange-cart-setup-none-02.webp'],
   },
 };
 
@@ -73,7 +73,7 @@ export default function MediaPage() {
       <section className="relative overflow-hidden -mt-44 md:-mt-36">
         {/* Background image */}
         <Image
-          src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
+          src="/images/media/the_exchange-cart-setup-none-02.webp"
           alt=""
           fill
           sizes="100vw"

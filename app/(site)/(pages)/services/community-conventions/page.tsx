@@ -123,7 +123,7 @@ export default function CommunityConventionsPage() {
               <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
                 <Image
                   src="/images/services/community-conventions-hero.webp"
-                  alt="Wide shot of RAD 100 community setup with the El Gato Negro cart serving a multi-day event"
+                  alt="El Gato Negro cart serving a wide line at the RAD 100 outdoor community event"
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, 58vw"

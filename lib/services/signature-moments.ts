@@ -33,7 +33,7 @@ export const SIGNATURE_MOMENTS: Partial<
     attribution: "— Juan",
     image: {
       src: "/images/services/brand-activations-signature.webp",
-      alt: "Phil setting up the espresso cart at 1111 Church for a weekday morning residence pop-up",
+      alt: "Juan pulling shots at the 1111 Church leasing office coffee cart residency",
     },
     imageOnLeft: false,
     surface: "dark",
@@ -47,7 +47,7 @@ export const SIGNATURE_MOMENTS: Partial<
     attribution: "— Phil",
     image: {
       src: "/images/services/community-conventions-signature.webp",
-      alt: "Phil and Juan working the cart at RAD 100 during a busy convention morning",
+      alt: "Community members at RAD 100 with El Gato Negro service in the background",
     },
     imageOnLeft: true,
     surface: "dark",

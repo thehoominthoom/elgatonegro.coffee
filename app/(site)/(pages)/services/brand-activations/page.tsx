@@ -77,7 +77,7 @@ export default function BrandActivationsPage() {
       <section className="relative w-full min-h-[85svh] overflow-hidden -mt-44 md:-mt-36 bg-brand-black grain-overlay-dark">
         <Image
           src="/images/services/brand-activations-hero.webp"
-          alt="El Gato Negro coffee cart set up in the 1111 Church leasing office lobby, Juan pulling shots"
+          alt="Nike Stampede activation drink with El Gato Negro branded cup and event signage"
           fill
           priority
           sizes="100vw"

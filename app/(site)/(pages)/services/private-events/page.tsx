@@ -109,8 +109,8 @@ export default function PrivateEventsPage() {
             <div className="order-1 md:order-2">
               <div className="relative aspect-[4/5] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
                 <Image
-                  src="/images/services/private-events-hero.webp"
-                  alt="Phil and Juan setting up the El Gato Negro cart in an intimate private-event setting"
+                  src="/images/hero/fait_la_force-cart-portrait.service-juan.phil-01.webp"
+                  alt="Juan and Phil serving at the El Gato Negro cart at a Fait La Force private event"
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
