@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Download, FileText } from "lucide-react";
+// FileText import will be needed again when the Brand Guideline PDF CTA section below is uncommented.
+import { Download } from "lucide-react";
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -94,7 +95,7 @@ export default function MediaPage() {
           </h1>
           <p className="font-sans text-sm text-brand-grey/60 max-w-lg mt-4 leading-relaxed">
             Logos, colors, and brand guidelines for partners, press, and collaborators.
-            Download what you need, or grab the full brand guideline PDF below.
+            Download what you need.
           </p>
         </div>
       </section>
@@ -239,7 +240,7 @@ export default function MediaPage() {
         </div>
       </section>
 
-      {/* ── Brand Guideline PDF CTA ───────────────────────────────── */}
+      {/* ── Brand Guideline PDF CTA — HIDDEN until Phil delivers the actual PDF. Markup preserved intentionally; re-enable by uncommenting. ─────────────
       <section className="bg-brand-black border-t border-brand-grey/10">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 flex flex-col items-center text-center">
           <div className="flex h-14 w-14 items-center justify-center border border-brand-grey/15 mb-6">
@@ -262,6 +263,7 @@ export default function MediaPage() {
           </a>
         </div>
       </section>
+      */}
     </>
   );
 }
