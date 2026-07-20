@@ -44,5 +44,9 @@ next-env.d.ts
 # screenshots
 .screenshots/
 
+# brand-kit raw reference archive (2.2GB source photos, star-rated folders)
+# Keep on disk for agent read-access; never commit. Optimized WebPs for pages
+# live under public/images/ and are the only imagery in git.
+brand-kit/references/
 
 .env*.local
