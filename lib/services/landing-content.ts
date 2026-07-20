@@ -1,12 +1,5 @@
 import type { ServiceSlug } from "@/lib/inquiry/config";
 
-export type SocialProofType = "logos" | "testimonial";
-
-export interface Testimonial {
-  quote: string;
-  attribution: string;
-}
-
 export interface ProcessStep {
   number: string;
   title: string;
@@ -19,136 +12,141 @@ export interface ServiceCTA {
   subtext: string;
 }
 
+export interface InclusionsBlock {
+  eyebrow: string;
+  heading: string;
+}
+
 export interface ServiceLandingContent {
-  featuresHeading: string;
-  socialProofType: SocialProofType;
-  testimonial: Testimonial | null;
+  inclusions: InclusionsBlock;
+  processEyebrow: string;
+  processHeading: string;
   steps: ProcessStep[];
   cta: ServiceCTA;
 }
 
 export const SERVICE_LANDING_CONTENT: Record<ServiceSlug, ServiceLandingContent> = {
   "brand-activations": {
-    featuresHeading: "Your brand, our bar.",
-    socialProofType: "logos",
-    testimonial: null,
+    inclusions: {
+      eyebrow: "WHAT'S INCLUDED",
+      heading: "Your brand. Our bar.",
+    },
+    processEyebrow: "THE PROCESS",
+    processHeading: "How booking works.",
     steps: [
       {
         number: "01",
         title: "You reach out.",
-        body: "Tell us about your activation — brand, venue, dates, and headcount.",
+        body: "Brand, venue, dates, headcount. As much or as little as you have.",
       },
       {
         number: "02",
-        title: "We plan.",
-        body: "Custom quote within 1 business day. We coordinate branding, setup logistics, and crew.",
+        title: "We quote.",
+        body: "24 hours. No drip funnel.",
       },
       {
         number: "03",
         title: "We show up.",
-        body: "Setup in under 30 minutes. Branded bar, trained crew, coffee that matches the moment.",
+        body: "Cart in your colors. Crew already briefed. You go run your event.",
       },
     ],
     cta: {
       eyebrow: "YOUR ACTIVATION",
       heading: "Let's build the setup.",
-      subtext:
-        "Share your event details and we'll get back within 1 business day with availability and a custom quote.",
+      subtext: "Tell us what the room is. We'll tell you what we can do with it.",
     },
   },
 
   "community-conventions": {
-    featuresHeading: "Scale without compromise.",
-    socialProofType: "logos",
-    testimonial: null,
+    inclusions: {
+      eyebrow: "WHAT'S INCLUDED",
+      heading: "Built for the long days.",
+    },
+    processEyebrow: "THE PROCESS",
+    processHeading: "How booking works.",
     steps: [
       {
         number: "01",
         title: "You reach out.",
-        body: "Share your event details — dates, venue, expected attendance.",
+        body: "Dates, venue, expected attendance. Even a rough guess helps.",
       },
       {
         number: "02",
-        title: "We plan.",
-        body: "We send a custom proposal within 48 hours. Multi-station layout, crew assignments, logistics.",
+        title: "We quote.",
+        body: "48 hours. Multi-day events take a minute to map.",
       },
       {
         number: "03",
         title: "We show up.",
-        body: "Stations built, crew in position, lines moving. Multi-day coverage, consistent quality.",
+        body: "Stations up before doors. Crew in position. Line moves.",
       },
     ],
     cta: {
       eyebrow: "YOUR EVENT",
-      heading: "Let's talk logistics.",
-      subtext:
-        "Convention-scale events need coordination. Tell us about yours and we'll reach out within 48 hours.",
+      heading: "Let's map the days.",
+      subtext: "Send us the schedule. We'll send back a plan that survives day three.",
     },
   },
 
   "weddings-celebrations": {
-    featuresHeading: "Every detail, handled.",
-    socialProofType: "testimonial",
-    testimonial: {
-      quote:
-        "They handled everything. We just showed up and enjoyed the party.",
-      attribution: "Sarah & James, Oct 2025",
+    inclusions: {
+      eyebrow: "WHAT'S INCLUDED",
+      heading: "Built around your day.",
     },
+    processEyebrow: "THE PROCESS",
+    processHeading: "How booking works.",
     steps: [
       {
         number: "01",
         title: "You reach out.",
-        body: "Tell us about your celebration — date, venue, guest count.",
+        body: "Date, venue, guest count. We'll take it from there.",
       },
       {
         number: "02",
-        title: "We plan.",
-        body: "Custom quote within 24 hours. Signature drink menu, setup plan, and timeline coordination with your venue.",
+        title: "We quote.",
+        body: "24 hours. We read every wedding inquiry ourselves.",
       },
       {
         number: "03",
         title: "We show up.",
-        body: "Full bar setup and breakdown. You stay present. We handle the coffee.",
+        body: "Bar set before guests arrive. Broken down before you notice. You stay in your day.",
       },
     ],
     cta: {
       eyebrow: "YOUR DAY",
-      heading: "Let's make it yours.",
-      subtext:
-        "Every inquiry is reviewed personally. Share your details and expect a response with availability and a custom quote within 24 hours.",
+      heading: "Tell us about the two of you.",
+      subtext: "We'll build a menu around it and stay out of the way of everything else.",
     },
   },
 
   "private-events": {
-    featuresHeading: "Show up. We handle the rest.",
-    socialProofType: "testimonial",
-    testimonial: {
-      quote:
-        "Set up was quick, drinks were incredible, cleanup was done before we even noticed.",
-      attribution: "Rachel M., Dec 2025",
+    inclusions: {
+      eyebrow: "WHAT'S INCLUDED",
+      heading: "Show up. We handle the rest.",
     },
+    processEyebrow: "THE PROCESS",
+    processHeading: "How booking works.",
     steps: [
       {
         number: "01",
         title: "You reach out.",
-        body: "Give us the basics — date, location, rough headcount.",
+        body: "Date, where, rough headcount. That's plenty to start.",
       },
       {
         number: "02",
-        title: "We plan.",
-        body: "Quote within 24 hours. We work out the drink menu, setup, and timing.",
+        title: "We quote.",
+        body: "24 hours. We keep this one personal.",
       },
       {
         number: "03",
         title: "We show up.",
-        body: "Compact setup, great drinks, no stress. We arrive, serve, and clean up.",
+        body: "Cart in. Drinks out. Cleaned up before anyone's looking for the host.",
       },
     ],
     cta: {
-      eyebrow: "YOUR GATHERING",
-      heading: "Let's set the bar.",
-      subtext:
-        "Tell us about your event and we'll get back within 24 hours with availability and a quote.",
+      eyebrow: "YOUR NIGHT",
+      heading: "Tell us what you're throwing.",
+      subtext: "We'll show up, run the bar, and let you actually be at your own party.",
     },
   },
 };

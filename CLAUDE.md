@@ -138,7 +138,7 @@ Route groups (parentheses = no URL impact):
 app/
 ├── (marketing)/       → /, /about, /menu, /locations, /events
 │   ├── services/      → /services + 6 service sub-pages
-│   ├── inquiry/[service]/ → multi-step lead capture flow
+│   ├── inquiry/       → single-step lead capture form (service pre-select via ?service=slug)
 │   ├── resources/     → /resources, /blog/[slug], /build-guides/[slug], /product-lists, /youtube
 │   └── legal/         → /privacy, /terms, /refund-policy
 ├── (store)/           → /shop, /shop/[category], /shop/product/[slug], /cart, /checkout
@@ -164,7 +164,7 @@ These are two separate data sources deliberately — don't conflate them.
 
 **Inventory:** Physical only — digital products skip stock checks entirely. Two-phase reservation: reserve on payment confirmed, deduct on shipped. All mutations inside Prisma transactions.
 
-**Lead inquiry routing:** `/inquiry/[service]` uses a `SERVICE_CONFIGS` map in `lib/inquiry/config.ts` to drive dynamic fields, email templates, and success copy per service type (weddings, corporate, conventions, production-sets, apartment-popups, partnerships).
+**Lead inquiry routing:** `/inquiry` is a single-step unified form. Service pages deep-link with `/inquiry?service=[slug]` to pre-select the service dropdown. Valid slugs (`brand-activations`, `community-conventions`, `weddings-celebrations`, `private-events`) come from the `SERVICE_CONFIGS` map in `lib/inquiry/config.ts`, which also drives service page copy (labels, features, tagline, description).
 
 ## Brand Design System
 
