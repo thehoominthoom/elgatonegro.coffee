@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -7,6 +6,7 @@ import { SERVICE_LANDING_CONTENT } from "@/lib/services/landing-content";
 import { SERVICE_FAQS } from "@/lib/services/faqs";
 import { SERVICE_TESTIMONIALS } from "@/lib/services/testimonials";
 import { buildServiceGraph } from "@/lib/seo/service-graph";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 import { InclusionsList } from "@/components/services/InclusionsList";
 import { ServicesFAQ } from "@/components/services/ServicesFAQ";
 import { HowBookingWorks } from "@/components/services/HowBookingWorks";
@@ -67,62 +67,47 @@ export default function PrivateEventsPage() {
     <>
       <JsonLd data={graph} />
 
-      {/* ── 1. Hero — balanced 50/50 editorial spread ──────────────── */}
-      <section data-sticky-cta="hero" className="relative bg-brand-black grain-overlay-dark overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-16 md:pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
-            <div className="order-2 md:order-1">
-              <div className="mb-8 md:mb-10">
-                <HeroBreadcrumb
-                  currentLabel="Private Events"
-                  variant="onDarkBg"
-                />
-              </div>
-
-              <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
-                {config.eyebrow}
-              </p>
-              <h1
-                className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-                style={{ fontSize: "var(--text-hero)" }}
-              >
-                Private
-                <br />
-                Events.
-              </h1>
-              <p className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6">
-                {config.tagline}
-              </p>
-              <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-md border-l-2 border-brand-orange pl-5 md:pl-6">
-                {config.description}
-              </p>
-              <Link
-                href={`/inquiry?service=${SLUG}`}
-                className="group mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 md:px-10 md:py-5 hover:bg-brand-yellow transition-colors"
-              >
-                Request a Quote
-                <ArrowRight
-                  size={16}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </Link>
-            </div>
-
-            <div className="order-1 md:order-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
-                <Image
-                  src="/images/hero/fait_la_force-cart-portrait.service-juan.phil-01.webp"
-                  alt="Juan and Phil serving at the El Gato Negro cart at a Fait La Force private event"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover photo-treatment"
-                />
-              </div>
-            </div>
+      {/* ── 1. Hero — full-viewport, shared HeroImageFrame ─────────── */}
+      <HeroImageFrame
+        src="/images/services/private-events-hero.webp"
+        alt="Phil and Juan working the El Gato Negro cart during a service moment at The Exchange"
+        minHeight="85svh"
+        bleedTop
+      >
+        <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
+          <div className="mb-8 md:mb-12">
+            <HeroBreadcrumb currentLabel="Private Events" variant="onImage" />
           </div>
+
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+            {config.eyebrow}
+          </p>
+          <h1
+            className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
+            style={{ fontSize: "var(--text-hero)" }}
+          >
+            Private
+            <br />
+            Events.
+          </h1>
+          <p className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6">
+            {config.tagline}
+          </p>
+          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
+            {config.description}
+          </p>
+          <Link
+            href={`/inquiry?service=${SLUG}`}
+            className="group mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 md:px-10 md:py-5 hover:bg-brand-yellow transition-colors"
+          >
+            Request a Quote
+            <ArrowRight
+              size={16}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── 2. Testimonial — quieter than weddings (py-14) ─────────── */}
       <section className="bg-brand-grey grain-overlay py-14 md:py-18">

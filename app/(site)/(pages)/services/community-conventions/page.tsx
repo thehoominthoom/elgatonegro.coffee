@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -9,6 +8,7 @@ import { SIGNATURE_MOMENTS } from "@/lib/services/signature-moments";
 import { BY_THE_NUMBERS } from "@/lib/services/by-the-numbers";
 import { RECENT_ACTIVATIONS } from "@/lib/services/recent-activations";
 import { buildServiceGraph } from "@/lib/seo/service-graph";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 import { InclusionsList } from "@/components/services/InclusionsList";
 import { SignatureMoment } from "@/components/services/SignatureMoment";
 import { ByTheNumbers } from "@/components/services/ByTheNumbers";
@@ -74,68 +74,56 @@ export default function CommunityConventionsPage() {
     <>
       <JsonLd data={graph} />
 
-      {/* ── 1. Hero — editorial spread, text left, dark bg ──────────── */}
-      <section data-sticky-cta="hero" className="relative bg-brand-black grain-overlay-dark overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-20 md:pb-28">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center">
-            <div className="md:col-span-5 order-2 md:order-1">
-              <div className="mb-8 md:mb-10">
-                <HeroBreadcrumb
-                  currentLabel="Community & Conventions"
-                  variant="onDarkBg"
-                />
-              </div>
-
-              <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
-                {config.eyebrow}
-              </p>
-              <h1
-                className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
-                style={{ fontSize: "var(--text-hero)" }}
-              >
-                Community
-                <br />
-                &amp;
-                <br />
-                Conventions.
-              </h1>
-
-              <div className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6 leading-tight">
-                <p>Three days.</p>
-                <p>One line.</p>
-                <p>Keeps moving.</p>
-              </div>
-
-              <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-8 max-w-lg border-l-2 border-brand-orange pl-5 md:pl-6">
-                {config.description}
-              </p>
-              <Link
-                href={`/inquiry?service=${SLUG}`}
-                className="group mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 md:px-10 md:py-5 hover:bg-brand-yellow transition-colors"
-              >
-                Request a Quote
-                <ArrowRight
-                  size={16}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </Link>
-            </div>
-
-            <div className="md:col-span-7 order-1 md:order-2">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
-                <Image
-                  src="/images/services/community-conventions-hero.webp"
-                  alt="El Gato Negro cart serving a wide line at the RAD 100 outdoor community event"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 58vw"
-                  className="object-cover photo-treatment"
-                />
-              </div>
-            </div>
+      {/* ── 1. Hero — full-viewport, shared HeroImageFrame ─────────── */}
+      <HeroImageFrame
+        src="/images/services/community-conventions-hero.webp"
+        alt="El Gato Negro cart serving a wide line at the RAD 100 outdoor community event"
+        minHeight="85svh"
+        bleedTop
+      >
+        <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
+          <div className="mb-8 md:mb-12">
+            <HeroBreadcrumb
+              currentLabel="Community & Conventions"
+              variant="onImage"
+            />
           </div>
+
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
+            {config.eyebrow}
+          </p>
+          <h1
+            className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
+            style={{ fontSize: "var(--text-hero)" }}
+          >
+            Community
+            <br />
+            &amp;
+            <br />
+            Conventions.
+          </h1>
+
+          <div className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6 leading-tight">
+            <p>Three days.</p>
+            <p>One line.</p>
+            <p>Keeps moving.</p>
+          </div>
+
+          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-8 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
+            {config.description}
+          </p>
+          <Link
+            href={`/inquiry?service=${SLUG}`}
+            className="group mt-10 inline-flex items-center gap-3 bg-brand-orange text-brand-grey font-display font-bold text-sm uppercase tracking-[0.1em] rounded-sm px-8 py-4 md:px-10 md:py-5 hover:bg-brand-yellow transition-colors"
+          >
+            Request a Quote
+            <ArrowRight
+              size={16}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── 2. By the Numbers — light, moved up on this page ────────── */}
       <section className="bg-brand-grey grain-overlay py-20 md:py-28">
