@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -9,6 +8,7 @@ import { SIGNATURE_MOMENTS } from "@/lib/services/signature-moments";
 import { BY_THE_NUMBERS } from "@/lib/services/by-the-numbers";
 import { RECENT_ACTIVATIONS } from "@/lib/services/recent-activations";
 import { buildServiceGraph } from "@/lib/seo/service-graph";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 import { InclusionsList } from "@/components/services/InclusionsList";
 import { SignatureMoment } from "@/components/services/SignatureMoment";
 import { ByTheNumbers } from "@/components/services/ByTheNumbers";
@@ -19,6 +19,8 @@ import { ServiceSocialProof } from "@/components/services/ServiceSocialProof";
 import { AlsoSee } from "@/components/services/AlsoSee";
 import { FinalCTA } from "@/components/services/FinalCTA";
 import { HeroBreadcrumb } from "@/components/services/HeroBreadcrumb";
+import { InlineCTA } from "@/components/services/InlineCTA";
+import { StickyMobileCTA } from "@/components/services/StickyMobileCTA";
 import { JsonLd } from "@/components/services/JsonLd";
 
 const SLUG = "brand-activations" as const;
@@ -73,18 +75,13 @@ export default function BrandActivationsPage() {
     <>
       <JsonLd data={graph} />
 
-      {/* ── 1. Hero — full-viewport, About §1 pattern ──────────────── */}
-      <section className="relative w-full min-h-[85svh] overflow-hidden -mt-44 md:-mt-36 bg-brand-black grain-overlay-dark">
-        <Image
-          src="/images/services/brand-activations-hero.webp"
-          alt="Nike Stampede activation drink with El Gato Negro branded cup and event signage"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover photo-treatment"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/40 to-brand-black/20" />
-
+      {/* ── 1. Hero — full-viewport, shared HeroImageFrame ─────────── */}
+      <HeroImageFrame
+        src="/images/services/brand-activations-hero.webp"
+        alt="Nike Stampede activation drink with El Gato Negro branded cup and event signage"
+        minHeight="85svh"
+        bleedTop
+      >
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
           <div className="mb-8 md:mb-12">
             <HeroBreadcrumb currentLabel="Brand Activations" variant="onImage" />
@@ -104,7 +101,7 @@ export default function BrandActivationsPage() {
           <p className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6">
             {config.tagline}
           </p>
-          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-2xl">
+          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
             {config.description}
           </p>
           <Link
@@ -118,7 +115,7 @@ export default function BrandActivationsPage() {
             />
           </Link>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── 2. Social Proof — logos, light ─────────────────────────── */}
       <section className="bg-brand-grey grain-overlay py-10 md:py-14">
@@ -136,9 +133,17 @@ export default function BrandActivationsPage() {
       </section>
 
       {/* ── 4. Signature Moment — dark, image right ────────────────── */}
-      <section className="bg-brand-black grain-overlay-dark py-20 md:py-28">
+      <section className="bg-brand-black grain-overlay-dark py-14 md:py-20">
         <SignatureMoment {...signature} />
       </section>
+
+      {/* ── 4b. Inline CTA — quiet mid-page moment (dark, matches §4) ─ */}
+      <InlineCTA
+        eyebrow="READY WHEN YOU ARE"
+        linkText="Tell us about it"
+        href={`/inquiry?service=${SLUG}`}
+        surface="dark"
+      />
 
       {/* ── 5. By the Numbers — light ──────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay py-16 md:py-24">
@@ -193,6 +198,9 @@ export default function BrandActivationsPage() {
         buttonLabel="Start your inquiry"
         buttonHref={`/inquiry?service=${SLUG}`}
       />
+
+      {/* ── Sticky mobile CTA — fades in past hero, out before Final CTA */}
+      <StickyMobileCTA href={`/inquiry?service=${SLUG}`} />
     </>
   );
 }

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getServiceConfig } from "@/lib/inquiry/config";
@@ -8,6 +7,7 @@ import { SERVICE_FAQS } from "@/lib/services/faqs";
 import { SIGNATURE_MOMENTS } from "@/lib/services/signature-moments";
 import { SERVICE_TESTIMONIALS } from "@/lib/services/testimonials";
 import { buildServiceGraph } from "@/lib/seo/service-graph";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 import { InclusionsList } from "@/components/services/InclusionsList";
 import { SignatureMoment } from "@/components/services/SignatureMoment";
 import { ServicesFAQ } from "@/components/services/ServicesFAQ";
@@ -16,6 +16,8 @@ import { ServiceTestimonial } from "@/components/services/ServiceTestimonial";
 import { AlsoSee } from "@/components/services/AlsoSee";
 import { FinalCTA } from "@/components/services/FinalCTA";
 import { HeroBreadcrumb } from "@/components/services/HeroBreadcrumb";
+import { InlineCTA } from "@/components/services/InlineCTA";
+import { StickyMobileCTA } from "@/components/services/StickyMobileCTA";
 import { JsonLd } from "@/components/services/JsonLd";
 
 const SLUG = "weddings-celebrations" as const;
@@ -68,18 +70,13 @@ export default function WeddingsCelebrationsPage() {
     <>
       <JsonLd data={graph} />
 
-      {/* ── 1. Hero — full-viewport, warmer image ─────────────────── */}
-      <section className="relative w-full min-h-[85svh] overflow-hidden -mt-44 md:-mt-36 bg-brand-black grain-overlay-dark">
-        <Image
-          src="/images/services/weddings-celebrations-hero.webp"
-          alt="Close-up of an El Gato Negro espresso drink with wedding flowers, styled for a Nashville reception"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover photo-treatment"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/40 to-brand-black/20" />
-
+      {/* ── 1. Hero — full-viewport, shared HeroImageFrame ─────────── */}
+      <HeroImageFrame
+        src="/images/services/weddings-celebrations-hero.webp"
+        alt="Close-up of an El Gato Negro espresso drink with wedding flowers, styled for a Nashville reception"
+        minHeight="85svh"
+        bleedTop
+      >
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
           <div className="mb-8 md:mb-12">
             <HeroBreadcrumb
@@ -104,7 +101,7 @@ export default function WeddingsCelebrationsPage() {
           <p className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6">
             {config.tagline}
           </p>
-          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-2xl">
+          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-6 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
             {config.description}
           </p>
           <Link
@@ -118,7 +115,7 @@ export default function WeddingsCelebrationsPage() {
             />
           </Link>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── 2. Testimonial — center-column pull quote ──────────────── */}
       <section className="bg-brand-grey grain-overlay py-16 md:py-20">
@@ -129,9 +126,17 @@ export default function WeddingsCelebrationsPage() {
       </section>
 
       {/* ── 3. Signature Moment — LIGHT (unique to weddings) ───────── */}
-      <section className="bg-brand-grey grain-overlay py-20 md:py-28">
+      <section className="bg-brand-grey grain-overlay py-14 md:py-20">
         <SignatureMoment {...signature} />
       </section>
+
+      {/* ── 3b. Inline CTA — quiet mid-page moment (light, matches §3) ─ */}
+      <InlineCTA
+        eyebrow="WHEN YOU'RE READY"
+        linkText="Tell us about it"
+        href={`/inquiry?service=${SLUG}`}
+        surface="light"
+      />
 
       {/* ── 4. Inclusions — light ──────────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay py-16 md:py-24">
@@ -184,6 +189,9 @@ export default function WeddingsCelebrationsPage() {
         buttonLabel="Start your inquiry"
         buttonHref={`/inquiry?service=${SLUG}`}
       />
+
+      {/* ── Sticky mobile CTA — fades in past hero, out before Final CTA */}
+      <StickyMobileCTA href={`/inquiry?service=${SLUG}`} />
     </>
   );
 }

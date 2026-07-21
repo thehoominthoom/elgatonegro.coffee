@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 // FileText import will be needed again when the Brand Guideline PDF CTA section below is uncommented.
 import { Download } from "lucide-react";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -69,23 +69,12 @@ const BRAND_COLORS = [
 export default function MediaPage() {
   return (
     <>
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden -mt-44 md:-mt-36">
-        {/* Background image */}
-        <Image
-          src="/images/media/the_exchange-cart-setup-none-02.webp"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center photo-treatment"
-        />
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/85 via-brand-black/50 to-brand-black/40" />
-
-        {/* Grain overlay */}
-        <div className="absolute inset-0 grain-overlay-dark pointer-events-none" />
-
+      {/* ── Hero — shared HeroImageFrame (content-driven height) ─── */}
+      <HeroImageFrame
+        src="/images/media/the_exchange-cart-setup-none-02.webp"
+        alt="The El Gato Negro coffee cart set up at The Exchange residency"
+        bleedTop
+      >
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             Brand Resources
@@ -98,7 +87,7 @@ export default function MediaPage() {
             Download what you need.
           </p>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── Logo Downloads ────────────────────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -16,10 +17,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero/fait_la_force-cart-portrait.service-juan.phil-01.webp",
+        url: "/images/about/crew_in_front_of_cart_exchange-260110.webp",
         width: 1200,
         height: 630,
-        alt: "Juan Martinez and Phil Bartko at the El Gato Negro cart",
+        alt: "El Gato Negro Coffee crew in front of the cart",
       },
     ],
   },
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     title: "About — El Gato Negro Coffee",
     description:
       "Nashville mobile coffee cart. Specialty espresso, bold energy, community first.",
-    images: ["/images/hero/fait_la_force-cart-portrait.service-juan.phil-01.webp"],
+    images: ["/images/about/crew_in_front_of_cart_exchange-260110.webp"],
   },
 };
 
@@ -46,8 +47,8 @@ const team = [
     name: "Phil",
     role: "The Brand Guy",
     bio: "Runs the website, the brand, and the business side. Phil brings the design eye, the tech backbone, and the strategy that keeps EGN moving forward.",
-    image: "/images/about/misc-founding.bts.espresso_machine-portrait-phil-01.webp",
-    imageAlt: "Portrait of Phil Bartko, co-founder of El Gato Negro",
+    image: "/images/about/fait_la_force-cart-portrait.service-phil-01.webp",
+    imageAlt: "Portrait of Phil Bartko at the El Gato Negro cart during a Fait La Force event",
   },
 ];
 
@@ -84,17 +85,12 @@ export default function AboutPage() {
   return (
     <>
       {/* ── 1. Hero — Full-viewport image + massive type ──────────────── */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden -mt-44 md:-mt-36 grain-overlay-dark">
-        <Image
-          src="/images/hero/fait_la_force-cart-portrait.service-juan.phil-01.webp"
-          alt="Juan Martinez and Phil Bartko at the El Gato Negro cart"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover photo-treatment"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-brand-black/40 to-brand-black/30" />
-
+      <HeroImageFrame
+        src="/images/about/crew_in_front_of_cart_exchange-260110.webp"
+        alt="El Gato Negro crew in front of the coffee cart"
+        minHeight="100svh"
+        bleedTop
+      >
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             About EGN
@@ -116,7 +112,7 @@ export default function AboutPage() {
             events, communities, and moments that matter most.
           </p>
         </div>
-      </section>
+      </HeroImageFrame>
 
       {/* ── 2. Story — Magazine spread ─────────────────────────────────── */}
       <section className="relative bg-brand-black overflow-hidden grain-overlay-dark">

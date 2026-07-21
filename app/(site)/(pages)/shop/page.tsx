@@ -21,11 +21,34 @@ export const metadata: Metadata = {
   },
 };
 
+// Portrait shots (Coffee Beans, Merchandise) need object-position biased away
+// from center so the product labels aren't cropped out of the landscape grid
+// cell. Landscape shots (Apparel, Best Sellers) default to center.
 const SHOP_CATEGORIES = [
-  { title: "Coffee\nBeans", href: "/shop/collections/coffee-beans", image: "/images/shop/lakehouse-coffeebeans.coffee_beans-close_up-moongoat-03.webp" },
-  { title: "Apparel", href: "/shop/collections/apparel", image: "/images/shop/the_exchange.bpn.moon_goat-cart.coffee_beans.swag-close_up-none-01.webp" },
-  { title: "Merchandise", href: "/shop/collections/merchandise", image: "/images/shop/the_exchange-retail-setup-go_get_em_tiger-01.webp" },
-  { title: "Best\nSellers", href: "/shop/collections/best-sellers", image: "/images/shop/misc-syrups.portrait-close_up-none-02.webp" },
+  {
+    title: "Coffee\nBeans",
+    href: "/shop/collections/coffee-beans",
+    image:
+      "/images/shop/lakehouse-coffeebeans.coffee_beans-close_up-moongoat-03.webp",
+    objectPosition: "center 75%", // keep EGN cup wordmark + moongoat bag in view
+  },
+  {
+    title: "Apparel",
+    href: "/shop/collections/apparel",
+    image:
+      "/images/shop/the_exchange.bpn.moon_goat-cart.coffee_beans.swag-close_up-none-01.webp",
+  },
+  {
+    title: "Merchandise",
+    href: "/shop/collections/merchandise",
+    image: "/images/shop/the_exchange-retail-setup-go_get_em_tiger-01.webp",
+    objectPosition: "center 40%", // keep the retail shelves with Go Get Em Tiger bags in view
+  },
+  {
+    title: "Best\nSellers",
+    href: "/shop/collections/best-sellers",
+    image: "/images/shop/misc-syrups.portrait-close_up-none-02.webp",
+  },
 ];
 
 export default function ShopPage() {
@@ -56,6 +79,7 @@ export default function ShopPage() {
               alt={cat.title.replace("\n", " ")}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
+              style={cat.objectPosition ? { objectPosition: cat.objectPosition } : undefined}
               className="object-cover photo-treatment group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/30 to-brand-black/20 group-hover:from-brand-black/80 group-hover:via-brand-black/40 transition-all duration-500" />

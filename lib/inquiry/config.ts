@@ -38,7 +38,7 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
       "We've set up in lobbies, on production sets, behind shoe drops, and in the leasing office at 1111 Church — enough times now that we've served hundreds of residents through those doors. The brief is always different. What we put behind the bar isn't. You get the cart, the menu built around your event, and a barista who's actually ours — not a contractor we found that morning.",
     features: [
       "A drink menu built around your event, not pulled off a shelf",
-      "The cart in your colors, your logo, your room",
+      "Custom banners and POP signage in your colors — cups too if you plan ahead",
       "Lobby, courtyard, trade floor, parking garage — Nashville and out, we'll make it work",
       "A barista who works for us, not a staffing agency",
       "Setup in under 30 minutes",

@@ -44,7 +44,10 @@ export function ByTheNumbers({
       <div className={`grid grid-cols-1 ${gridCols} gap-10 md:gap-8`}>
         {items.map((item) => (
           <div key={`${item.value}-${item.label}`} className="relative py-4">
-            <p className="font-display font-bold text-7xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none tabular-nums text-brand-orange">
+            <p
+              className="font-display font-bold uppercase tracking-tight leading-none tabular-nums text-brand-orange"
+              style={{ fontSize: "clamp(3.5rem, 7vw, 5.5rem)" }}
+            >
               {item.value}
             </p>
             <p

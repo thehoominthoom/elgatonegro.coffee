@@ -14,6 +14,8 @@ import { ServiceTestimonial } from "@/components/services/ServiceTestimonial";
 import { AlsoSee } from "@/components/services/AlsoSee";
 import { FinalCTA } from "@/components/services/FinalCTA";
 import { HeroBreadcrumb } from "@/components/services/HeroBreadcrumb";
+import { InlineCTA } from "@/components/services/InlineCTA";
+import { StickyMobileCTA } from "@/components/services/StickyMobileCTA";
 import { JsonLd } from "@/components/services/JsonLd";
 
 const SLUG = "private-events" as const;
@@ -66,7 +68,7 @@ export default function PrivateEventsPage() {
       <JsonLd data={graph} />
 
       {/* ── 1. Hero — balanced 50/50 editorial spread ──────────────── */}
-      <section className="relative bg-brand-black grain-overlay-dark overflow-hidden">
+      <section data-sticky-cta="hero" className="relative bg-brand-black grain-overlay-dark overflow-hidden">
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-16 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
             <div className="order-2 md:order-1">
@@ -130,6 +132,14 @@ export default function PrivateEventsPage() {
         />
       </section>
 
+      {/* ── 2b. Inline CTA — quiet mid-page moment (light, matches §2) ─ */}
+      <InlineCTA
+        eyebrow="WHEN THE NIGHT IS ON"
+        linkText="Start your inquiry"
+        href={`/inquiry?service=${SLUG}`}
+        surface="light"
+      />
+
       {/* ── 3. Inclusions — light, shorter list ───────────────────── */}
       <section className="bg-brand-grey grain-overlay py-16 md:py-24">
         <InclusionsList
@@ -181,6 +191,9 @@ export default function PrivateEventsPage() {
         buttonLabel="Start your inquiry"
         buttonHref={`/inquiry?service=${SLUG}`}
       />
+
+      {/* ── Sticky mobile CTA — fades in past hero, out before Final CTA */}
+      <StickyMobileCTA href={`/inquiry?service=${SLUG}`} />
     </>
   );
 }

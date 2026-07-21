@@ -19,6 +19,8 @@ import { ServiceSocialProof } from "@/components/services/ServiceSocialProof";
 import { AlsoSee } from "@/components/services/AlsoSee";
 import { FinalCTA } from "@/components/services/FinalCTA";
 import { HeroBreadcrumb } from "@/components/services/HeroBreadcrumb";
+import { InlineCTA } from "@/components/services/InlineCTA";
+import { StickyMobileCTA } from "@/components/services/StickyMobileCTA";
 import { JsonLd } from "@/components/services/JsonLd";
 
 const SLUG = "community-conventions" as const;
@@ -73,7 +75,7 @@ export default function CommunityConventionsPage() {
       <JsonLd data={graph} />
 
       {/* ── 1. Hero — editorial spread, text left, dark bg ──────────── */}
-      <section className="relative bg-brand-black grain-overlay-dark overflow-hidden">
+      <section data-sticky-cta="hero" className="relative bg-brand-black grain-overlay-dark overflow-hidden">
         <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-20 md:pb-28">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center">
             <div className="md:col-span-5 order-2 md:order-1">
@@ -98,7 +100,7 @@ export default function CommunityConventionsPage() {
                 Conventions.
               </h1>
 
-              <div className="font-display text-2xl md:text-3xl text-brand-grey/70 mt-6 leading-tight">
+              <div className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6 leading-tight">
                 <p>Three days.</p>
                 <p>One line.</p>
                 <p>Keeps moving.</p>
@@ -144,6 +146,14 @@ export default function CommunityConventionsPage() {
         />
       </section>
 
+      {/* ── 2b. Inline CTA — quiet mid-page moment (light, matches §2) ─ */}
+      <InlineCTA
+        eyebrow="WHEN THE DAY IS BIG"
+        linkText="Get the quote"
+        href={`/inquiry?service=${SLUG}`}
+        surface="light"
+      />
+
       {/* ── 3. Social Proof — logos ────────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay py-10 md:py-14 border-t border-dashed border-brand-black/15">
         <ServiceSocialProof eyebrow="GROUPS WE'VE WORKED WITH" />
@@ -160,7 +170,7 @@ export default function CommunityConventionsPage() {
       </section>
 
       {/* ── 5. Signature Moment — dark, image LEFT (mirror) ────────── */}
-      <section className="bg-brand-black grain-overlay-dark py-20 md:py-28 border-t border-dashed border-brand-grey/10">
+      <section className="bg-brand-black grain-overlay-dark py-14 md:py-20 border-t border-dashed border-brand-grey/10">
         <SignatureMoment {...signature} />
       </section>
 
@@ -205,6 +215,9 @@ export default function CommunityConventionsPage() {
         buttonLabel="Start your inquiry"
         buttonHref={`/inquiry?service=${SLUG}`}
       />
+
+      {/* ── Sticky mobile CTA — fades in past hero, out before Final CTA */}
+      <StickyMobileCTA href={`/inquiry?service=${SLUG}`} />
     </>
   );
 }

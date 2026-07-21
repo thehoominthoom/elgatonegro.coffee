@@ -23,7 +23,7 @@ export function HowBookingWorks({
   const isDark = surface === "dark";
   const eyebrowColor = isDark ? "text-brand-orange" : "text-brand-green";
   const headingColor = isDark ? "text-brand-grey" : "text-brand-black";
-  const numberColor = isDark ? "text-brand-grey/10" : "text-brand-black/10";
+  const numberColor = isDark ? "text-brand-grey/20" : "text-brand-black/15";
   const stepTitleColor = isDark ? "text-brand-grey" : "text-brand-black";
   const bodyColor = isDark ? "text-brand-grey/70" : "text-brand-black/70";
   const dividerClass = isDark

@@ -38,24 +38,24 @@ export function SignatureMoment({
   return (
     <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
       <p
-        className={`font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] mb-10 md:mb-12 ${eyebrowColor}`}
+        className={`font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] mb-6 md:mb-8 ${eyebrowColor}`}
       >
         {eyebrow}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-center">
         <div
           className={`${
-            imageOnLeft ? "md:col-span-7 md:order-1" : "md:col-span-7 md:order-2"
+            imageOnLeft ? "md:col-span-6 md:order-1" : "md:col-span-6 md:order-2"
           } order-1`}
         >
-          <div className="relative aspect-[3/4] md:aspect-[3/5] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-sm grain-overlay-sm bg-brand-black">
             {image.src ? (
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
-                sizes="(max-width: 768px) 100vw, 58vw"
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover photo-treatment"
               />
             ) : (
@@ -71,10 +71,10 @@ export function SignatureMoment({
 
         <div
           className={`${
-            imageOnLeft ? "md:col-span-5 md:order-2" : "md:col-span-5 md:order-1"
+            imageOnLeft ? "md:col-span-6 md:order-2" : "md:col-span-6 md:order-1"
           } order-2`}
         >
-          <div className="border-l-2 border-brand-orange pl-5 md:pl-6 max-w-md space-y-5">
+          <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5">
             {body.map((paragraph) => (
               <p
                 key={paragraph}

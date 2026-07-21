@@ -23,7 +23,7 @@ export function FinalCTA({
   buttonHref,
 }: FinalCTAProps) {
   return (
-    <section className="bg-brand-orange grain-overlay">
+    <section data-sticky-cta="final" className="bg-brand-orange grain-overlay">
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
         <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-4 md:mb-6">
           {eyebrow}
