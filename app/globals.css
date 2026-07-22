@@ -45,11 +45,6 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Fluid type scale — genuine scaling across 1280px–2560px desktop range */
-  --text-hero:    clamp(4rem, 6.5vw, 11rem);
-  --text-display: clamp(2.75rem, 4.5vw, 7rem);
-  --text-section: clamp(2rem, 3vw, 5rem);
-
   /* Brand colors */
   --color-brand-orange: #b43620;
   --color-brand-yellow: #d09324;
@@ -92,6 +87,11 @@
   --sidebar-accent-foreground: #2a201d;
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: #b43620;
+
+  /* Fluid type scale — genuine scaling across 1280px–2560px desktop range */
+  --text-hero:    clamp(4rem, 6.5vw, 11rem);
+  --text-display: clamp(2.75rem, 4.5vw, 7rem);
+  --text-section: clamp(2rem, 3vw, 5rem);
 }
 
 @layer base {
