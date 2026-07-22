@@ -30,7 +30,7 @@ export const RECENT_ACTIVATIONS: Partial<
     ],
   },
   "community-conventions": {
-    eyebrow: "RECENT CONVENTIONS *",
+    eyebrow: "RECENT EVENTS *",
     items: [
       "The Exchange",
       "RAD 100",

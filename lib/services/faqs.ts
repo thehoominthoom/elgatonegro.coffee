@@ -92,7 +92,7 @@ export const SERVICE_FAQS: Record<ServiceSlug, FAQBlock> = {
       {
         question: "Can you handle guests who aren't drinking coffee?",
         answer:
-          "Yes. Every menu we build includes non-coffee options: matcha, chocolate, seasonal drinks, something for the kids. Nobody stands in line for forty minutes to leave with nothing.",
+          "Yes. Every menu we build includes non-coffee options: hot chocolate, seasonal drinks, something for the kids. Nobody stands in line for forty minutes to leave with nothing.",
       },
       {
         question: "How big can the crew get for a large convention?",

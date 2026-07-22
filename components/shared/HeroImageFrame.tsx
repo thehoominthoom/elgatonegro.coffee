@@ -30,6 +30,8 @@ interface HeroImageFrameProps {
   minHeight?: "85svh" | "100svh";
   /** Adds `-mt-44 md:-mt-36` so the hero bleeds under the fixed header. */
   bleedTop?: boolean;
+  /** CSS `object-position` value for the hero image. Defaults to `center`. Use to shift the crop (e.g. `center 75%` to expose more of the lower portion). */
+  objectPosition?: string;
   children: React.ReactNode;
 }
 
@@ -38,6 +40,7 @@ export function HeroImageFrame({
   alt,
   minHeight,
   bleedTop = false,
+  objectPosition,
   children,
 }: HeroImageFrameProps) {
   const heightClass =
@@ -59,7 +62,8 @@ export function HeroImageFrame({
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center photo-treatment"
+        className="object-cover photo-treatment"
+        style={{ objectPosition: objectPosition ?? "center" }}
       />
       {/* Double-gradient scrim — vertical + horizontal. Both required. */}
       <div className="absolute inset-0 z-[2] bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent" />

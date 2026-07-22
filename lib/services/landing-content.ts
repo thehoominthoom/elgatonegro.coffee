@@ -73,7 +73,7 @@ export const SERVICE_LANDING_CONTENT: Record<ServiceSlug, ServiceLandingContent>
       {
         number: "02",
         title: "We quote.",
-        body: "48 hours. Multi-day events take a minute to map.",
+        body: "Within 48 hours. Multi-day events take a minute to map.",
       },
       {
         number: "03",

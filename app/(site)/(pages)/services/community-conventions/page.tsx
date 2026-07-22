@@ -82,6 +82,7 @@ export default function CommunityConventionsPage() {
         alt="Phil Bartko working the El Gato Negro cart at Nashville Production Week"
         minHeight="85svh"
         bleedTop
+        objectPosition="center 25%"
       >
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
           <div className="mb-8 md:mb-12">
@@ -98,9 +99,7 @@ export default function CommunityConventionsPage() {
             className="font-display font-bold uppercase text-brand-grey tracking-tight leading-[0.9]"
             style={{ fontSize: "var(--text-hero)" }}
           >
-            Community
-            <br />
-            &amp;
+            Community &amp;
             <br />
             Conventions.
           </h1>
@@ -174,6 +173,9 @@ export default function CommunityConventionsPage() {
         />
       </section>
 
+      {/* ── 6b. Image Triptych — wordless visual reset before the FAQ */}
+      <ImageTriptych images={IMAGE_ROWS[SLUG]!} />
+
       {/* ── 7. FAQ — DARK (paired flip) ───────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark py-16 md:py-24">
         <ServicesFAQ
@@ -184,10 +186,7 @@ export default function CommunityConventionsPage() {
         />
       </section>
 
-      {/* ── 7b. Image Triptych — wordless visual reset before closing rhythm */}
-      <ImageTriptych images={IMAGE_ROWS[SLUG]!} />
-
-      {/* ── 8. Recent Conventions — dark marquee ───────────────────── */}
+      {/* ── 8. Recent Events — dark marquee ────────────────────────── */}
       <RecentActivations eyebrow={recent.eyebrow} items={recent.items} />
 
       {/* ── 9. Also See — light cross-links ────────────────────────── */}

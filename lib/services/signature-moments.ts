@@ -49,14 +49,14 @@ export const SIGNATURE_MOMENTS: Partial<
   },
   "community-conventions": {
     eyebrow: "THE EXCHANGE RESIDENCY",
-    headline: "The empty room is our favorite ten minutes of the week.",
+    headline: "Our favorite ten minutes is the one right after the run.",
     body: [
-      "Every week at The Exchange, the cart's up before doors open. The run first. The coffee second. We've been at it long enough that the regulars know our names, and we know their orders before they say them.",
-      "Then the doors open.",
+      "Every week at The Exchange, the run goes first. We're open when the group loops back — still buzzing from the last mile.",
+      "They ran together. That's the room. The regulars know our names, and we know their orders before they say them.",
     ],
     attribution: "— Phil",
     attributionRole: "Co-founder, EGN",
-    photoCaption: "The Exchange, before doors.",
+    photoCaption: "The Exchange, post run.",
     image: {
       src: "/images/services/community-conventions-signature.webp",
       alt: "Phil and Juan setting up the El Gato Negro cart at The Exchange residency before service",
