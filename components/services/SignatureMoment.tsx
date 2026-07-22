@@ -19,6 +19,7 @@ import Image from "next/image";
 
 interface SignatureMomentProps {
   eyebrow: string;
+  headline?: string;
   body: string[];
   attribution?: string;
   attributionRole?: string;
@@ -33,6 +34,7 @@ interface SignatureMomentProps {
 
 export function SignatureMoment({
   eyebrow,
+  headline,
   body,
   attribution,
   attributionRole,
@@ -43,6 +45,7 @@ export function SignatureMoment({
 }: SignatureMomentProps) {
   const isDark = surface === "dark";
   const eyebrowColor = isDark ? "text-brand-orange" : "text-brand-green";
+  const headlineColor = isDark ? "text-brand-grey" : "text-brand-black";
   const bodyColor = isDark ? "text-brand-grey/75" : "text-brand-black/75";
   const ruleColor = isDark ? "border-brand-grey/15" : "border-brand-black/15";
   const captionColor = isDark ? "text-brand-grey/50" : "text-brand-black/50";
@@ -104,6 +107,14 @@ export function SignatureMoment({
           } order-2`}
         >
           <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5">
+            {headline ? (
+              <p
+                className={`font-display text-2xl md:text-3xl tracking-tight leading-snug ${headlineColor}`}
+              >
+                {headline}
+              </p>
+            ) : null}
+
             {body.map((paragraph) => (
               <p
                 key={paragraph}

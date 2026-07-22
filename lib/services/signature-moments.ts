@@ -2,6 +2,7 @@ import type { ServiceSlug } from "@/lib/inquiry/config";
 
 export interface SignatureMomentData {
   eyebrow: string;
+  headline?: string;
   body: string[];
   attribution?: string;
   attributionRole?: string;
@@ -47,10 +48,11 @@ export const SIGNATURE_MOMENTS: Partial<
     surface: "dark",
   },
   "community-conventions": {
-    eyebrow: "THE THREE-DAY LINE",
+    eyebrow: "THE EXCHANGE RESIDENCY",
+    headline: "The empty room is our favorite ten minutes of the week.",
     body: [
-      "Doors open at 9. Line by 9:03. Second station's up by 9:30 when the room outgrows the first.",
-      "Day three still runs the way day one did.",
+      "Every week at The Exchange, the cart's up before doors open. The run first. The coffee second. We've been at it long enough that the regulars know our names, and we know their orders before they say them.",
+      "Then the doors open.",
     ],
     attribution: "— Phil",
     attributionRole: "Co-founder, EGN",
