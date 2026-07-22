@@ -79,7 +79,7 @@ export default function CommunityConventionsPage() {
       {/* ── 1. Hero — full-viewport, shared HeroImageFrame ─────────── */}
       <HeroImageFrame
         src="/images/services/community-conventions-hero.webp"
-        alt="El Gato Negro cart serving a wide line at the RAD 100 outdoor community event"
+        alt="Phil Bartko working the El Gato Negro cart at Nashville Production Week"
         minHeight="85svh"
         bleedTop
       >

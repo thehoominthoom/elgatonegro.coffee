@@ -37,7 +37,7 @@ export const IMAGE_ROWS: Partial<
     },
     {
       src: "/images/services/triptych/community-conventions-2.webp",
-      alt: "Phil Bartko working the El Gato Negro cart at Nashville Production Week",
+      alt: "Guests holding El Gato Negro drinks at the Fait La Force community event",
     },
     {
       src: "/images/services/triptych/community-conventions-3.webp",

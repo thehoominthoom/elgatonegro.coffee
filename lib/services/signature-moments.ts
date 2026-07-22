@@ -54,10 +54,10 @@ export const SIGNATURE_MOMENTS: Partial<
     ],
     attribution: "— Phil",
     attributionRole: "Co-founder, EGN",
-    photoCaption: "RAD 100, the room.",
+    photoCaption: "The Exchange, before doors.",
     image: {
       src: "/images/services/community-conventions-signature.webp",
-      alt: "Community members at RAD 100 with El Gato Negro service in the background",
+      alt: "Phil and Juan setting up the El Gato Negro cart at The Exchange residency before service",
     },
     imageOnLeft: true,
     surface: "dark",

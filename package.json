@@ -54,6 +54,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "heic-convert": "^2.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "puppeteer-core": "^24.39.1",
