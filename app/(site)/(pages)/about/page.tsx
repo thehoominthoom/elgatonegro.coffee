@@ -47,8 +47,8 @@ const team = [
     name: "Phil",
     role: "The Brand Guy",
     bio: "Runs the website, the brand, and the business side. Phil brings the design eye, the tech backbone, and the strategy that keeps EGN moving forward.",
-    image: "/images/about/fait_la_force-cart-portrait.service-phil-01.webp",
-    imageAlt: "Portrait of Phil Bartko at the El Gato Negro cart during a Fait La Force event",
+    image: "/images/about/the_exchange-barista.cart-service-phil-02.webp",
+    imageAlt: "Portrait of Phil Bartko working the El Gato Negro cart at The Exchange residency",
   },
 ];
 
@@ -170,8 +170,8 @@ export default function AboutPage() {
               {/* Inset image — hidden on tablet, visible on mobile + desktop */}
               <div className="block md:hidden lg:block relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
-                  src="/images/about/the_exchange-bts.cart-portrait-moongoat.juan-01.webp"
-                  alt="Juan working the El Gato Negro cart during a Moon Goat collaboration"
+                  src="/images/about/brass_horn-founding.bts.roaster-misc-juan-07.webp"
+                  alt="Juan working the coffee roaster at Brass Horn during the founding era of El Gato Negro"
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover photo-treatment-sm"
@@ -183,7 +183,7 @@ export default function AboutPage() {
             <div className="md:col-span-7 order-1 md:order-2">
               <div className="relative aspect-[3/4] md:aspect-[3/5] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
-                  src="/images/about/misc-bts.cart.founding.build-misc-none-12.webp"
+                  src="/images/about/misc-bts.cart.founding.build-misc-none-13.webp"
                   alt="Behind-the-scenes shot of the original El Gato Negro cart being built"
                   fill
                   sizes="(max-width: 768px) 100vw, 58vw"
