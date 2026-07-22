@@ -7,11 +7,13 @@ import { SERVICE_FAQS } from "@/lib/services/faqs";
 import { SIGNATURE_MOMENTS } from "@/lib/services/signature-moments";
 import { BY_THE_NUMBERS } from "@/lib/services/by-the-numbers";
 import { RECENT_ACTIVATIONS } from "@/lib/services/recent-activations";
+import { IMAGE_ROWS } from "@/lib/services/image-rows";
 import { buildServiceGraph } from "@/lib/seo/service-graph";
 import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 import { InclusionsList } from "@/components/services/InclusionsList";
 import { SignatureMoment } from "@/components/services/SignatureMoment";
 import { ByTheNumbers } from "@/components/services/ByTheNumbers";
+import { ImageTriptych } from "@/components/services/ImageTriptych";
 import { RecentActivations } from "@/components/services/RecentActivations";
 import { ServicesFAQ } from "@/components/services/ServicesFAQ";
 import { HowBookingWorks } from "@/components/services/HowBookingWorks";
@@ -173,6 +175,9 @@ export default function BrandActivationsPage() {
           surface="light"
         />
       </section>
+
+      {/* ── 7b. Image Triptych — wordless visual reset before closing rhythm */}
+      <ImageTriptych images={IMAGE_ROWS[SLUG]!} />
 
       {/* ── 8. Recent Activations — dark marquee ───────────────────── */}
       <RecentActivations eyebrow={recent.eyebrow} items={recent.items} />
