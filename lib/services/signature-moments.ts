@@ -4,6 +4,8 @@ export interface SignatureMomentData {
   eyebrow: string;
   body: string[];
   attribution?: string;
+  attributionRole?: string;
+  photoCaption?: string;
   image: {
     src: string | null;
     alt: string;
@@ -16,6 +18,10 @@ export interface SignatureMomentData {
  * SignatureMoment content per subpage. `image.src` is null when the confirmed
  * asset isn't on disk yet — component falls back to the branded placeholder
  * (dark bg + hellcat watermark at 4% opacity) matching the site convention.
+ *
+ * `photoCaption` values from copy/services-pages.md (2026-07-21 SM caption pass) —
+ * comma-separated moment-anchored register, each pulls a phrase from its own
+ * SM body copy. Rendered uppercase via the component's caption class.
  *
  * Voice-adjacent copy: brand-activations body restates the 1111 Church scene
  * from the hero. Community-conventions + weddings bodies are designer-fresh
@@ -31,6 +37,8 @@ export const SIGNATURE_MOMENTS: Partial<
       "Hundreds of residents through those doors, and the mailroom never noticed.",
     ],
     attribution: "— Juan",
+    attributionRole: "Co-founder, EGN",
+    photoCaption: "1111 Church, mid-morning run.",
     image: {
       src: "/images/services/brand-activations-signature.webp",
       alt: "Juan pulling shots at the 1111 Church leasing office coffee cart residency",
@@ -45,6 +53,8 @@ export const SIGNATURE_MOMENTS: Partial<
       "Day three still runs the way day one did.",
     ],
     attribution: "— Phil",
+    attributionRole: "Co-founder, EGN",
+    photoCaption: "RAD 100, the room.",
     image: {
       src: "/images/services/community-conventions-signature.webp",
       alt: "Community members at RAD 100 with El Gato Negro service in the background",
@@ -58,6 +68,7 @@ export const SIGNATURE_MOMENTS: Partial<
       "You tell us what you drink. What your people drink. What goes on the board.",
       "Then one drink ends up with your name on it, and the first three people in line order it because they saw it on the board.",
     ],
+    photoCaption: "The couple's drink, on the board.",
     image: {
       src: "/images/services/weddings-celebrations-signature.webp",
       alt: "El Gato Negro cart set up with wedding florals, barista ready to serve reception guests",

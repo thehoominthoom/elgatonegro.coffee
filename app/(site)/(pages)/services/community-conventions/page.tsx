@@ -160,7 +160,7 @@ export default function CommunityConventionsPage() {
       </section>
 
       {/* ── 5. Signature Moment — dark, image LEFT (mirror) ────────── */}
-      <section className="bg-brand-black grain-overlay-dark py-14 md:py-20 border-t border-dashed border-brand-grey/10">
+      <section className="bg-brand-black grain-overlay-dark py-12 md:py-16 border-t border-dashed border-brand-grey/10">
         <SignatureMoment {...signature} />
       </section>
 

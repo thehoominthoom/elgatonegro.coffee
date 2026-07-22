@@ -135,7 +135,7 @@ export default function BrandActivationsPage() {
       </section>
 
       {/* ── 4. Signature Moment — dark, image right ────────────────── */}
-      <section className="bg-brand-black grain-overlay-dark py-14 md:py-20">
+      <section className="bg-brand-black grain-overlay-dark py-12 md:py-16">
         <SignatureMoment {...signature} />
       </section>
 

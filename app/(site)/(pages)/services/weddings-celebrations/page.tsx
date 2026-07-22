@@ -126,7 +126,7 @@ export default function WeddingsCelebrationsPage() {
       </section>
 
       {/* ── 3. Signature Moment — LIGHT (unique to weddings) ───────── */}
-      <section className="bg-brand-grey grain-overlay py-14 md:py-20">
+      <section className="bg-brand-grey grain-overlay py-12 md:py-16">
         <SignatureMoment {...signature} />
       </section>
 
