@@ -14,7 +14,9 @@ export function CartDrawer() {
 
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Trap Escape key and lock body scroll while open
+  // Trap Escape key and lock body scroll while open.
+  // Scrollbar-gutter: stable on <html> (globals.css) reserves gutter width
+  // globally, so no per-drawer padding compensation is needed.
   useEffect(() => {
     if (!isOpen) return;
 
@@ -22,31 +24,12 @@ export function CartDrawer() {
       if (e.key === "Escape") closeCart();
     }
 
-    // Measure scrollbar width before hiding it
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-
-    // Compensate body padding so content doesn't shift
     document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
-
-    // Compensate fixed header so it doesn't shift either
-    const fixedHeader = document.querySelector<HTMLElement>(
-      "[data-site-header-wrapper]"
-    );
-    if (fixedHeader) {
-      fixedHeader.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
     document.addEventListener("keydown", onKeyDown);
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-      if (fixedHeader) {
-        fixedHeader.style.paddingRight = "";
-      }
     };
   }, [isOpen, closeCart]);
 

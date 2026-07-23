@@ -64,7 +64,8 @@ export function StickyMobileCTA({
       href={href}
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
-      className={`fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between gap-3 min-h-[52px] px-5 py-3 bg-brand-black border-t border-brand-orange/40 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey md:hidden transition-opacity duration-300 ${
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      className={`fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between gap-3 min-h-[52px] px-5 pt-3 bg-brand-black border-t border-brand-orange/40 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey md:hidden transition-opacity duration-300 ${
         visible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
     >

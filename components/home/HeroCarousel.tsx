@@ -242,7 +242,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
           {/* Title */}
           <h1
-            className="font-display font-bold text-brand-grey leading-none uppercase tracking-[-0.03em] mb-6"
+            className="font-display font-bold text-brand-grey leading-none uppercase tracking-[-0.03em] mb-6 text-balance"
             style={{
               fontSize: "var(--text-hero)",
               ...textAnim(transitioning, "title", mounted),

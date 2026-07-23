@@ -155,7 +155,7 @@ export default async function MenuPage() {
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
             What We Serve
           </p>
-          <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight leading-[0.9]">
+          <h1 className="font-display font-bold text-5xl md:text-7xl uppercase text-brand-grey tracking-tight leading-[0.9] text-balance">
             The Menu
           </h1>
         </div>

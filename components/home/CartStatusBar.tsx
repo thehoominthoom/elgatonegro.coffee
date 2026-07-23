@@ -91,7 +91,7 @@ export async function CartStatusBar() {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center gap-x-6 overflow-x-auto scrollbar-hide">
         <span
-          className={`font-sans font-semibold text-xs uppercase tracking-[0.3em] shrink-0 ${
+          className={`font-sans font-semibold text-sm md:text-base uppercase tracking-[0.3em] shrink-0 ${
             hasOpen ? "text-brand-grey" : "text-brand-grey/60"
           }`}
         >

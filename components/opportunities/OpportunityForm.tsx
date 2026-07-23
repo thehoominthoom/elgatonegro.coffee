@@ -259,7 +259,7 @@ export function OpportunityForm() {
         {isPending ? (
           <>
             <Loader2 className="size-4 animate-spin" />
-            Sending...
+            Sending…
           </>
         ) : (
           <>
