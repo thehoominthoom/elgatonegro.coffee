@@ -19,7 +19,7 @@ interface AlsoSeeProps {
 export function AlsoSee({ links }: AlsoSeeProps) {
   return (
     <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
-      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/40 mb-6 md:mb-8">
+      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-6 md:mb-8">
         ALSO SEE
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">

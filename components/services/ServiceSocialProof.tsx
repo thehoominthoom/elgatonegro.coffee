@@ -13,7 +13,7 @@ interface ServiceSocialProofProps {
 export function ServiceSocialProof({ eyebrow }: ServiceSocialProofProps) {
   return (
     <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
-      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/40 mb-8">
+      <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60 mb-8">
         {eyebrow}
       </p>
 

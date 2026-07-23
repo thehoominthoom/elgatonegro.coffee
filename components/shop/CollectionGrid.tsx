@@ -128,7 +128,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
   if (products.length === 0) {
     return (
-      <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
+      <p className="font-sans text-sm text-brand-black/60 py-12 text-center">
         No products in this collection yet.
       </p>
     );
@@ -140,7 +140,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
         {/* Filters */}
         {filterOptions.roast.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60">
               Roast
             </span>
             <select
@@ -163,7 +163,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {filterOptions.country.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60">
               Country
             </span>
             <select
@@ -186,7 +186,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {filterOptions.vendor.length >= 2 && (
           <label className="flex items-center gap-2">
-            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
+            <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60">
               Vendor
             </span>
             <select
@@ -220,7 +220,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
         {/* Sort — pushed right */}
         <label className="flex items-center gap-2 sm:ml-auto">
-          <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40">
+          <span className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60">
             Sort by
           </span>
           <select
@@ -240,7 +240,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
 
       {/* Filtered count */}
       {filtersActive && (
-        <p className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/40 mb-3">
+        <p className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-3">
           Showing {result.length} of {products.length} products
         </p>
       )}

@@ -175,7 +175,7 @@ export default function AIChat() {
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="shrink-0 w-10 h-10 flex items-center justify-center bg-brand-orange hover:bg-brand-orange/90 disabled:bg-brand-grey/10 disabled:text-brand-grey/20 text-white rounded transition-colors"
+            className="shrink-0 w-10 h-10 flex items-center justify-center bg-brand-orange hover:bg-brand-orange/90 disabled:bg-brand-grey/10 disabled:text-brand-grey/20 text-brand-grey rounded transition-colors"
           >
             {isLoading ? (
               <Loader2 size={16} className="animate-spin" />

@@ -291,7 +291,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
 function EventList({ events, dateStr }: { events: CalendarEvent[]; dateStr: string }) {
   if (!events.length) {
     return (
-      <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/40 py-8">
+      <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60 py-8">
         Nothing brewing that day.
       </p>
     );
@@ -356,7 +356,7 @@ function MonthGrid({ events }: { events: CalendarEvent[] }) {
       <div className="grid grid-cols-7 mb-1">
         {DAYS_OF_WEEK.map((d) => (
           <div key={d} className="text-center">
-            <span className="font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] text-brand-black/40">
+            <span className="font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] text-brand-black/60">
               {d}
             </span>
           </div>
@@ -424,7 +424,7 @@ function MonthGrid({ events }: { events: CalendarEvent[] }) {
                     />
                   ))}
                   {overflow > 0 && (
-                    <span className="text-[8px] text-brand-black/40 leading-none">
+                    <span className="text-[8px] text-brand-black/60 leading-none">
                       +{overflow}
                     </span>
                   )}
@@ -536,7 +536,7 @@ function WeekStrip({ events }: { events: CalendarEvent[] }) {
             >
               <span
                 className={`font-sans font-extrabold text-[10px] uppercase tracking-[0.1em] ${
-                  isSelected ? "text-brand-grey/60" : "text-brand-black/40"
+                  isSelected ? "text-brand-grey/60" : "text-brand-black/60"
                 }`}
               >
                 {DAYS_OF_WEEK[dayDate.getDay()]}

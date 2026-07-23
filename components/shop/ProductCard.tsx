@@ -34,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="w-full h-full bg-brand-black/10" />
         )}
         {soldOut && (
-          <span className="absolute top-2 right-2 z-[3] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1 rounded-sm">
+          <span className="absolute top-2 right-2 z-[3] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-2 py-1 rounded-sm">
             Sold Out
           </span>
         )}

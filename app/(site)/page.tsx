@@ -260,7 +260,7 @@ export default async function Home() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-transparent to-transparent" />
                     {!featuredProducts[0].availableForSale && (
-                      <span className="absolute top-4 right-4 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-2 py-1 rounded-sm">
+                      <span className="absolute top-4 right-4 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-2 py-1 rounded-sm">
                         Sold Out
                       </span>
                     )}
@@ -327,7 +327,7 @@ export default async function Home() {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 via-transparent to-transparent" />
                       {!product.availableForSale && (
-                        <span className="absolute top-2 right-2 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-white px-1.5 py-0.5 rounded-sm">
+                        <span className="absolute top-2 right-2 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-1.5 py-0.5 rounded-sm">
                           Sold Out
                         </span>
                       )}

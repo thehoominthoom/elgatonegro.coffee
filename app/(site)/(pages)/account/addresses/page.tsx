@@ -54,7 +54,7 @@ export default async function AddressesPage() {
 
       {/* Address list */}
       {addresses.length === 0 ? (
-        <p className="font-sans text-sm text-brand-black/40 py-8 text-center border border-brand-black/10 rounded-sm mb-8">
+        <p className="font-sans text-sm text-brand-black/60 py-8 text-center border border-brand-black/10 rounded-sm mb-8">
           No saved addresses yet.
         </p>
       ) : (

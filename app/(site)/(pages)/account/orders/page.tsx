@@ -57,7 +57,7 @@ export default async function OrdersPage() {
 
       {orders.length === 0 ? (
         <div className="text-center py-16 border border-brand-black/10 rounded-sm">
-          <p className="font-sans text-sm text-brand-black/40 mb-4">
+          <p className="font-sans text-sm text-brand-black/60 mb-4">
             You haven&apos;t placed any orders yet.
           </p>
           <Link
@@ -122,7 +122,7 @@ export default async function OrdersPage() {
                   <p className="font-sans font-extrabold text-sm text-brand-black">
                     ${parseFloat(order.totalPrice.amount).toFixed(2)}
                   </p>
-                  <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/40 mt-0.5">
+                  <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-brand-black/60 mt-0.5">
                     {status.toLowerCase().replace(/_/g, " ")}
                   </p>
                 </div>

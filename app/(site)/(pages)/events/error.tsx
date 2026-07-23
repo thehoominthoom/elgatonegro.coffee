@@ -20,13 +20,13 @@ export default function EventsError({
       <div className="mt-8 flex gap-4">
         <button
           onClick={reset}
-          className="font-sans font-semibold text-sm uppercase tracking-wider bg-brand-orange text-white px-6 py-3 hover:bg-brand-orange/90 transition-colors"
+          className="font-sans font-semibold text-sm uppercase tracking-wider bg-brand-orange text-brand-grey px-6 py-3 hover:bg-brand-orange/90 transition-colors"
         >
           Try again
         </button>
         <Link
           href="/"
-          className="font-sans font-semibold text-sm uppercase tracking-wider border-2 border-brand-black text-brand-black px-6 py-3 hover:bg-brand-black hover:text-white transition-colors"
+          className="font-sans font-semibold text-sm uppercase tracking-wider border-2 border-brand-black text-brand-black px-6 py-3 hover:bg-brand-black hover:text-brand-grey transition-colors"
         >
           Homepage
         </Link>
