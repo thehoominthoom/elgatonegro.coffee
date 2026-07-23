@@ -33,7 +33,7 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
     slug: "brand-activations",
     label: "Brand Activations",
     eyebrow: "Corporate & Brand",
-    tagline: "Different room. Same bar.",
+    tagline: "Corporate events, product launches, brand activations. Different room. Same bar.",
     description:
       "We've set up in lobbies, on production sets, behind shoe drops, and in the leasing office at 1111 Church — enough times now that we've served hundreds of residents through those doors. The brief is always different. What we put behind the bar isn't. You get the cart, the menu built around your event, and a barista who's actually ours — not a contractor we found that morning.",
     features: [

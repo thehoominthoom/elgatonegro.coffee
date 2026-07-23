@@ -28,14 +28,14 @@ import { JsonLd } from "@/components/services/JsonLd";
 const SLUG = "brand-activations" as const;
 
 export const metadata: Metadata = {
-  title: "Brand Activations — Corporate Coffee Cart | El Gato Negro",
+  title: "Corporate Events & Brand Activations | El Gato Negro Nashville",
   description:
-    "Lobbies, production sets, shoe drops, apartment pop-ups in Nashville. Cart in your colors, our baristas, setup in under 30 minutes. Get a quote in 24 hours.",
+    "Corporate events, product launches, brand activations. Lobbies, production sets, apartment pop-ups in Nashville. Cart in your colors. Quote in 24 hours.",
   alternates: { canonical: `/services/${SLUG}` },
   openGraph: {
     title: "Brand Activations — El Gato Negro",
     description:
-      "Different room. Same bar. Nashville brand activations with the cart in your colors.",
+      "Corporate events, product launches, brand activations. Different room. Same bar.",
     url: `/services/${SLUG}`,
     type: "website",
     images: [
@@ -65,10 +65,10 @@ export default function BrandActivationsPage() {
 
   const graph = buildServiceGraph({
     slug: SLUG,
-    name: "Brand Activations — Mobile Coffee Cart",
+    name: "Corporate Events & Brand Activations — Mobile Coffee Cart",
     serviceType: "Corporate Coffee Catering",
     description:
-      "Mobile coffee cart brand activations in Nashville. Lobbies, production sets, shoe drops, apartment pop-ups. Cart branded to your event, baristas on our payroll, setup in under 30 minutes.",
+      "Mobile coffee cart for corporate events, product launches, and brand activations in Nashville. Lobbies, production sets, apartment pop-ups. Cart branded to your event, baristas on our payroll, setup in under 30 minutes.",
     breadcrumbName: "Brand Activations",
     faqs: faq.items,
   });
