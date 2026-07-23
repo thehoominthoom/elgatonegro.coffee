@@ -22,7 +22,7 @@ interface Filters {
 const DEFAULT_FILTERS: Filters = { roast: "", country: "", vendor: "" };
 
 const SELECT_STYLES =
-  "font-sans text-xs uppercase tracking-wide text-brand-black bg-brand-grey border border-brand-black/20 px-3 py-2.5 pr-8 appearance-none cursor-pointer focus:outline-none focus:border-brand-black/40 rounded-sm";
+  "font-sans text-xs uppercase tracking-wide text-brand-black bg-brand-grey border border-brand-black/20 px-3 py-2.5 pr-8 appearance-none cursor-pointer focus:outline-none focus:border-brand-black/40 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-grey rounded-sm";
 
 const CHEVRON_BG = {
   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,

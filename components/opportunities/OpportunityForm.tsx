@@ -39,7 +39,7 @@ function Field({
 }
 
 const inputClass =
-  "w-full border border-brand-grey/10 bg-brand-grey/5 px-4 py-3 font-sans text-sm text-brand-grey placeholder:text-brand-grey/25 outline-none transition-colors focus:border-brand-orange focus:bg-brand-grey/8 disabled:opacity-40";
+  "w-full border border-brand-grey/10 bg-brand-grey/5 px-4 py-3 font-sans text-sm text-brand-grey placeholder:text-brand-grey/25 outline-none transition-colors focus:border-brand-orange focus:bg-brand-grey/10 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black disabled:opacity-40";
 
 const selectClass = cn(inputClass, "appearance-none cursor-pointer");
 

@@ -170,7 +170,7 @@ export default function AIChat() {
             onKeyDown={handleKeyDown}
             placeholder="Ask about products, orders, inventory..."
             disabled={isLoading}
-            className="flex-1 resize-none overflow-y-auto max-h-36 bg-brand-grey/5 border border-brand-grey/10 rounded px-4 py-2.5 font-sans text-sm text-brand-grey placeholder:text-brand-grey/30 focus:outline-none focus:border-brand-orange/50 disabled:opacity-50 transition-colors"
+            className="flex-1 resize-none overflow-y-auto max-h-36 bg-brand-grey/5 border border-brand-grey/10 rounded px-4 py-2.5 font-sans text-sm text-brand-grey placeholder:text-brand-grey/30 focus:outline-none focus:border-brand-orange/50 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-black disabled:opacity-50 transition-colors"
           />
           <button
             type="submit"

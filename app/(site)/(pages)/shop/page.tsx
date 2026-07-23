@@ -82,7 +82,7 @@ export default function ShopPage() {
               style={cat.objectPosition ? { objectPosition: cat.objectPosition } : undefined}
               className="object-cover photo-treatment group-hover:scale-105 transition-transform duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/30 to-brand-black/20 group-hover:from-brand-black/80 group-hover:via-brand-black/40 transition-all duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/30 to-brand-black/20 group-hover:from-brand-black/80 group-hover:via-brand-black/40 transition-[background-image] duration-500" />
             <div className="absolute inset-0 z-10 flex items-center justify-center px-6">
               <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl uppercase text-brand-grey tracking-tight text-center leading-[0.9]">
                 {cat.title.split("\n").map((line, i) => (

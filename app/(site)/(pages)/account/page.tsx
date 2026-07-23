@@ -211,7 +211,7 @@ function QuickLink({
       </div>
       <ArrowRight
         size={16}
-        className="text-brand-black/20 group-hover:text-brand-orange group-hover:translate-x-1 transition-all shrink-0"
+        className="text-brand-black/20 group-hover:text-brand-orange group-hover:translate-x-1 transition-[color,transform] shrink-0"
       />
     </Link>
   );

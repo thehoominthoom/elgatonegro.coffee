@@ -212,7 +212,7 @@ export default async function Home() {
             <span className="font-display text-sm md:text-base uppercase tracking-[0.2em] text-brand-orange group-hover:text-brand-yellow transition-colors">
               See All Events
             </span>
-            <ArrowRight size={18} className="text-brand-orange group-hover:text-brand-yellow transition-all group-hover:translate-x-1" />
+            <ArrowRight size={18} className="text-brand-orange group-hover:text-brand-yellow transition-[color,transform] group-hover:translate-x-1" />
           </Link>
         </div>
       </section>
@@ -402,7 +402,7 @@ export default async function Home() {
                 <img
                   src={c.src}
                   alt={c.name}
-                  className="w-auto max-h-full brightness-0 invert opacity-65 group-hover:opacity-90 group-hover:scale-105 [filter:blur(0.4px)_brightness(0)_invert(1)] transition-all duration-300"
+                  className="w-auto max-h-full brightness-0 invert opacity-65 group-hover:opacity-90 group-hover:scale-105 [filter:blur(0.4px)_brightness(0)_invert(1)] transition-[opacity,transform] duration-300"
                   style={{ height: c.h }}
                 />
               </div>
@@ -429,7 +429,7 @@ export default async function Home() {
             <Link
               key={service.href}
               href={service.href}
-              className="group relative block py-7 md:py-9 border-b border-dashed border-brand-black/15 first:border-t first:border-dashed first:border-brand-black/15 hover:pl-4 transition-all duration-300"
+              className="group relative block py-7 md:py-9 border-b border-dashed border-brand-black/15 first:border-t first:border-dashed first:border-brand-black/15 hover:pl-4 transition-[padding,border-color] duration-300"
             >
               {/* Background index number — left-aligned on the 0 */}
               <span

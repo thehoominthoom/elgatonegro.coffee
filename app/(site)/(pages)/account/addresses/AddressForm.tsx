@@ -102,7 +102,7 @@ const InputField = forwardRef<
         type="text"
         required={required}
         defaultValue={defaultValue}
-        className="w-full px-3 py-2 bg-brand-grey border border-brand-black/15 rounded-sm font-sans text-sm text-brand-black placeholder:text-brand-black/30 focus:outline-none focus:border-brand-orange transition-colors"
+        className="w-full px-3 py-2 bg-brand-grey border border-brand-black/15 rounded-sm font-sans text-sm text-brand-black placeholder:text-brand-black/30 focus:outline-none focus:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-grey transition-colors"
       />
     </div>
   );

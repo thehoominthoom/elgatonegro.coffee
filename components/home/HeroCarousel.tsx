@@ -309,7 +309,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                   >
                     <span
                       className={[
-                        "block overflow-hidden transition-all duration-500 [transition-timing-function:cubic-bezier(0.35,0.15,0.02,0.99)]",
+                        "block overflow-hidden transition-[width,background-color] duration-500 [transition-timing-function:cubic-bezier(0.35,0.15,0.02,0.99)]",
                         isActive
                           ? "w-8 h-2 rounded-full bg-brand-grey/30"
                           : "w-2 h-2 rounded-full bg-brand-grey/20",
