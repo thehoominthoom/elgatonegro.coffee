@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 
@@ -51,6 +51,42 @@ const navLinks: Array<{ label: string; href: string }> = [
 
 export function NavDrawer() {
   const { isOpen, close } = useNavDrawer();
+
+  // Trap Escape key and lock body scroll while open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") close();
+    }
+
+    // Measure scrollbar width before hiding it
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    // Compensate body padding so content doesn't shift
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    // Compensate fixed header so it doesn't shift either
+    const fixedHeader = document.querySelector<HTMLElement>(
+      "[data-site-header-wrapper]"
+    );
+    if (fixedHeader) {
+      fixedHeader.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      if (fixedHeader) {
+        fixedHeader.style.paddingRight = "";
+      }
+    };
+  }, [isOpen, close]);
 
   return (
     <>

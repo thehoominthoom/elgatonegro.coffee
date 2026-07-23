@@ -152,12 +152,14 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
     (event.displayAddress ? trimAddress(event.displayAddress) : null);
 
   return (
-    <div
-      className="border border-brand-black/10 hover:border-brand-black/25 transition-colors cursor-pointer"
-      onClick={() => setExpanded((v) => !v)}
-    >
-      {/* Collapsed row */}
-      <div className="flex items-start gap-3 p-4">
+    <div className="border border-brand-black/10 hover:border-brand-black/25 focus-within:border-brand-black/25 transition-colors">
+      {/* Toggle button — collapsed row */}
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="w-full text-left flex items-start gap-3 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-brand-grey cursor-pointer"
+      >
         <div className="flex flex-col items-start gap-1.5 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <TypeBadge type={event.type} />
@@ -184,7 +186,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
         <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-orange shrink-0 mt-1">
           {expanded ? "Close" : "Details"}
         </span>
-      </div>
+      </button>
 
       {/* Expanded detail */}
       {expanded && (
@@ -375,12 +377,20 @@ function MonthGrid({ events }: { events: CalendarEvent[] }) {
           const isSelected = dateStr === selectedDate;
           const visibleDots = dayEvents.slice(0, 3);
           const overflow = dayEvents.length - 3;
+          const monthLabel = MONTHS[viewMonth];
+          const eventCountLabel =
+            dayEvents.length === 0
+              ? "no events"
+              : `${dayEvents.length} event${dayEvents.length === 1 ? "" : "s"}`;
 
           return (
-            <div
+            <button
               key={dateStr}
+              type="button"
               onClick={() => setSelectedDate(isSelected ? null : dateStr)}
-              className={`border-r border-b border-brand-black/20 h-[72px] p-1.5 cursor-pointer transition-colors ${
+              aria-label={`${monthLabel} ${d.getDate()} — ${eventCountLabel}`}
+              aria-pressed={isSelected}
+              className={`text-left border-r border-b border-brand-black/20 h-[72px] p-1.5 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange ${
                 isSelected
                   ? "bg-brand-black"
                   : isToday
@@ -420,7 +430,7 @@ function MonthGrid({ events }: { events: CalendarEvent[] }) {
                   )}
                 </div>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
