@@ -132,12 +132,11 @@
 }
 
 @utility photo-treatment {
-  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.42px);
+  filter: contrast(1.45) sepia(0.5) saturate(1.4);
 }
 
-/* Lighter blur for small images (product cards, thumbnails) */
 @utility photo-treatment-sm {
-  filter: contrast(1.45) sepia(0.5) saturate(1.4) blur(0.21px);
+  filter: contrast(1.45) sepia(0.5) saturate(1.4);
 }
 
 @layer utilities {

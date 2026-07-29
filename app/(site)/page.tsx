@@ -402,7 +402,7 @@ export default async function Home() {
                 <img
                   src={c.src}
                   alt={c.name}
-                  className="w-auto max-h-full brightness-0 invert opacity-65 group-hover:opacity-90 group-hover:scale-105 [filter:blur(0.4px)_brightness(0)_invert(1)] transition-[opacity,transform] duration-300"
+                  className="w-auto max-h-full brightness-0 invert opacity-65 group-hover:opacity-90 group-hover:scale-105 [filter:brightness(0)_invert(1)] transition-[opacity,transform] duration-300"
                   style={{ height: c.h }}
                 />
               </div>
