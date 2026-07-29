@@ -54,7 +54,7 @@ export default function WeddingsCelebrationsPage() {
   const content = SERVICE_LANDING_CONTENT[SLUG];
   const faq = SERVICE_FAQS[SLUG];
   const signature = SIGNATURE_MOMENTS[SLUG]!;
-  const testimonial = SERVICE_TESTIMONIALS[SLUG]!;
+  const testimonial = SERVICE_TESTIMONIALS[SLUG];
 
   const graph = buildServiceGraph({
     slug: SLUG,
@@ -117,13 +117,15 @@ export default function WeddingsCelebrationsPage() {
         </div>
       </HeroImageFrame>
 
-      {/* ── 2. Testimonial — center-column pull quote ──────────────── */}
-      <section className="bg-brand-grey grain-overlay py-16 md:py-20">
-        <ServiceTestimonial
-          quote={testimonial.quote}
-          attribution={testimonial.attribution}
-        />
-      </section>
+      {/* ── 2. Testimonial — center-column pull quote (hidden while placeholder) ── */}
+      {testimonial && !testimonial.isPlaceholder && (
+        <section className="bg-brand-grey grain-overlay py-16 md:py-20">
+          <ServiceTestimonial
+            quote={testimonial.quote}
+            attribution={testimonial.attribution}
+          />
+        </section>
+      )}
 
       {/* ── 3. Signature Moment — LIGHT (unique to weddings) ───────── */}
       <section className="bg-brand-grey grain-overlay py-12 md:py-16">

@@ -15,18 +15,31 @@ interface InlineCTAProps {
   linkText: string;
   href: string;
   surface: "light" | "dark";
+  /**
+   * True when no section sits directly above this CTA (e.g. it becomes the
+   * first block under the hero). Restores normal section top padding instead
+   * of the tight default that leans on the preceding section's bottom padding.
+   */
+  detachedTop?: boolean;
 }
 
-export function InlineCTA({ eyebrow, linkText, href, surface }: InlineCTAProps) {
+export function InlineCTA({
+  eyebrow,
+  linkText,
+  href,
+  surface,
+  detachedTop = false,
+}: InlineCTAProps) {
   const isDark = surface === "dark";
   const sectionBg = isDark
     ? "bg-brand-black grain-overlay-dark"
     : "bg-brand-grey grain-overlay";
   const eyebrowColor = isDark ? "text-brand-orange" : "text-brand-green";
   const linkColor = isDark ? "text-brand-grey" : "text-brand-black";
+  const topPadding = detachedTop ? "pt-14 md:pt-18" : "pt-2 md:pt-4";
 
   return (
-    <section className={`${sectionBg} pt-2 md:pt-4 pb-14 md:pb-16`}>
+    <section className={`${sectionBg} ${topPadding} pb-14 md:pb-16`}>
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
         <p
           className={`font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] mb-3 ${eyebrowColor}`}

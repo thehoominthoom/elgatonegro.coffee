@@ -51,7 +51,7 @@ export default function PrivateEventsPage() {
   const config = getServiceConfig(SLUG)!;
   const content = SERVICE_LANDING_CONTENT[SLUG];
   const faq = SERVICE_FAQS[SLUG];
-  const testimonial = SERVICE_TESTIMONIALS[SLUG]!;
+  const testimonial = SERVICE_TESTIMONIALS[SLUG];
 
   const graph = buildServiceGraph({
     slug: SLUG,
@@ -109,13 +109,15 @@ export default function PrivateEventsPage() {
         </div>
       </HeroImageFrame>
 
-      {/* ── 2. Testimonial — quieter than weddings (py-14) ─────────── */}
-      <section className="bg-brand-grey grain-overlay py-14 md:py-18">
-        <ServiceTestimonial
-          quote={testimonial.quote}
-          attribution={testimonial.attribution}
-        />
-      </section>
+      {/* ── 2. Testimonial — quieter than weddings, py-14 (hidden while placeholder) ── */}
+      {testimonial && !testimonial.isPlaceholder && (
+        <section className="bg-brand-grey grain-overlay py-14 md:py-18">
+          <ServiceTestimonial
+            quote={testimonial.quote}
+            attribution={testimonial.attribution}
+          />
+        </section>
+      )}
 
       {/* ── 2b. Inline CTA — quiet mid-page moment (light, matches §2) ─ */}
       <InlineCTA
@@ -123,6 +125,7 @@ export default function PrivateEventsPage() {
         linkText="Start your inquiry"
         href={`/inquiry?service=${SLUG}`}
         surface="light"
+        detachedTop={!testimonial || testimonial.isPlaceholder}
       />
 
       {/* ── 3. Inclusions — light, shorter list ───────────────────── */}

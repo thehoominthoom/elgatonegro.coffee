@@ -12,7 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         "/api/",
         "/inquiry",
         "/preview",
-        "/coming-soon",
       ],
     },
     sitemap: "https://www.elgatonegro.coffee/sitemap.xml",
