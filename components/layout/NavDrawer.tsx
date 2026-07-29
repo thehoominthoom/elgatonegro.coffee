@@ -82,7 +82,7 @@ export function NavDrawer() {
           isOpen ? "translate-x-0" : "translate-x-full",
         ].join(" ")}
       >
-        <div className="relative z-10 flex flex-col flex-1 grain-overlay">
+        <div className="relative z-10 flex flex-col flex-1">
           {/* Nav links */}
           <nav>
             <ul className="list-none m-0 p-0">

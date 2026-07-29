@@ -84,7 +84,7 @@ export default function CommunityConventionsPage() {
         bleedTop
         objectPosition="center 25%"
       >
-        <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
+        <div className="relative z-10 flex min-h-[85svh] flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 pt-32 md:pt-36">
           <div className="mb-8 md:mb-12">
             <HeroBreadcrumb
               currentLabel="Community & Conventions"
@@ -104,13 +104,13 @@ export default function CommunityConventionsPage() {
             Conventions.
           </h1>
 
-          <div className="font-display text-xl md:text-2xl text-brand-grey/70 mt-6 leading-tight">
+          <div className="font-display text-xl md:text-2xl text-brand-grey mt-6 leading-tight">
             <p>Three days.</p>
             <p>One line.</p>
             <p>Keeps moving.</p>
           </div>
 
-          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey/70 mt-8 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
+          <p className="font-sans text-base md:text-lg leading-relaxed text-brand-grey mt-8 max-w-2xl border-l-2 border-brand-orange pl-5 md:pl-6">
             {config.description}
           </p>
           <Link
