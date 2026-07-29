@@ -245,7 +245,7 @@ export default function MediaPage() {
           <a
             href="/media-kit/egn-brand-guideline.pdf"
             download
-            className="inline-flex items-center gap-3 rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange active:scale-[0.98]"
+            className="inline-flex items-center gap-3 rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange active:scale-[0.98]"
           >
             <Download className="size-4" />
             Download PDF

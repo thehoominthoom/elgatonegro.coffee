@@ -224,7 +224,7 @@ export function InquiryForm({
       <button
         type="submit"
         disabled={isPending}
-        className="mt-1 inline-flex items-center gap-3 self-start rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-1 inline-flex items-center gap-3 self-start rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isPending ? (
           <>
