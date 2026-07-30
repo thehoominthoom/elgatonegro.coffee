@@ -46,25 +46,25 @@ const services = [
   {
     eyebrow: "Launches · Pop-ups · Marketing",
     label: "Brand Activations",
-    description: "Shoe releases, apartment pop-ups, corporate marketing campaigns, and product launches.",
+    description: "We've poured for hundreds of residents out of the leasing office at 1111 Church. Your launch gets the same bar, up in under thirty minutes.",
     href: "/services/brand-activations",
   },
   {
     eyebrow: "Conventions · Club Events",
     label: "Community & Conventions",
-    description: "Multi-day conventions, trade floors, film sets, and large-scale community gatherings.",
+    description: "We pull seventy-plus drinks an hour on convention floors and pour for the same running crew every week at The Exchange.",
     href: "/services/community-conventions",
   },
   {
     eyebrow: "Weddings · Milestones",
     label: "Weddings & Celebrations",
-    description: "Full-service espresso bar for ceremonies, receptions, and private celebrations.",
+    description: "We build a drink around the couple, put it on the board, and run a bar the open bar should worry about.",
     href: "/services/weddings-celebrations",
   },
   {
     eyebrow: "Bachelorettes · Small Parties",
     label: "Private Events",
-    description: "Intimate gatherings, bachelorette parties, and small private functions.",
+    description: "One party booked us for a couple hours and kept us for eight. We're not the ones who end the night.",
     href: "/services/private-events",
   },
 ];

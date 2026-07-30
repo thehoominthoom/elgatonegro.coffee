@@ -129,7 +129,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
   if (products.length === 0) {
     return (
       <p className="font-sans text-sm text-brand-black/60 py-12 text-center">
-        No products in this collection yet.
+        Nothing on the shelf yet.
       </p>
     );
   }
@@ -248,7 +248,7 @@ export function CollectionGrid({ products }: CollectionGridProps) {
       {result.length === 0 ? (
         <div className="text-center py-16 border border-brand-black/10 rounded-sm">
           <p className="font-sans text-sm text-brand-black/50 mb-1">
-            No products match your filters.
+            Those filters came up empty.
           </p>
           <button
             type="button"

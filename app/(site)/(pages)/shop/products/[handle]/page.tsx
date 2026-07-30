@@ -160,7 +160,7 @@ export default async function ProductPage({
           <section className="mt-16 md:mt-24 pt-10 md:pt-14 border-t border-dashed border-brand-black/15">
             <div className="mb-8 md:mb-10">
               <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60">
-                You Might Also Like
+                The Other Stuff
               </p>
             </div>
 

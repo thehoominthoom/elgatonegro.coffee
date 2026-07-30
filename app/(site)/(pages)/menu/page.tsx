@@ -4,9 +4,9 @@ import { client } from "@/sanity/lib/client";
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Menu — El Gato Negro Coffee",
+  title: "Menu",
   description:
-    "Browse El Gato Negro's drink menu — espresso, specialty drinks, add-ons, and more from Nashville's mobile coffee cart.",
+    "On the board at Nashville's mobile coffee cart: espresso drinks, drip, cold brew, and hot chocolate, with whole or oat milk and caramel or vanilla syrup.",
   openGraph: {
     images: [{ url: '/images/hero/juan-stamping-cups.webp', width: 1200, height: 630 }],
   },
@@ -206,7 +206,7 @@ export default async function MenuPage() {
           ) : (
             <div className="py-20 text-center">
               <p className="font-sans text-sm text-brand-grey/40">
-                Menu coming soon.
+                The board&apos;s being rewritten.
               </p>
             </div>
           )}

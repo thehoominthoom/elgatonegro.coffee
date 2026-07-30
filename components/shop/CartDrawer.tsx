@@ -241,7 +241,7 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
     <div className="flex flex-col items-center justify-center h-full px-6 text-center gap-4 py-20">
       <ShoppingBag size={40} className="text-brand-black/20" />
       <p className="font-sans font-extrabold text-sm uppercase tracking-[0.15em] text-brand-black/40">
-        Your cart is empty
+        Empty. For now.
       </p>
       <Link
         href="/shop"
