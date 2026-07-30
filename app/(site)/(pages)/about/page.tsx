@@ -9,11 +9,11 @@ import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "El Gato Negro is a Nashville mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters. Meet the team behind the brand.",
+    "El Gato Negro is Nashville's mobile coffee cart — two friends, too many margaritas at El Fuego, and a business that's more events company than coffee company.",
   openGraph: {
     title: "About — El Gato Negro Coffee",
     description:
-      "Nashville mobile coffee cart built on specialty espresso, bold energy, and showing up where it matters.",
+      "Two friends, too many margaritas at El Fuego, one espresso machine. El Gato Negro — Nashville's mobile coffee cart.",
     type: "website",
     images: [
       {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About — El Gato Negro Coffee",
     description:
-      "Nashville mobile coffee cart. Specialty espresso, bold energy, community first.",
+      "Two friends, too many margaritas at El Fuego, one espresso machine. El Gato Negro — Nashville's mobile coffee cart.",
     images: ["/images/about/crew_in_front_of_cart_exchange-260110.webp"],
   },
 };
