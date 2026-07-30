@@ -89,6 +89,29 @@ const approach = [
   },
 ];
 
+const yearOneStrip = [
+  {
+    src: "/images/about/rad_100-bts-outdoor.setup-none-02.webp",
+    alt: "Truck bed loaded with the El Gato Negro rig at R.A.D. 100 — cold brew bucket, coolers, coffee boxes, and a cake dome on the tailgate",
+    caption: "R.A.D. 100, load-in.",
+  },
+  {
+    src: "/images/about/rad_100-community.decor-outdoor.setup-phil.juan.blue-02.webp",
+    alt: "Four people around a mid-century coffee table and cowhide rug set up on the pavement beside a truck at R.A.D. 100, with the El Gato Negro sandwich-board sign",
+    caption: "R.A.D. 100, rug included.",
+  },
+  {
+    src: "/images/about/brass_horn-founding.bts.coffee_tasting.roaster-misc-na-02.webp",
+    alt: "Cupping table at the Brass Horn roaster covered in tasting bowls, sample cards, and spoons",
+    caption: "Brass Horn, cupping homework.",
+  },
+  {
+    src: "/images/about/ernies-bts.drinking-portrait-juan-03.webp",
+    alt: "Juan Martinez grinning over a beer at a graffiti-covered patio table at Ernie's",
+    caption: "Ernie's, debrief.",
+  },
+];
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
@@ -221,21 +244,88 @@ export default function AboutPage() {
             with.
           </h2>
 
-          <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5 max-w-2xl">
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              Phil built a contraption that used an air compressor as a water
-              pump. It looked exactly like a bomb. It sort of functioned. We set
-              it up on a collapsing plastic folding table in front of close
-              friends — people who love us enough to drink bad espresso and say
-              it&apos;s fine.
-            </p>
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              The shots were bad. The table was dying. The whole thing was
-              completely janky, and we knew it, and we kept going anyway.
-            </p>
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              We also needed a new name.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 items-start">
+            {/* Text column + sketch marginalia */}
+            <div className="md:col-span-6">
+              <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5">
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  Phil built a contraption that used an air compressor as a
+                  water pump. It looked exactly like a bomb. It sort of
+                  functioned. We set it up on a collapsing plastic folding table
+                  in front of close friends — people who love us enough to drink
+                  bad espresso and say it&apos;s fine.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  The shots were bad. The table was dying. The whole thing was
+                  completely janky, and we knew it, and we kept going anyway.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  We also needed a new name.
+                </p>
+              </div>
+
+              {/* The bomb sketch — marginalia, not a photo */}
+              <div className="max-w-[240px] md:max-w-xs mt-8 rotate-[1.5deg]">
+                <Image
+                  src="/images/about/misc-founding.bts.sketch.water_system-close_up-none-01.webp"
+                  alt="Hand-drawn plumbing sketch of the air-compressor water pump rig — Schrader valve, PVC, and PEX line to the espresso machine"
+                  width={1200}
+                  height={1598}
+                  sizes="(max-width: 768px) 240px, 320px"
+                  className="w-full h-auto rounded-sm border border-brand-black/10 shadow-md"
+                />
+              </div>
+              <p className="font-accent text-lg text-brand-green mt-3 -rotate-1">
+                the bomb, as designed.
+              </p>
+            </div>
+
+            {/* Photo cluster — day-one evidence */}
+            <div className="md:col-span-6">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
+                <Image
+                  src="/images/about/the_exchange-bts.founding.cart-setup-none-04.webp"
+                  alt="The first El Gato Negro setup on day one — espresso machine, grinder, and water jugs rigged under folding tables at The Exchange running store"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 45vw"
+                  className="object-cover photo-treatment-sm"
+                />
+              </div>
+              <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
+                Day one, the folding table in question.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 md:gap-4 mt-3 md:mt-4">
+                <div>
+                  <div className="relative aspect-square overflow-hidden rounded-sm grain-overlay-sm">
+                    <Image
+                      src="/images/about/misc-founding.bts.espresso_machine.grinder-setup-none-02.webp"
+                      alt="Late-night first programming of the grinder and espresso machine, with a notebook of dial-in notes open on the bench"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 22vw"
+                      className="object-cover photo-treatment-sm"
+                    />
+                  </div>
+                  <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
+                    Night one with the machines, notes required.
+                  </p>
+                </div>
+                <div>
+                  <div className="relative aspect-square overflow-hidden rounded-sm grain-overlay-sm">
+                    <Image
+                      src="/images/about/misc-founding.bts.espresso_machine.coffee_tasting-outdoor.setup-phil.na-01.webp"
+                      alt="Phil Bartko testing the espresso machine at the first outdoor tasting on a backyard deck"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 22vw"
+                      className="object-cover photo-treatment-sm"
+                    />
+                  </div>
+                  <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
+                    The first outdoor shots, somebody&apos;s deck.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="border-t border-dashed border-brand-black/15 my-10 md:my-14 max-w-2xl" />
@@ -266,10 +356,11 @@ export default function AboutPage() {
               ourselves after a Nazi symbol before we named ourselves after
               ourselves.
             </p>
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              El Gato Negro. The black cat. Taboo. Counter-culture. Ours.
-            </p>
           </div>
+
+          <p className="font-accent text-2xl md:text-3xl text-brand-black leading-snug -rotate-2 max-w-md mt-10 md:mt-14 md:ml-[45%] lg:ml-[50%]">
+            El Gato Negro. The black cat. Taboo. Counter-culture. Ours.
+          </p>
         </div>
       </section>
 
@@ -349,6 +440,26 @@ export default function AboutPage() {
               mistake&rdquo; moment yet. There&apos;s been plenty of everything
               else.
             </p>
+          </div>
+
+          {/* Chaos strip — four reel frames under a dashed rule */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10 md:mt-14 pt-10 md:pt-12 border-t border-dashed border-brand-grey/10">
+            {yearOneStrip.map((frame) => (
+              <div key={frame.src}>
+                <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm">
+                  <Image
+                    src={frame.src}
+                    alt={frame.alt}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover photo-treatment-sm"
+                  />
+                </div>
+                <p className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.15em] text-brand-grey/50 mt-2">
+                  {frame.caption}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
