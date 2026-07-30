@@ -303,7 +303,7 @@ export default function AboutPage() {
                       alt="Late-night first programming of the grinder and espresso machine, with a notebook of dial-in notes open on the bench"
                       fill
                       sizes="(max-width: 768px) 50vw, 22vw"
-                      className="object-cover photo-treatment-sm"
+                      className="object-cover object-[65%_center] photo-treatment-sm"
                     />
                   </div>
                   <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
