@@ -359,7 +359,15 @@ export default function AboutPage() {
           </div>
 
           <p className="font-accent text-2xl md:text-3xl text-brand-black leading-snug -rotate-2 max-w-md mt-10 md:mt-14 md:ml-[45%] lg:ml-[50%]">
-            El Gato Negro. The black cat. Taboo. Counter-culture. Ours.
+            El Gato Negro.
+            <br />
+            The black cat.
+            <br />
+            Taboo.
+            <br />
+            Counter-culture.
+            <br />
+            Ours.
           </p>
         </div>
       </section>
