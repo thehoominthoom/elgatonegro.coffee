@@ -9,7 +9,10 @@ export interface ServiceConfig {
   label: string;
   eyebrow: string;
   tagline: string;
+  /** Subpage hero description. */
   description: string;
+  /** Short row description for the /services index. */
+  indexDescription: string;
   features: string[];
   formFields: {
     eventDate?: boolean;
@@ -36,6 +39,8 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
     tagline: "Corporate events, product launches, brand activations. Different room. Same bar.",
     description:
       "We've set up in lobbies, on production sets, behind shoe drops, and in the leasing office at 1111 Church — enough times now that we've served hundreds of residents through those doors. The brief is always different. What we put behind the bar isn't. You get the cart, the menu built around your event, and a barista who's actually ours — not a contractor we found that morning.",
+    indexDescription:
+      "Lobbies, production sets, shoe drops, apartment pop-ups. The brief is always different. The bar isn't.",
     features: [
       "A drink menu built around your event, not pulled off a shelf",
       "Custom banners and POP signage in your colors — cups too if you plan ahead",
@@ -63,6 +68,8 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
     tagline: "Three days. One line. Keeps moving.",
     description:
       "Over seventy drinks pulled in an hour when the line demands it. Hundreds served across a day when the day runs long. Conventions, club meetups, multi-day community gatherings, Nashville and out — we build our schedule around yours, restock without being asked, and stay running as long as you do.",
+    indexDescription:
+      "Three days. One line that keeps moving. We build our schedule around yours and run it without you having to check on us.",
     features: [
       "Multi-station setup so the line never becomes the story",
       "Multi-day coverage — we've run longer than three",
@@ -89,6 +96,8 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
     tagline: "We do the coffee. You do the day.",
     description:
       "Ceremonies, receptions, rehearsal dinners, anniversaries. Nashville venues and anywhere within a reasonable drive. You've thought about every other detail. We'll match that energy on the coffee side — signature drinks named after the two of you, the bar set where it looks right in the photos, and nobody asking you a question during the toasts.",
+    indexDescription:
+      "We do the coffee. You do the day. Signature drinks, full setup and breakdown, a bar your guests will stand at longer than the open bar.",
     features: [
       "A signature drink menu we'll build with you — your names on it if you want",
       "Full setup and breakdown, timed to your venue's schedule",
@@ -114,6 +123,8 @@ export const SERVICE_CONFIGS: Record<ServiceSlug, ServiceConfig> = {
     tagline: "The small ones count too.",
     description:
       "Bachelorettes, birthdays, the dinner party where you don't want to be the one making drinks. Nashville homes, rooftops, backyards. Twenty people who actually know each other, somewhere nobody's on their phone. We bring the cart, build a short menu around what the group likes, and let the night do what it does.",
+    indexDescription:
+      "Bachelorettes, birthdays, the dinner party where you don't want to be the one making drinks.",
     features: [
       "A compact setup that fits a kitchen, a rooftop, a backyard",
       "A drink menu shaped around the group — no minimum headcount",

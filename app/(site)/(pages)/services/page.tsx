@@ -94,7 +94,7 @@ export default function ServicesIndexPage() {
                   {service.label}
                 </h2>
                 <p className="font-sans text-base md:text-lg leading-relaxed text-brand-black/70 mt-4 max-w-2xl">
-                  {service.description}
+                  {service.indexDescription}
                 </p>
                 <span className="mt-6 inline-flex items-center gap-2 font-display font-bold text-xs md:text-sm uppercase tracking-[0.2em] text-brand-orange group-hover:text-brand-yellow transition-colors">
                   Get a quote
