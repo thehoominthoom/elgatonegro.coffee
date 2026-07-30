@@ -6,15 +6,31 @@ import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Media Resources — El Gato Negro",
+  title: "Media Kit & Brand Assets",
   description:
-    "Download El Gato Negro brand assets — logos, color palette, and brand guidelines for partners and press.",
+    "Official El Gato Negro brand assets: logos in SVG, PNG, and WebP, color palette, and usage guidelines for partners and press. Grab what you need and go.",
+  alternates: { canonical: "/media" },
   openGraph: {
-    images: [{ url: '/images/media/the_exchange-cart-setup-none-02.webp', width: 1200, height: 630 }],
+    title: "Media Kit & Brand Assets | El Gato Negro Coffee",
+    description:
+      "Official El Gato Negro brand assets: logos, color palette, and usage guidelines for partners and press.",
+    url: "/media",
+    type: "website",
+    images: [
+      {
+        url: "/images/media/the_exchange-cart-setup-none-02.webp",
+        width: 1200,
+        height: 630,
+        alt: "The El Gato Negro coffee cart set up at The Exchange residency",
+      },
+    ],
   },
   twitter: {
-    card: 'summary_large_image',
-    images: ['/images/media/the_exchange-cart-setup-none-02.webp'],
+    card: "summary_large_image",
+    title: "Media Kit & Brand Assets | El Gato Negro Coffee",
+    description:
+      "Official El Gato Negro brand assets: logos, color palette, and usage guidelines for partners and press.",
+    images: ["/images/media/the_exchange-cart-setup-none-02.webp"],
   },
 };
 
@@ -77,14 +93,14 @@ export default function MediaPage() {
       >
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-52 md:pt-40 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
-            Brand Resources
+            For Press & Partners
           </p>
           <h1 className="font-display font-bold text-4xl md:text-6xl uppercase text-brand-grey tracking-tight">
-            Media Kit
+            The Media Kit
           </h1>
           <p className="font-sans text-sm text-brand-grey/60 max-w-lg mt-4 leading-relaxed">
-            Logos, colors, and brand guidelines for partners, press, and collaborators.
-            Download what you need.
+            Logos, colors, and the ground rules for putting our name next to yours.
+            Grab what you need and go.
           </p>
         </div>
       </HeroImageFrame>
@@ -92,9 +108,9 @@ export default function MediaPage() {
       {/* ── Logo Downloads ────────────────────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
-            Logo Variants
-          </p>
+          <h2 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
+            The Logos
+          </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {LOGO_VARIANTS.map((variant) => (
@@ -107,7 +123,7 @@ export default function MediaPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element -- static brand assets */}
                   <img
                     src={`/media-kit/${variant.base}.svg`}
-                    alt={variant.label}
+                    alt={`El Gato Negro ${variant.label.toLowerCase()}`}
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
@@ -140,9 +156,9 @@ export default function MediaPage() {
       {/* ── Brand Colors ──────────────────────────────────────────── */}
       <section className="bg-brand-black border-t border-brand-grey/10">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
-            Color Palette
-          </p>
+          <h2 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
+            The Colors
+          </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {BRAND_COLORS.map((color) => (
@@ -173,9 +189,9 @@ export default function MediaPage() {
       {/* ── Usage Guidelines ──────────────────────────────────────── */}
       <section className="bg-brand-black border-t border-brand-grey/10 grain-overlay-dark">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
-          <p className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
-            Usage Guidelines
-          </p>
+          <h2 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-grey/30 mb-8">
+            The Rules
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Do */}
@@ -185,11 +201,11 @@ export default function MediaPage() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  "Use the logo on a solid background with enough contrast",
-                  "Maintain the original aspect ratio when resizing",
-                  "Use the provided color variants on light or dark backgrounds",
-                  "Leave adequate clear space around the logo",
-                  "Use SVG format for web, PNG/WebP for print and social",
+                  "Put the logo on a solid background with real contrast.",
+                  "Keep the proportions locked when you resize.",
+                  "Pick the color variant built for your background, light or dark.",
+                  "Give it clear space. The cat doesn't like a crowd.",
+                  "Use SVG for anything that scales or prints, PNG or WebP for web and social.",
                 ].map((item) => (
                   <li
                     key={item}
@@ -209,11 +225,11 @@ export default function MediaPage() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  "Distort, stretch, or skew the logo",
-                  "Change the logo colors outside of provided variants",
-                  "Place the logo on busy or low-contrast backgrounds",
-                  "Add effects like drop shadows, outlines, or glows",
-                  "Recreate or modify the logo mark or wordmark",
+                  "Stretch, squish, or skew the logo.",
+                  "Recolor it outside the variants we gave you.",
+                  "Drop it on a busy or low-contrast background.",
+                  "Dress it up with drop shadows, outlines, or glows.",
+                  "Redraw the hellcat or the wordmark. We'll know.",
                 ].map((item) => (
                   <li
                     key={item}
@@ -236,11 +252,11 @@ export default function MediaPage() {
             <FileText className="size-6 text-brand-orange" />
           </div>
           <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-tight text-brand-grey mb-3">
-            Full Brand Guidelines
+            The Whole Rulebook
           </h2>
           <p className="font-sans text-sm text-brand-grey/50 max-w-md mb-8 leading-relaxed">
-            Need the complete picture? Download our brand guideline PDF with
-            detailed usage rules, typography, spacing, and tone of voice.
+            This page covers the fast stuff. The full PDF goes deeper, for
+            anything bigger than a logo drop.
           </p>
           <a
             href="/media-kit/egn-brand-guideline.pdf"
@@ -248,7 +264,7 @@ export default function MediaPage() {
             className="inline-flex items-center gap-3 rounded-sm bg-brand-orange px-8 py-4 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-grey transition-colors duration-200 hover:bg-brand-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange active:scale-[0.98]"
           >
             <Download className="size-4" />
-            Download PDF
+            Grab the PDF
           </a>
         </div>
       </section>

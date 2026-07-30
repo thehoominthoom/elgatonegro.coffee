@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   description:
     "Coffee cart service for weddings, corporate events, conventions, and production sets. Shop coffee, merch, and digital products.",
-  metadataBase: new URL("https://elgatonegro.coffee"),
+  metadataBase: new URL("https://www.elgatonegro.coffee"),
 };
 
 export default function RootLayout({

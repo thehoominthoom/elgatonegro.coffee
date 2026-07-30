@@ -89,7 +89,7 @@ export function SiteFooter() {
           <FooterColumn
             title="Company"
             links={[
-              { label: "Media Resources", href: "/media" },
+              { label: "Media Kit", href: "/media" },
               { label: "Opportunities", href: "/opportunities" },
             ]}
           />
