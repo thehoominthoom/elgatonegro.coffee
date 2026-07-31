@@ -124,6 +124,7 @@ export default function AboutPage() {
         alt="El Gato Negro crew in front of the coffee cart"
         minHeight="100svh"
         bleedTop
+        objectPosition="center 35%"
       >
         <div className="absolute inset-0 z-10 flex flex-col justify-end max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-orange mb-4">
