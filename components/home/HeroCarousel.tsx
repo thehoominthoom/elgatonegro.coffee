@@ -241,7 +241,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           </p>
 
           {/* Title */}
-          <h1
+          <h2
             className="font-display font-bold text-brand-grey leading-none uppercase tracking-[-0.03em] mb-6 text-balance"
             style={{
               fontSize: "var(--text-hero)",
@@ -253,7 +253,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                 {line}
               </span>
             ))}
-          </h1>
+          </h2>
 
           {/* Date + time + location */}
           <div

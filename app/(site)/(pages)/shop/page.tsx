@@ -95,9 +95,11 @@ export default function ShopPage() {
         ))}
       </div>
 
-      {/* ── Centered "SHOP" overlay — desktop only, sits at the grid intersection */}
+      {/* ── Centered "SHOP" overlay — desktop only, sits at the grid intersection.
+          Visual decoration; the mobile hero h1 is the page's sole H1. */}
       <div className="hidden md:flex absolute inset-0 top-[5.75rem] z-20 items-center justify-center pointer-events-none">
-        <h1
+        <p
+          aria-hidden="true"
           className="font-display font-bold uppercase text-brand-grey tracking-tight"
           style={{
             fontSize: "var(--text-hero)",
@@ -105,7 +107,7 @@ export default function ShopPage() {
           }}
         >
           Shop
-        </h1>
+        </p>
       </div>
 
     </section>

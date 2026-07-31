@@ -124,31 +124,46 @@ export default async function Home() {
   const today = todayInCT();
   const heroSlides = buildHeroSlides(sanityEvents, today);
 
-  const organizationJsonLd = {
+  // LocalBusiness @id "#business" is referenced by every services page's
+  // Service.provider (lib/seo/service-graph.ts) — do not remove or rename.
+  const localBusinessJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "LocalBusiness",
+    "@id": "https://www.elgatonegro.coffee/#business",
     name: "El Gato Negro Coffee",
     url: "https://www.elgatonegro.coffee",
     logo: "https://www.elgatonegro.coffee/brand/hellcat-color.svg",
-    sameAs: [
-      "https://www.instagram.com/elgatonegro.coffee/",
-      "https://www.tiktok.com/@el.gato.negro.coffee",
-    ],
+    image: "https://www.elgatonegro.coffee/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
     description: "Nashville's mobile espresso cart — coffee that shows up.",
+    areaServed: {
+      "@type": "City",
+      name: "Nashville",
+      containedInPlace: { "@type": "State", name: "Tennessee" },
+    },
     address: {
       "@type": "PostalAddress",
       addressLocality: "Nashville",
       addressRegion: "TN",
       addressCountry: "US",
     },
+    hasMenu: "https://www.elgatonegro.coffee/menu",
+    sameAs: [
+      "https://www.instagram.com/elgatonegro.coffee/",
+      "https://www.tiktok.com/@el.gato.negro.coffee",
+    ],
   };
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
       />
+
+      {/* Stable page H1 — the carousel title is an h2 and disappears with zero events */}
+      <h1 className="sr-only">
+        El Gato Negro Coffee — Nashville&apos;s Mobile Coffee Cart
+      </h1>
 
       {/* ── 1. Culture — Hero Carousel ────────────────────────────────────── */}
       <HeroCarousel slides={heroSlides} />
