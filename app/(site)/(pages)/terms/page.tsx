@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — El Gato Negro Coffee",
+  title: "Terms of Service",
+  alternates: { canonical: "/terms" },
   description:
     "Terms and conditions governing your use of the El Gato Negro Coffee website and services.",
-  robots: { index: false },
 };
 
 export default function TermsOfServicePage() {

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Refund Policy — El Gato Negro Coffee",
+  title: "Refund Policy",
+  alternates: { canonical: "/refund-policy" },
   description:
     "How returns, refunds, and replacements work for everything sold by El Gato Negro Coffee.",
-  robots: { index: false },
 };
 
 export default function RefundPolicyPage() {

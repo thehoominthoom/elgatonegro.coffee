@@ -70,6 +70,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/services`, changeFrequency: "monthly", priority: 0.9, lastModified: now },
     { url: `${BASE_URL}/media`, changeFrequency: "monthly", priority: 0.4, lastModified: now },
     { url: `${BASE_URL}/opportunities`, changeFrequency: "monthly", priority: 0.5, lastModified: now },
+    { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3, lastModified: now },
+    { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3, lastModified: now },
+    { url: `${BASE_URL}/refund-policy`, changeFrequency: "yearly", priority: 0.3, lastModified: now },
   ];
 
   const eventPages: MetadataRoute.Sitemap = eventSlugs.map((slug) => ({

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — El Gato Negro Coffee",
+  title: "Privacy Policy",
+  alternates: { canonical: "/privacy" },
   description:
     "How El Gato Negro Coffee collects, uses, and protects your personal information.",
-  robots: { index: false },
 };
 
 export default function PrivacyPolicyPage() {
