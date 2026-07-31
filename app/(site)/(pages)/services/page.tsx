@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og/services-index.png",
-        width: 1200,
-        height: 630,
+        url: "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
+        width: 1616,
+        height: 1080,
         alt: "El Gato Negro mobile coffee cart at a Nashville event",
       },
     ],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Book the Cart — El Gato Negro",
     description: "Nashville's mobile coffee cart. Four ways we show up.",
-    images: ["/og/services-index.png"],
+    images: ["/images/hero/the_exchange-cart-setup-phil.juan-01.webp"],
   },
 };
 

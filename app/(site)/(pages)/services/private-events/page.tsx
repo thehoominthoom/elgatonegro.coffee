@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og/services-private-events.png",
-        width: 1200,
-        height: 630,
+        url: "/images/services/private-events-hero.webp",
+        width: 2400,
+        height: 1600,
         alt: "El Gato Negro compact cart setup at a private home gathering",
       },
     ],
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Private Event Coffee — El Gato Negro",
     description: "Compact setup. No minimum headcount.",
-    images: ["/og/services-private-events.png"],
+    images: ["/images/services/private-events-hero.webp"],
   },
 };
 

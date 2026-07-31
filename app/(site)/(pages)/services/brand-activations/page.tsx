@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og/services-brand-activations.png",
-        width: 1200,
-        height: 630,
+        url: "/images/services/brand-activations-hero.webp",
+        width: 2400,
+        height: 3200,
         alt: "El Gato Negro cart branded for a corporate activation",
       },
     ],
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Brand Activations — El Gato Negro",
     description: "Cart in your colors. Setup in under 30 minutes.",
-    images: ["/og/services-brand-activations.png"],
+    images: ["/images/services/brand-activations-hero.webp"],
   },
 };
 

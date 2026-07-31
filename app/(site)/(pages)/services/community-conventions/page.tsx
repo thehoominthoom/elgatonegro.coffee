@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og/services-community-conventions.png",
-        width: 1200,
-        height: 630,
+        url: "/images/services/community-conventions-hero.webp",
+        width: 2400,
+        height: 3200,
         alt: "El Gato Negro multi-station setup serving a convention crowd",
       },
     ],
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Convention Coffee Catering — El Gato Negro",
     description: "Multi-day. Multi-station. Line keeps moving.",
-    images: ["/og/services-community-conventions.png"],
+    images: ["/images/services/community-conventions-hero.webp"],
   },
 };
 

@@ -34,9 +34,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og/services-weddings.png",
-        width: 1200,
-        height: 630,
+        url: "/images/services/weddings-celebrations-hero.webp",
+        width: 2400,
+        height: 1802,
         alt: "El Gato Negro espresso bar set up at a wedding reception",
       },
     ],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Wedding Coffee Bar — El Gato Negro",
     description: "Signature drinks. Full setup. Nashville weddings.",
-    images: ["/og/services-weddings.png"],
+    images: ["/images/services/weddings-celebrations-hero.webp"],
   },
 };
 
