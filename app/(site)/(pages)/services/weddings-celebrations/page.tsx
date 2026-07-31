@@ -23,7 +23,7 @@ import { JsonLd } from "@/components/services/JsonLd";
 const SLUG = "weddings-celebrations" as const;
 
 export const metadata: Metadata = {
-  title: "Wedding Coffee Cart Nashville — Espresso Bar | El Gato Negro",
+  title: { absolute: "Wedding Coffee Cart Nashville — Espresso Bar | El Gato Negro" },
   description:
     "Ceremonies, receptions, rehearsal dinners. Nashville venues and reasonable drives beyond. Signature drinks named after you, service that fits the day. Request a quote.",
   alternates: { canonical: `/services/${SLUG}` },

@@ -5,11 +5,12 @@ import Link from "next/link";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Shop — El Gato Negro Coffee",
+  title: "Shop Coffee & Merch",
+  alternates: { canonical: "/shop" },
   description:
     "Coffee beans, merchandise, and more from Nashville's mobile espresso cart.",
   openGraph: {
-    title: "Shop — El Gato Negro Coffee",
+    title: "Shop Coffee & Merch | El Gato Negro Coffee",
     description:
       "Coffee beans, merchandise, and more from Nashville's mobile espresso cart.",
     type: "website",

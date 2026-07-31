@@ -5,6 +5,7 @@ import { OpportunityForm } from "@/components/opportunities/OpportunityForm";
 
 export const metadata: Metadata = {
   title: "Opportunities — El Gato Negro",
+  alternates: { canonical: "/opportunities" },
   description:
     "Join the El Gato Negro team. We're looking for passionate baristas to help us bring the cart to Nashville and beyond.",
   openGraph: {

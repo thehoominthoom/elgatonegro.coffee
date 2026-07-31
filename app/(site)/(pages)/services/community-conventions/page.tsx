@@ -28,7 +28,7 @@ import { JsonLd } from "@/components/services/JsonLd";
 const SLUG = "community-conventions" as const;
 
 export const metadata: Metadata = {
-  title: "Convention & Community Coffee Catering | El Gato Negro Nashville",
+  title: { absolute: "Convention & Community Coffee Catering | El Gato Negro Nashville" },
   description:
     "Seventy drinks an hour when the line demands it. Multi-day conventions, club meetups, community events. Nashville and out. Multi-station setup. Request a quote.",
   alternates: { canonical: `/services/${SLUG}` },

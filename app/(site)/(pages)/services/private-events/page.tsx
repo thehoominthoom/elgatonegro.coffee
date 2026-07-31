@@ -21,7 +21,7 @@ import { JsonLd } from "@/components/services/JsonLd";
 const SLUG = "private-events" as const;
 
 export const metadata: Metadata = {
-  title: "Private Event Coffee Cart Nashville | El Gato Negro",
+  title: { absolute: "Private Event Coffee Cart Nashville | El Gato Negro" },
   description:
     "Bachelorettes, birthdays, dinner parties. Twenty people who actually know each other. Compact setup, no minimum headcount, short-notice when we can swing it.",
   alternates: { canonical: `/services/${SLUG}` },

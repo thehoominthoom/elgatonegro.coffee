@@ -5,7 +5,8 @@ import { InquiryForm } from "@/components/inquiry/InquiryForm";
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Book the Cart — El Gato Negro",
+  title: "Book the Cart",
+  alternates: { canonical: "/inquiry" },
   description:
     "Ready to bring El Gato Negro to your event? Fill out an inquiry and we'll be in touch within 1–2 business days.",
   openGraph: {

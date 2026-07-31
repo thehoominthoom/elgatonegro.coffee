@@ -31,7 +31,8 @@ export async function generateMetadata({
     const product = await getProductByHandle(handle);
     if (!product) return {};
     return {
-      title: `${product.title} — El Gato Negro Shop`,
+      title: product.title,
+      alternates: { canonical: `/shop/products/${handle}` },
       description: product.description || `${product.title} from El Gato Negro Coffee.`,
       openGraph: {
         title: `${product.title} — El Gato Negro Shop`,
@@ -46,6 +47,12 @@ export async function generateMetadata({
               },
             ]
           : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${product.title} — El Gato Negro Shop`,
+        description: product.description || `${product.title} from El Gato Negro Coffee.`,
+        images: product.featuredImage ? [product.featuredImage.url] : [],
       },
     };
   } catch {

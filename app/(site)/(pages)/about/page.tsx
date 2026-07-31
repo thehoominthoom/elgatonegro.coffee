@@ -8,6 +8,7 @@ import { HeroImageFrame } from "@/components/shared/HeroImageFrame";
 
 export const metadata: Metadata = {
   title: "About",
+  alternates: { canonical: "/about" },
   description:
     "El Gato Negro is Nashville's mobile coffee cart — two friends, too many margaritas at El Fuego, and a business that's more events company than coffee company.",
   openGraph: {

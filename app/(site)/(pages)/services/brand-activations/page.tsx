@@ -28,7 +28,7 @@ import { JsonLd } from "@/components/services/JsonLd";
 const SLUG = "brand-activations" as const;
 
 export const metadata: Metadata = {
-  title: "Corporate Events & Brand Activations | El Gato Negro Nashville",
+  title: { absolute: "Corporate Events & Brand Activations | El Gato Negro Nashville" },
   description:
     "Corporate events, product launches, brand activations. Lobbies, production sets, apartment pop-ups in Nashville. Cart in your colors. Quote in 24 hours.",
   alternates: { canonical: `/services/${SLUG}` },

@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/services/JsonLd";
 import { buildServicesIndexGraph } from "@/lib/seo/service-graph";
 
 export const metadata: Metadata = {
-  title: "Book the Cart — Nashville Coffee Cart Services | El Gato Negro",
+  title: { absolute: "Book the Cart — Nashville Coffee Cart Services | El Gato Negro" },
   description:
     "Four ways we show up: brand activations, conventions, weddings, and private events. Nashville's mobile coffee cart. Get a quote in 24 hours.",
   alternates: { canonical: "/services" },

@@ -6,11 +6,12 @@ import type { CalendarEvent } from "@/components/events/EventCalendar";
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Events | El Gato Negro Coffee",
+  title: "Events & Pop-Ups",
+  alternates: { canonical: "/events" },
   description:
     "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities for Nashville's mobile espresso cart.",
   openGraph: {
-    title: "Events | El Gato Negro Coffee",
+    title: "Events & Pop-Ups | El Gato Negro Coffee",
     description:
       "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities.",
     type: "website",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Events | El Gato Negro Coffee",
+    title: "Events & Pop-Ups | El Gato Negro Coffee",
     description:
       "See where El Gato Negro is serving next. Nashville mobile espresso cart.",
     images: ["/images/hero/hero-barista_roasting.webp"],

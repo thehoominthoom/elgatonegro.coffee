@@ -29,7 +29,8 @@ export async function generateMetadata({
     const collection = await getCollectionByHandle(handle, 1);
     if (!collection) return {};
     return {
-      title: `${collection.title} — El Gato Negro Shop`,
+      title: collection.title,
+      alternates: { canonical: `/shop/collections/${handle}` },
       description: collection.description || `Shop ${collection.title} from El Gato Negro Coffee.`,
       openGraph: {
         images: collection.image?.url

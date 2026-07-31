@@ -72,7 +72,8 @@ const services = [
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+  title: { absolute: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart" },
+  alternates: { canonical: "/" },
   description:
     "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events. Find us, book the cart, or shop the brand.",
   openGraph: {

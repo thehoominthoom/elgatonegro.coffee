@@ -317,7 +317,8 @@ export async function generateMetadata({
     .slice(0, 160) || `${event.title} — El Gato Negro Coffee event.`;
 
   return {
-    title: `${event.title} | El Gato Negro Coffee`,
+    title: event.title,
+    alternates: { canonical: `/events/${slug}` },
     description: descriptionText,
     openGraph: {
       title: `${event.title} | El Gato Negro Coffee`,

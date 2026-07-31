@@ -4,7 +4,8 @@ import { client } from "@/sanity/lib/client";
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Menu",
+  title: "Drink Menu",
+  alternates: { canonical: "/menu" },
   description:
     "On the board at Nashville's mobile coffee cart: espresso drinks, drip, cold brew, and hot chocolate, with whole or oat milk and caramel or vanilla syrup.",
   openGraph: {
