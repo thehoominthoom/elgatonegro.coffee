@@ -4,10 +4,10 @@ import { OpportunityForm } from "@/components/opportunities/OpportunityForm";
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Opportunities — El Gato Negro",
+  title: "Nashville Barista Jobs",
   alternates: { canonical: "/opportunities" },
   description:
-    "Join the El Gato Negro team. We're looking for passionate baristas to help us bring the cart to Nashville and beyond.",
+    "Barista jobs with El Gato Negro. Event-based schedule, Nashville's best venues, no 5 AM opens. Tell us about yourself.",
   openGraph: {
     images: [{ url: '/images/hero/juan-phil-serving.webp', width: 1200, height: 630 }],
   },

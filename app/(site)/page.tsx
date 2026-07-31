@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   title: { absolute: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart" },
   alternates: { canonical: "/" },
   description:
-    "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events. Find us, book the cart, or shop the brand.",
+    "Nashville's mobile espresso cart for pop-ups, weddings, brand activations, conventions, and private events. Find us, book the cart, or shop the brand.",
   openGraph: {
     title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
     description:
@@ -468,7 +468,7 @@ export default async function Home() {
                   {service.description}
                 </p>
                 <span className="inline-flex items-center gap-2 font-display text-sm md:text-base uppercase tracking-[0.2em] text-brand-orange group-hover:text-brand-yellow transition-colors duration-300">
-                  Get a Quote <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  Book the Cart <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>
@@ -496,7 +496,7 @@ export default async function Home() {
             href="/inquiry"
             className="group inline-flex items-center gap-3 bg-brand-black text-brand-grey font-display font-bold uppercase tracking-[0.1em] text-sm px-8 py-4 md:px-10 md:py-5 rounded-sm hover:bg-brand-orange transition-colors duration-300 active:scale-[0.98]"
           >
-            Start Your Inquiry
+            Book the Cart
             <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>

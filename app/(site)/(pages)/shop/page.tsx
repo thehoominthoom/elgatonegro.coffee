@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   title: "Shop Coffee & Merch",
   alternates: { canonical: "/shop" },
   description:
-    "Coffee beans, merchandise, and more from Nashville's mobile espresso cart.",
+    "Coffee beans, apparel, and merch from Nashville's mobile espresso cart. Shop the brand, wear the hellcat.",
   openGraph: {
     title: "Shop Coffee & Merch | El Gato Negro Coffee",
     description:
-      "Coffee beans, merchandise, and more from Nashville's mobile espresso cart.",
+      "Coffee beans, apparel, and merch from Nashville's mobile espresso cart. Shop the brand, wear the hellcat.",
     type: "website",
     images: [{ url: '/images/hero/hero-barista_roasting.webp', width: 1200, height: 630 }],
   },
@@ -24,13 +24,14 @@ export const metadata: Metadata = {
 
 // Portrait shots (Coffee Beans, Merchandise) need object-position biased away
 // from center so the product labels aren't cropped out of the landscape grid
-// cell. Landscape shots (Apparel, Best Sellers) default to center.
+// cell. Landscape shots (Apparel, Featured) default to center.
 const SHOP_CATEGORIES = [
   {
     title: "Coffee\nBeans",
     href: "/shop/collections/coffee-beans",
     image:
       "/images/shop/lakehouse-coffeebeans.coffee_beans-close_up-moongoat-03.webp",
+    alt: "Close-up of coffee beans and a MoonGoat bag on the El Gato Negro cart",
     objectPosition: "center 75%", // keep EGN cup wordmark + moongoat bag in view
   },
   {
@@ -43,11 +44,12 @@ const SHOP_CATEGORIES = [
     title: "Merchandise",
     href: "/shop/collections/merchandise",
     image: "/images/shop/the_exchange-retail-setup-go_get_em_tiger-01.webp",
+    alt: "Retail shelf of El Gato Negro merch at The Exchange",
     objectPosition: "center 40%", // keep the retail shelves with Go Get Em Tiger bags in view
   },
   {
-    title: "Best\nSellers",
-    href: "/shop/collections/best-sellers",
+    title: "Featured",
+    href: "/shop/collections/featured",
     image: "/images/shop/misc-syrups.portrait-close_up-none-02.webp",
   },
 ];
@@ -77,7 +79,7 @@ export default function ShopPage() {
           >
             <Image
               src={cat.image}
-              alt={cat.title.replace("\n", " ")}
+              alt={cat.alt ?? cat.title.replace("\n", " ")}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               style={cat.objectPosition ? { objectPosition: cat.objectPosition } : undefined}
