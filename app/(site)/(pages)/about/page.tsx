@@ -245,8 +245,8 @@ export default function AboutPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 items-start">
-            {/* Text column + sketch marginalia */}
-            <div className="md:col-span-6">
+            {/* Text column */}
+            <div className="md:col-span-5">
               <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5">
                 <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
                   Phil built a contraption that used an air compressor as a
@@ -263,31 +263,16 @@ export default function AboutPage() {
                   We also needed a new name.
                 </p>
               </div>
-
-              {/* The bomb sketch — marginalia, not a photo */}
-              <div className="max-w-[240px] md:max-w-xs mt-8 rotate-[1.5deg]">
-                <Image
-                  src="/images/about/misc-founding.bts.sketch.water_system-close_up-none-01.webp"
-                  alt="Hand-drawn plumbing sketch of the air-compressor water pump rig — Schrader valve, PVC, and PEX line to the espresso machine"
-                  width={1200}
-                  height={1598}
-                  sizes="(max-width: 768px) 240px, 320px"
-                  className="w-full h-auto rounded-sm border border-brand-black/10 shadow-md"
-                />
-              </div>
-              <p className="font-accent text-lg text-brand-green mt-3 -rotate-1">
-                the bomb, as designed.
-              </p>
             </div>
 
             {/* Photo cluster — day-one evidence */}
-            <div className="md:col-span-6">
+            <div className="md:col-span-7">
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
                   src="/images/about/the_exchange-bts.founding.cart-setup-none-04.webp"
                   alt="The first El Gato Negro setup on day one — espresso machine, grinder, and water jugs rigged under folding tables at The Exchange running store"
                   fill
-                  sizes="(max-width: 768px) 100vw, 45vw"
+                  sizes="(max-width: 768px) 100vw, 55vw"
                   className="object-cover photo-treatment-sm"
                 />
               </div>
@@ -295,14 +280,14 @@ export default function AboutPage() {
                 Day one, the folding table in question.
               </p>
 
-              <div className="grid grid-cols-2 gap-3 md:gap-4 mt-3 md:mt-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-3 md:mt-4 items-start">
                 <div>
-                  <div className="relative aspect-square overflow-hidden rounded-sm grain-overlay-sm">
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm">
                     <Image
                       src="/images/about/misc-founding.bts.espresso_machine.grinder-setup-none-02.webp"
                       alt="Late-night first programming of the grinder and espresso machine, with a notebook of dial-in notes open on the bench"
                       fill
-                      sizes="(max-width: 768px) 50vw, 22vw"
+                      sizes="(max-width: 768px) 50vw, 18vw"
                       className="object-cover object-[65%_center] photo-treatment-sm"
                     />
                   </div>
@@ -311,17 +296,33 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <div>
-                  <div className="relative aspect-square overflow-hidden rounded-sm grain-overlay-sm">
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm">
                     <Image
                       src="/images/about/misc-founding.bts.espresso_machine.coffee_tasting-outdoor.setup-phil.na-01.webp"
                       alt="Phil Bartko testing the espresso machine at the first outdoor tasting on a backyard deck"
                       fill
-                      sizes="(max-width: 768px) 50vw, 22vw"
+                      sizes="(max-width: 768px) 50vw, 18vw"
                       className="object-cover photo-treatment-sm"
                     />
                   </div>
                   <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
                     The first outdoor shots, somebody&apos;s deck.
+                  </p>
+                </div>
+                {/* The bomb sketch — a document among photographs, no photo-treatment */}
+                <div className="col-span-2 md:col-span-1">
+                  <div className="max-w-[260px] md:max-w-none rotate-[2deg]">
+                    <Image
+                      src="/images/about/misc-founding.bts.sketch.water_system-close_up-none-01.webp"
+                      alt="Hand-drawn plumbing sketch of the air-compressor water pump rig — threaded cap with Schrader valve, elbow, and PEX line to the espresso machine"
+                      width={900}
+                      height={1200}
+                      sizes="(max-width: 768px) 260px, 18vw"
+                      className="w-full h-auto rounded-sm border border-brand-black/10 shadow-md"
+                    />
+                  </div>
+                  <p className="font-accent text-lg text-brand-green mt-2 -rotate-1">
+                    the bomb, as designed.
                   </p>
                 </div>
               </div>
