@@ -74,6 +74,7 @@ interface EventDetail {
   cta: CtaItem[] | null;
   menu: { title: string; blocks: MenuBlock[] | null } | null;
   eventPageType: "internal" | "internal-link" | "external" | null;
+  isPublic: boolean | null;
 }
 
 // ─── Query ────────────────────────────────────────────────────────────────────
@@ -107,7 +108,8 @@ const EVENT_QUERY = `*[_type == "event" && slug.current == $slug][0] {
       rightItems[]{_type, _key, text, price}
     }
   },
-  eventPageType
+  eventPageType,
+  isPublic
 }`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -304,8 +306,8 @@ export async function generateMetadata({
     { next: { revalidate: 60 } }
   );
 
-  if (!event || event.eventPageType !== "internal") {
-    return { title: "Event Not Found | El Gato Negro Coffee" };
+  if (!event || event.isPublic !== true || event.eventPageType !== "internal") {
+    return { title: "Event Not Found" };
   }
 
   const descriptionText = event.description
@@ -357,7 +359,7 @@ export default async function EventDetailPage({
     { next: { revalidate: 60 } }
   );
 
-  if (!event || event.eventPageType !== "internal") notFound();
+  if (!event || event.isPublic !== true || event.eventPageType !== "internal") notFound();
 
   const schedule = event.schedule
     ? [...event.schedule].sort((a, b) => a.date.localeCompare(b.date))

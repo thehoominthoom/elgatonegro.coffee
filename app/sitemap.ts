@@ -8,7 +8,7 @@ const BASE_URL = "https://www.elgatonegro.coffee";
 
 async function getEventSlugs(): Promise<string[]> {
   const events = await client.fetch<{ slug: string }[]>(
-    `*[_type == "event" && defined(slug.current)]{ "slug": slug.current }`,
+    `*[_type == "event" && defined(slug.current) && isPublic == true && eventPageType == "internal"]{ "slug": slug.current }`,
     {},
     { next: { revalidate: 3600 } }
   );
