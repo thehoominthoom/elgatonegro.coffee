@@ -44,14 +44,17 @@ export function formatEventDateRange(schedule: ScheduleDay[]): string {
   return `${formatEventDate(first)} – ${formatEventDate(last)}`;
 }
 
-/** Day-of-week abbreviation within the next 6 days, "Sep 2" beyond it. */
-function dayLabel(dateStr: string, today: string): string {
+/** "Sat" — no distance threshold. The caller picks weekday or date by what the
+ *  line above already shows, not by how far away the day is. */
+function weekdayLabel(dateStr: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-  const [todayY, todayM, todayD] = today.split("-").map(Number);
-  const todayDate = new Date(todayY, todayM - 1, todayD);
-  const diffDays = Math.round((date.getTime() - todayDate.getTime()) / 86400000);
-  return diffDays <= 6 ? DAY_NAMES[date.getDay()] : `${MONTH_NAMES[month - 1]} ${day}`;
+  return DAY_NAMES[new Date(year, month - 1, day).getDay()];
+}
+
+/** "Aug 28" */
+function monthDayLabel(dateStr: string): string {
+  const [, month, day] = dateStr.split("-").map(Number);
+  return `${MONTH_NAMES[month - 1]} ${day}`;
 }
 
 /** Schedule times are free-typed in Sanity — treat absent or blank as "no time". */
@@ -89,24 +92,26 @@ export function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRec
   const future = sorted.filter((d) => d.date > today);
   if (!future.length) return null;
   const next = future[0];
+  const hours = formatHours(next.openTime, next.closeTime);
 
+  // Both branches fill the gap left by the line directly above. What that line
+  // omits decides what this one names — never how far off the day is.
   if (isRecurring) {
-    // Unlike "Today:", the day is this line's payload — a recurring event's date
-    // range never names the specific next day. Keep it when the hours are gone.
-    const label = `Next: ${dayLabel(next.date, today)}`;
-    const hours = formatHours(next.openTime, next.closeTime, "–");
+    // Above reads "{recurrenceLabel} · {dateRange}", so the weekday is already
+    // on screen and the date is the missing piece. Unlike "Today:", the date is
+    // this line's payload — keep it when the hours are gone.
+    const label = `Next: ${monthDayLabel(next.date)}`;
     return hours ? `${label} ${hours} CT` : label;
   }
 
-  // One-off event. The date range already renders directly above this line, so
-  // the day is only worth naming when the hours differ across the upcoming
-  // dates — an unlabelled time on a multi-day range misstates day two.
-  const hours = formatHours(next.openTime, next.closeTime);
+  // One-off. Above shows exact dates and no weekday, so this line names the
+  // weekday — except across a multi-day range with uniform hours, where no one
+  // weekday is true of it and an unlabelled time would misstate day two.
   if (!hours) return null;
   const uniform = future.every((d) => formatHours(d.openTime, d.closeTime) === hours);
-  return uniform
-    ? `${hours} CT`
-    : `${dayLabel(next.date, today)}: ${hours} CT`;
+  return future.length > 1 && uniform
+    ? `Daily: ${hours} CT`
+    : `${weekdayLabel(next.date)} ${hours} CT`;
 }
 
 const TIME_PATTERN = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
