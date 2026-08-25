@@ -1,5 +1,8 @@
 import type { ScheduleDay } from "./types";
 
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 /** Today's date in CT as YYYY-MM-DD */
 export function todayInCT(): string {
   return new Date().toLocaleDateString("en-CA", {
@@ -31,24 +34,43 @@ export function formatEventDateRange(schedule: ScheduleDay[]): string {
   return `${formatEventDate(first)} – ${formatEventDate(last)}`;
 }
 
+/** Day-of-week abbreviation within the next 6 days, "Sep 2" beyond it. */
+function dayLabel(dateStr: string, today: string): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  const [todayY, todayM, todayD] = today.split("-").map(Number);
+  const todayDate = new Date(todayY, todayM - 1, todayD);
+  const diffDays = Math.round((date.getTime() - todayDate.getTime()) / 86400000);
+  return diffDays <= 6 ? DAY_NAMES[date.getDay()] : `${MONTH_NAMES[month - 1]} ${day}`;
+}
+
+/** Schedule times are free-typed in Sanity — treat absent or blank as "no time". */
+function trimTime(value: string | null | undefined): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 export function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRecurring: boolean): string | null {
   const sorted = [...schedule].sort((a, b) => a.date.localeCompare(b.date));
   const todayEntry = sorted.find((d) => d.date === today);
   if (todayEntry) {
     return `Today: ${todayEntry.openTime} – ${todayEntry.closeTime} CT`;
   }
-  if (!isRecurring) return null;
   const future = sorted.filter((d) => d.date > today);
   if (!future.length) return null;
   const next = future[0];
-  const [ny, nm, nd] = next.date.split("-").map(Number);
-  const nextDate = new Date(ny, nm - 1, nd);
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const dow = dayNames[nextDate.getDay()];
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const [todayY, todayM, todayD] = today.split("-").map(Number);
-  const todayDate = new Date(todayY, todayM - 1, todayD);
-  const diffDays = Math.round((nextDate.getTime() - todayDate.getTime()) / 86400000);
-  const dayLabel = diffDays <= 6 ? dow : `${monthNames[nm - 1]} ${nd}`;
-  return `Next: ${dayLabel} ${next.openTime}–${next.closeTime} CT`;
+
+  if (isRecurring) {
+    return `Next: ${dayLabel(next.date, today)} ${next.openTime}–${next.closeTime} CT`;
+  }
+
+  // One-off event. The date range already renders directly above this line, so
+  // the day is only worth naming when the hours differ across the upcoming
+  // dates — an unlabelled time on a multi-day range misstates day two.
+  const open = trimTime(next.openTime);
+  const close = trimTime(next.closeTime);
+  if (!open || !close) return null;
+  const uniform = future.every((d) => trimTime(d.openTime) === open && trimTime(d.closeTime) === close);
+  return uniform
+    ? `${open} – ${close} CT`
+    : `${dayLabel(next.date, today)}: ${open} – ${close} CT`;
 }
