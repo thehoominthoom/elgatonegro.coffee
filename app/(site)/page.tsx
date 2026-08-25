@@ -16,15 +16,26 @@ import { getMetafieldValues } from "@/lib/shopify/utils";
 
 // ─── Query ────────────────────────────────────────────────────────────────────
 
-// Returns upcoming public events ordered by first schedule date.
+// Returns every upcoming public event.
 // GROQ dateTime() operates in UTC; subtract 30h to cover the full CT calendar day —
 // event remains visible until midnight CT (30h covers CST worst-case end of day).
-// Cap at 8 (strip max). heroSlides derives from this set via JS filter + slice(0,6).
+//
+// Display order does NOT come from this query. buildHeroSlides sorts by each
+// event’s next upcoming date and buildStripRows sorts rows by sortDate, both in
+// JS, and both cap after sorting (6 slides, 8 rows). order(_id) is here only to
+// make the truncation below deterministic — _id is used precisely because it
+// carries no date meaning and no editor can change it. Do not “fix” it back to a
+// date: schedule[0] is an array position, not the earliest date (rows are not
+// sorted on save), and it counts past dates the display already ignores.
+//
+// 50 is a runaway guard, not a display limit — roughly ten times any plausible
+// count of concurrently-booked public events, at ~1.2KB per document. Sizing it
+// well clear of the caps is what stops the slice from dropping a sooner event.
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
   count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
-] | order(schedule[0].date asc) [0...8] {
+] | order(_id asc) [0...50] {
   _id,
   title,
   "locationName": location.locationName,
