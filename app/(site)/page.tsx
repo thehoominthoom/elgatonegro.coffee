@@ -7,8 +7,8 @@ import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
 import { clients } from "@/lib/clients";
 import type { SanityEvent } from "@/lib/home/types";
-import { todayInCT } from "@/lib/home/dates";
-import { buildStripRows } from "@/lib/home/events";
+import { addDays, todayInCT } from "@/lib/home/dates";
+import { buildStripRows, WINDOW_DAYS } from "@/lib/home/events";
 import { buildHeroSlides } from "@/lib/home/hero";
 import { getAllProducts } from "@/lib/shopify/storefront";
 import type { Product } from "@/lib/shopify/types";
@@ -136,6 +136,16 @@ export default async function Home() {
   const today = todayInCT();
   const heroSlides = buildHeroSlides(sanityEvents, today);
 
+  // buildStripRows returns rows sorted ascending by sortDate, and only falls back
+  // to the next few upcoming events when the 7-day window produced nothing at
+  // all. So the first row alone identifies which branch ran: inside the window
+  // means every row is, outside it means the fallback returned.
+  const stripRows = buildStripRows(sanityEvents, today);
+  const stripLabel =
+    stripRows[0] && stripRows[0].sortDate <= addDays(today, WINDOW_DAYS)
+      ? "This Week"
+      : "Next Up";
+
   // LocalBusiness @id "#business" is referenced by every services page's
   // Service.provider (lib/seo/service-graph.ts) — do not remove or rename.
   const localBusinessJsonLd = {
@@ -181,9 +191,24 @@ export default async function Home() {
       <HeroCarousel slides={heroSlides} />
 
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
-      <section className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12">
+      <section
+        aria-labelledby={stripRows.length > 0 ? "events-strip-heading" : undefined}
+        className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12"
+      >
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative overflow-hidden">
-          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate, displayTime }, i) => {
+          {/* Section header — mirrors the store's eyebrow, dark variant */}
+          {stripRows.length > 0 && (
+            <div className="mb-8 md:mb-12 pb-4 border-b border-brand-grey/20">
+              <h2
+                id="events-strip-heading"
+                className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-grey/60"
+              >
+                {stripLabel}
+              </h2>
+            </div>
+          )}
+
+          {stripRows.map(({ key, event, displayDate, displayTime }, i) => {
             const eventHref =
               event.eventPageType === "external" && event.externalUrl
                 ? event.externalUrl

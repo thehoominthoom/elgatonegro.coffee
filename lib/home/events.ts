@@ -9,7 +9,7 @@ export type StripRow = {
   sortDate: string;
 };
 
-const WINDOW_DAYS = 7;
+export const WINDOW_DAYS = 7;
 const MAX_ROWS = 8;
 const FALLBACK_ROWS = 3;
 
