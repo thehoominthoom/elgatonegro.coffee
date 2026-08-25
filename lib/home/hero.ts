@@ -34,6 +34,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
       dateRange,
       timeContext,
       location: e.locationName || (e.location ? trimAddress(e.location) : ""),
+      mapLink: e.mapLink ?? null,
       type: e.type ?? "open",
       isHappeningNow,
       recurrenceLabel: e.recurrenceLabel ?? null,

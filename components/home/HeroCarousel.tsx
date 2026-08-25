@@ -13,6 +13,7 @@ export interface HeroSlide {
   dateRange: string;
   timeContext: string | null;
   location: string;
+  mapLink: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   isHappeningNow: boolean;
   recurrenceLabel: string | null;
@@ -271,9 +272,20 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
               </span>
             )}
             {slide.location && (
-              <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
-                {slide.location}
-              </span>
+              slide.mapLink ? (
+                <a
+                  href={slide.mapLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="self-start font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
+                >
+                  {slide.location}
+                </a>
+              ) : (
+                <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
+                  {slide.location}
+                </span>
+              )
             )}
             {slide.note && (
               <span className="font-sans text-sm text-brand-grey/50 italic">

@@ -29,6 +29,7 @@ const EVENTS_QUERY = `*[
   title,
   "locationName": location.locationName,
   "location": location.displayAddress,
+  "mapLink": location.mapLink,
   schedule,
   note,
   type,
@@ -171,19 +172,24 @@ export default async function Home() {
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12">
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative overflow-hidden">
-          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate, displayTime }, i) => (
-              <Link
+          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate, displayTime }, i) => {
+            const eventHref =
+              event.eventPageType === "external" && event.externalUrl
+                ? event.externalUrl
+                : event.eventPageType === "internal-link" && event.internalPath
+                ? event.internalPath
+                : event.eventPageType === "internal" && event.slug
+                ? `/events/${event.slug}`
+                : "/events";
+            const locationLabel = event.locationName || (event.location ? trimAddress(event.location) : "");
+            return (
+              // Stretched link: the row is a plain div and the event link is the
+              // title, whose ::after covers the row. That keeps the whole row
+              // clickable while leaving the map link a sibling rather than an
+              // <a> nested inside an <a>.
+              <div
                 key={key}
-                href={
-                  event.eventPageType === "external" && event.externalUrl
-                    ? event.externalUrl
-                    : event.eventPageType === "internal-link" && event.internalPath
-                    ? event.internalPath
-                    : event.eventPageType === "internal" && event.slug
-                    ? `/events/${event.slug}`
-                    : "/events"
-                }
-                className={`group gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors${i >= 5 ? " hidden md:grid" : " flex flex-col md:grid"} md:grid-cols-[10rem_1fr_auto]`}
+                className={`group relative gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors${i >= 5 ? " hidden md:grid" : " flex flex-col md:grid"} md:grid-cols-[10rem_1fr_auto]`}
               >
                 {/* When — date over hours */}
                 <span className="flex flex-row md:flex-col items-baseline md:items-start gap-x-1.5 md:gap-x-0 md:gap-y-0.5">
@@ -202,9 +208,12 @@ export default async function Home() {
 
                 {/* Title + badge */}
                 <span className="flex items-center gap-3">
-                  <span className="font-display font-bold text-lg md:text-xl lg:text-2xl uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors">
+                  <Link
+                    href={eventHref}
+                    className="font-display font-bold text-lg md:text-xl lg:text-2xl uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors after:content-[''] after:absolute after:inset-0"
+                  >
                     {event.title}
-                  </span>
+                  </Link>
                   {event.type === "ticketed" && (
                     <span className="hidden sm:inline-flex font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-1.5 py-0.5 rounded-sm shrink-0">
                       Ticketed
@@ -218,17 +227,41 @@ export default async function Home() {
                 </span>
 
 
-                {/* Location — mobile */}
+                {/* Location — mobile. py/-my pair grows the tap target past 24px
+                    without moving the text; z-1 lifts it over the stretched link. */}
                 <span className="md:hidden font-sans text-[10px] uppercase tracking-[0.15em] text-brand-grey/50 mt-1">
-                  {event.locationName || (event.location ? trimAddress(event.location) : "")}
+                  {event.mapLink && locationLabel ? (
+                    <a
+                      href={event.mapLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative z-[1] inline-block py-1.5 -my-1.5 hover:text-brand-grey/80 underline-offset-2 hover:underline transition-colors"
+                    >
+                      {locationLabel}
+                    </a>
+                  ) : (
+                    locationLabel
+                  )}
                 </span>
 
                 {/* Location — desktop */}
                 <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-grey/60 hidden md:block text-right">
-                  {event.locationName || (event.location ? trimAddress(event.location) : "")}
+                  {event.mapLink && locationLabel ? (
+                    <a
+                      href={event.mapLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative z-[1] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
+                    >
+                      {locationLabel}
+                    </a>
+                  ) : (
+                    locationLabel
+                  )}
                 </span>
-              </Link>
-          ))}
+              </div>
+            );
+          })}
 
           {/* See All Events row */}
           <Link

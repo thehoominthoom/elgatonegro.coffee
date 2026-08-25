@@ -13,6 +13,7 @@ export interface SanityEvent {
   schedule: ScheduleDay[] | null;
   locationName: string | null;
   location: string | null;
+  mapLink: string | null;
   image: SanityImageSource | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   note: string | null;
