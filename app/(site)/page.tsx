@@ -171,7 +171,7 @@ export default async function Home() {
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
       <section className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12">
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative overflow-hidden">
-          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate }, i) => (
+          {buildStripRows(sanityEvents, today).map(({ key, event, displayDate, displayTime }, i) => (
               <Link
                 key={key}
                 href={
@@ -183,11 +183,21 @@ export default async function Home() {
                     ? `/events/${event.slug}`
                     : "/events"
                 }
-                className={`group gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors${i >= 5 ? " hidden md:grid" : " flex flex-col md:grid"} md:grid-cols-[8rem_1fr_auto]`}
+                className={`group gap-1 md:gap-8 items-start md:items-center py-5 md:py-6 border-b border-brand-grey/10 hover:border-brand-grey/20 transition-colors${i >= 5 ? " hidden md:grid" : " flex flex-col md:grid"} md:grid-cols-[10rem_1fr_auto]`}
               >
-                {/* Date */}
-                <span className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.15em] text-brand-grey/50 tabular-nums">
-                  {displayDate}
+                {/* When — date over hours */}
+                <span className="flex flex-row md:flex-col items-baseline md:items-start gap-x-1.5 md:gap-x-0 md:gap-y-0.5">
+                  <span className="font-sans font-extrabold text-[10px] md:text-xs uppercase tracking-[0.15em] text-brand-grey/60 tabular-nums whitespace-nowrap">
+                    {displayDate}
+                  </span>
+                  {displayTime && (
+                    <>
+                      <span aria-hidden="true" className="md:hidden font-sans font-extrabold text-[10px] text-brand-grey/30">·</span>
+                      <span className="font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] text-brand-grey/60 tabular-nums whitespace-nowrap">
+                        {displayTime}
+                      </span>
+                    </>
+                  )}
                 </span>
 
                 {/* Title + badge */}

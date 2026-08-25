@@ -10,6 +10,16 @@ export function todayInCT(): string {
   });
 }
 
+/** YYYY-MM-DD shifted by whole days. Parsed and re-read in local calendar
+ *  terms, so the offset never crosses a timezone boundary. */
+export function addDays(dateStr: string, days: number): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const shifted = new Date(year, month - 1, day + days);
+  const shiftedMonth = String(shifted.getMonth() + 1).padStart(2, "0");
+  const shiftedDay = String(shifted.getDate()).padStart(2, "0");
+  return `${shifted.getFullYear()}-${shiftedMonth}-${shiftedDay}`;
+}
+
 /** Format a single YYYY-MM-DD date string for display — no UTC shift risk. */
 export function formatEventDate(dateStr: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
@@ -45,7 +55,7 @@ function dayLabel(dateStr: string, today: string): string {
 }
 
 /** Schedule times are free-typed in Sanity — treat absent or blank as "no time". */
-function trimTime(value: string | null | undefined): string {
+export function trimTime(value: string | null | undefined): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
@@ -73,4 +83,23 @@ export function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRec
   return uniform
     ? `${open} – ${close} CT`
     : `${dayLabel(next.date, today)}: ${open} – ${close} CT`;
+}
+
+const TIME_PATTERN = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
+
+/** Drop ":00" from a whole hour. Anything that isn't H:MM AM/PM — someone will
+ *  eventually type "Noon" — passes through rather than getting mangled. */
+function compactTime(value: string): string {
+  const trimmed = value.trim();
+  const match = TIME_PATTERN.exec(trimmed);
+  if (!match) return trimmed;
+  const [, hour, minute, meridiem] = match;
+  return minute === "00" ? `${hour} ${meridiem}` : `${hour}:${minute} ${meridiem}`;
+}
+
+/** Compact form for the events strip — "9 AM–3 PM". Tight en-dash, both
+ *  meridiems always, no CT suffix. Casing comes from the `uppercase` class.
+ *  Strip only: the long "9:00 AM – 3:00 PM CT" surfaces stay long on purpose. */
+export function formatTimeRange(open: string, close: string): string {
+  return `${compactTime(open)}–${compactTime(close)}`;
 }
