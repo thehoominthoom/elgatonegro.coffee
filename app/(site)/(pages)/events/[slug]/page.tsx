@@ -8,8 +8,10 @@ import { urlFor } from "@/sanity/lib/image";
 import {
   formatEventDate,
   formatEventDateRange,
+  formatHours,
   getHeroTimeContext,
   todayInCT,
+  trimTime,
 } from "@/lib/home/dates";
 
 // ─── ISR ──────────────────────────────────────────────────────────────────────
@@ -374,18 +376,27 @@ export default async function EventDetailPage({
     .join(" ")
     .slice(0, 200) || "";
 
+  // A blank time must drop the property rather than emit convertTo24h's "00:00"
+  // fallback, which would publish a midnight start or an end before its start.
+  const firstDay = schedule[0];
+  const lastDay = schedule[schedule.length - 1];
+  const startDate =
+    firstDay && trimTime(firstDay.openTime)
+      ? `${firstDay.date}T${convertTo24h(firstDay.openTime)}`
+      : null;
+  const endDate =
+    lastDay && trimTime(lastDay.closeTime)
+      ? `${lastDay.date}T${convertTo24h(lastDay.closeTime)}`
+      : null;
+
   const eventJsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
     ...(descriptionPlainText && { description: descriptionPlainText }),
     ...(event.image && { image: urlFor(event.image).width(1200).height(630).url() }),
-    ...(schedule[0] && {
-      startDate: `${schedule[0].date}T${convertTo24h(schedule[0].openTime)}`,
-    }),
-    ...(schedule.length > 0 && {
-      endDate: `${schedule[schedule.length - 1].date}T${convertTo24h(schedule[schedule.length - 1].closeTime)}`,
-    }),
+    ...(startDate && { startDate }),
+    ...(endDate && { endDate }),
     ...(event.locationName && {
       location: {
         "@type": "Place",
@@ -519,19 +530,24 @@ export default async function EventDetailPage({
           {/* Schedule strip */}
           {upcoming.length > 1 && (
             <div className="mb-10">
-              {upcoming.map((s) => (
-                <div
-                  key={s._key}
-                  className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 border-b border-brand-black/10 last:border-b-0"
-                >
-                  <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 tabular-nums">
-                    {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
-                  </span>
-                  <span className="font-display font-bold text-base sm:text-lg uppercase tracking-tight text-brand-black">
-                    {s.openTime} – {s.closeTime} CT
-                  </span>
-                </div>
-              ))}
+              {upcoming.map((s) => {
+                const hours = formatHours(s.openTime, s.closeTime);
+                return (
+                  <div
+                    key={s._key}
+                    className="flex flex-col sm:grid sm:grid-cols-[8rem_1fr] gap-1 sm:gap-8 items-start sm:items-center py-4 sm:py-5 border-b border-brand-black/10 last:border-b-0"
+                  >
+                    <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 tabular-nums">
+                      {formatDayOfWeek(s.date)}, {formatEventDate(s.date)}
+                    </span>
+                    {hours && (
+                      <span className="font-display font-bold text-base sm:text-lg uppercase tracking-tight text-brand-black">
+                        {hours} CT
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 

@@ -252,9 +252,13 @@ export const event = defineType({
               openTime?: string;
               closeTime?: string;
             }) {
+              // Same rule the site renders by: a blank close shows the open
+              // alone, a blank open shows no time at all.
+              const opens = openTime?.trim();
+              const closes = closeTime?.trim();
               const label = [
                 date,
-                openTime && closeTime ? `${openTime} – ${closeTime}` : null,
+                opens ? (closes ? `${opens} – ${closes}` : opens) : null,
               ]
                 .filter(Boolean)
                 .join(" · ");

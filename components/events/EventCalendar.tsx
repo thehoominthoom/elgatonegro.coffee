@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { trimAddress } from "@/lib/utils";
+import { formatHours } from "@/lib/home/dates";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -143,6 +144,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
   const [expanded, setExpanded] = useState(false);
   const schedule = event.schedule ?? [];
   const dayEntry = schedule.find((s) => s.date === dateStr);
+  const dayHours = dayEntry ? formatHours(dayEntry.openTime, dayEntry.closeTime) : "";
 
   // All dates for this event — used for range display when expanded
   const allDates = schedule.map((s) => s.date).sort();
@@ -167,9 +169,9 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           <span className="font-display font-bold text-lg uppercase tracking-tight text-brand-black leading-tight">
             {event.title}
           </span>
-          {dayEntry && (
+          {dayHours && (
             <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60">
-              {dayEntry.openTime} – {dayEntry.closeTime} CT
+              {dayHours} CT
             </span>
           )}
           {event.note && (
@@ -210,11 +212,14 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
                 Hours
               </span>
               <div className="mt-0.5 flex flex-col gap-0.5">
-                {schedule.map((s) => (
-                  <p key={s._key} className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black">
-                    {formatDate(s.date)}: {s.openTime} – {s.closeTime} CT
-                  </p>
-                ))}
+                {schedule.map((s) => {
+                  const hours = formatHours(s.openTime, s.closeTime);
+                  return (
+                    <p key={s._key} className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black">
+                      {hours ? `${formatDate(s.date)}: ${hours} CT` : formatDate(s.date)}
+                    </p>
+                  );
+                })}
               </div>
             </div>
           )}

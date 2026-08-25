@@ -1,5 +1,5 @@
 import type { SanityEvent, ScheduleDay } from "./types";
-import { addDays, formatEventDate, formatEventDateRange, formatTimeRange, trimTime } from "./dates";
+import { addDays, formatEventDate, formatEventDateRange, formatTimeRange } from "./dates";
 
 export type StripRow = {
   key: string;
@@ -15,15 +15,18 @@ const FALLBACK_ROWS = 3;
 
 /**
  * Hours for one row's dates. A single-date row is a set of one, so it needs no
- * special case: uniform hours print, mixed hours refuse to pick one, and a
- * blank time anywhere means the row prints no time at all.
+ * special case: uniform hours print and mixed hours refuse to pick one.
+ *
+ * Uniformity is judged on what would actually print, not on the raw fields. A
+ * date missing its close time reads "9 AM" where its siblings read "9 AM–3 PM",
+ * and that is a difference a reader would notice — so the row varies. When every
+ * date is missing its open time they all render "", which is uniform, and the
+ * row prints no time at all.
  */
 function rowDisplayTime(dates: ScheduleDay[]): string {
-  const times = dates.map((d) => ({ open: trimTime(d.openTime), close: trimTime(d.closeTime) }));
-  if (times.some((t) => !t.open || !t.close)) return "";
-  const [first] = times;
-  const uniform = times.every((t) => t.open === first.open && t.close === first.close);
-  return uniform ? formatTimeRange(first.open, first.close) : "Times vary";
+  const times = dates.map((d) => formatTimeRange(d.openTime, d.closeTime));
+  const [first = ""] = times;
+  return times.every((t) => t === first) ? first : "Times vary";
 }
 
 /** Rows for every schedule date in [from, until], sorted. `until` null = unbounded. */

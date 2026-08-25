@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
+import { formatHours } from "@/lib/home/dates";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -119,13 +120,16 @@ export async function CartStatusBar() {
 
             {openEvents.map(({ event, schedule }) => {
               const label = locationLabel(event);
+              const hours = formatHours(schedule!.openTime, schedule!.closeTime);
               return (
                 <div key={event._id} className="flex items-start gap-3 shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0 mt-1.5" />
                   <div className="flex flex-col">
-                    <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
-                      {schedule!.openTime} – {schedule!.closeTime} CT
-                    </span>
+                    {hours && (
+                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
+                        {hours} CT
+                      </span>
+                    )}
                     {label && (
                       event.mapLink ? (
                         <Link
