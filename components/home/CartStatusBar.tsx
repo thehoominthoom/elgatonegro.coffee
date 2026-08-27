@@ -93,13 +93,13 @@ export async function CartStatusBar() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center gap-x-6 overflow-x-auto scrollbar-hide">
         <span
           className={`font-sans font-semibold text-sm md:text-base uppercase tracking-[0.3em] shrink-0 ${
-            hasOpen ? "text-brand-grey" : "text-brand-grey/60"
+            hasOpen ? "text-brand-black" : "text-brand-grey/60"
           }`}
         >
           {hasOpen ? (
             <>
               {openEvents.length >= 2 && (
-                <span className="block text-[10px] tracking-[0.2em] text-brand-grey/70">
+                <span className="block text-[10px] tracking-[0.2em] text-brand-black/85">
                   {openEvents.length} Carts
                 </span>
               )}
@@ -116,7 +116,7 @@ export async function CartStatusBar() {
 
         {hasOpen && (
           <>
-            <span className="hidden md:block self-stretch w-0.5 shrink-0 bg-brand-grey/30" />
+            <span className="hidden md:block self-stretch w-0.5 shrink-0 bg-brand-black/30" />
 
             {openEvents.map(({ event, schedule }) => {
               const label = locationLabel(event);
@@ -126,7 +126,7 @@ export async function CartStatusBar() {
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0 mt-1.5" />
                   <div className="flex flex-col">
                     {hours && (
-                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-grey whitespace-nowrap">
+                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-black whitespace-nowrap">
                         {hours} CT
                       </span>
                     )}
@@ -136,12 +136,12 @@ export async function CartStatusBar() {
                           href={event.mapLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-sans font-semibold text-[10px] text-brand-grey/70 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors whitespace-nowrap"
+                          className="font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] hover:text-brand-black underline-offset-2 hover:underline transition-colors whitespace-nowrap"
                         >
                           {label}
                         </Link>
                       ) : (
-                        <span className="font-sans font-semibold text-[10px] text-brand-grey/70 uppercase tracking-[0.1em] whitespace-nowrap">
+                        <span className="font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] whitespace-nowrap">
                           {label}
                         </span>
                       )

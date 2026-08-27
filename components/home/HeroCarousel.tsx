@@ -216,7 +216,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           {/* Happening Now badge */}
           {slide.isHappeningNow && (
             <span
-              className="bg-brand-yellow text-brand-grey px-3 py-1 rounded-sm font-accent text-sm md:text-base -rotate-2 inline-block mb-3"
+              className="bg-brand-yellow text-brand-black px-3 py-1 rounded-sm font-accent text-sm md:text-base -rotate-2 inline-block mb-3"
               style={textAnim(transitioning, "happeningNow", mounted)}
             >
               Happening Now
@@ -225,7 +225,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
           {/* Event type tag */}
           <p
-            className="font-accent text-base md:text-lg uppercase tracking-[0.1em] text-brand-orange mb-3"
+            className="font-accent text-base md:text-lg uppercase tracking-[0.1em] text-brand-grey mb-3"
             style={textAnim(transitioning, "typeTag", mounted)}
           >
             {slide.type === "ticketed"
@@ -261,13 +261,13 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             className="flex flex-col gap-1 mb-8 pl-3 border-l-2 border-brand-orange/40"
             style={textAnim(transitioning, "dateMeta", mounted)}
           >
-            <span className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey/80">
+            <span className="font-sans font-extrabold text-base md:text-lg uppercase tracking-[0.15em] text-brand-grey">
               {slide.recurrenceLabel
                 ? `${slide.recurrenceLabel} · ${slide.dateRange}`
                 : slide.dateRange}
             </span>
             {slide.timeContext && (
-              <span className="font-sans font-semibold text-sm text-brand-grey/70 tracking-[0.05em] uppercase">
+              <span className="font-sans font-semibold text-sm text-brand-grey tracking-[0.05em] uppercase">
                 {slide.timeContext}
               </span>
             )}
@@ -277,18 +277,18 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                   href={slide.mapLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="self-start font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"
+                  className="self-start font-sans font-semibold text-sm text-brand-grey uppercase tracking-[0.1em] hover:text-brand-yellow underline-offset-2 hover:underline transition-colors"
                 >
                   {slide.location}
                 </a>
               ) : (
-                <span className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em]">
+                <span className="font-sans font-semibold text-sm text-brand-grey uppercase tracking-[0.1em]">
                   {slide.location}
                 </span>
               )
             )}
             {slide.note && (
-              <span className="font-sans text-sm text-brand-grey/50 italic">
+              <span className="font-sans text-sm text-brand-grey italic">
                 {slide.note}
               </span>
             )}
