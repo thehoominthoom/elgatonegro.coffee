@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
+import { googleMapsUrl } from "@/lib/maps";
 import { clients } from "@/lib/clients";
 import type { SanityEvent } from "@/lib/home/types";
 import { addDays, todayInCT } from "@/lib/home/dates";
@@ -40,7 +41,7 @@ const EVENTS_QUERY = `*[
   title,
   "locationName": location.locationName,
   "location": location.displayAddress,
-  "mapLink": location.mapLink,
+  "placeId": location.placeId,
   schedule,
   note,
   type,
@@ -218,6 +219,7 @@ export default async function Home() {
                 ? `/events/${event.slug}`
                 : "/events";
             const locationLabel = event.locationName || (event.location ? trimAddress(event.location) : "");
+            const mapLink = googleMapsUrl({ placeId: event.placeId, displayAddress: event.location });
             return (
               // Stretched link: the row is a plain div and the event link is the
               // title, whose ::after covers the row. That keeps the whole row
@@ -266,9 +268,9 @@ export default async function Home() {
                 {/* Location — mobile. py/-my pair grows the tap target past 24px
                     without moving the text; z-1 lifts it over the stretched link. */}
                 <span className="md:hidden font-sans text-[10px] uppercase tracking-[0.15em] text-brand-grey/50 mt-1">
-                  {event.mapLink && locationLabel ? (
+                  {mapLink && locationLabel ? (
                     <a
-                      href={event.mapLink}
+                      href={mapLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="relative z-[1] inline-block py-1.5 -my-1.5 hover:text-brand-grey/80 underline-offset-2 hover:underline transition-colors"
@@ -282,9 +284,9 @@ export default async function Home() {
 
                 {/* Location — desktop */}
                 <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-grey/60 hidden md:block text-right">
-                  {event.mapLink && locationLabel ? (
+                  {mapLink && locationLabel ? (
                     <a
-                      href={event.mapLink}
+                      href={mapLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="relative z-[1] hover:text-brand-grey underline-offset-2 hover:underline transition-colors"

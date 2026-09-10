@@ -3,6 +3,7 @@ import type { SanityEvent } from "./types";
 import { formatEventDateRange, getHeroTimeContext } from "./dates";
 import { urlFor } from "@/sanity/lib/image";
 import { trimAddress } from "@/lib/utils";
+import { googleMapsUrl } from "@/lib/maps";
 
 export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide[] {
   // Filter to events with images, compute next upcoming date, sort by it
@@ -34,7 +35,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
       dateRange,
       timeContext,
       location: e.locationName || (e.location ? trimAddress(e.location) : ""),
-      mapLink: e.mapLink ?? null,
+      mapLink: googleMapsUrl({ placeId: e.placeId, displayAddress: e.location }),
       type: e.type ?? "open",
       isHappeningNow,
       recurrenceLabel: e.recurrenceLabel ?? null,

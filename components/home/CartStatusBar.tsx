@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
+import { googleMapsUrl } from "@/lib/maps";
 import { formatHours } from "@/lib/home/dates";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -17,7 +18,7 @@ interface Event {
   title: string;
   locationName: string | null;
   displayAddress: string | null;
-  mapLink: string | null;
+  placeId: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   note: string | null;
   schedule: ScheduleDay[] | null;
@@ -37,7 +38,7 @@ const EVENTS_QUERY = `*[
   title,
   "locationName": location.locationName,
   "displayAddress": location.displayAddress,
-  "mapLink": location.mapLink,
+  "placeId": location.placeId,
   type,
   schedule,
   note
@@ -120,6 +121,7 @@ export async function CartStatusBar() {
 
             {openEvents.map(({ event, schedule }) => {
               const label = locationLabel(event);
+              const mapLink = googleMapsUrl(event);
               const hours = formatHours(schedule!.openTime, schedule!.closeTime);
               return (
                 <div key={event._id} className="flex items-start gap-3 shrink-0">
@@ -131,9 +133,9 @@ export async function CartStatusBar() {
                       </span>
                     )}
                     {label && (
-                      event.mapLink ? (
+                      mapLink ? (
                         <Link
-                          href={event.mapLink}
+                          href={mapLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] hover:text-brand-black underline-offset-2 hover:underline transition-colors whitespace-nowrap"

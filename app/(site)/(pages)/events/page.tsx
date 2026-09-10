@@ -56,7 +56,7 @@ const EVENTS_QUERY = `*[
   title,
   "locationName": location.locationName,
   "displayAddress": location.displayAddress,
-  "mapLink": location.mapLink,
+  "placeId": location.placeId,
   type,
   schedule,
   note,

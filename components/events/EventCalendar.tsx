@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { trimAddress } from "@/lib/utils";
+import { googleMapsUrl } from "@/lib/maps";
 import { formatHours } from "@/lib/home/dates";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -12,7 +13,7 @@ export interface CalendarEvent {
   title: string;
   locationName: string | null;
   displayAddress: string | null;
-  mapLink: string | null;
+  placeId: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   note: string | null;
   schedule: Array<{ _key: string; date: string; openTime: string; closeTime: string }> | null;
@@ -152,6 +153,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
   const locationDisplay =
     event.locationName ||
     (event.displayAddress ? trimAddress(event.displayAddress) : null);
+  const mapLink = googleMapsUrl(event);
 
   return (
     <div className="border border-brand-black/10 hover:border-brand-black/25 focus-within:border-brand-black/25 transition-colors">
@@ -225,14 +227,14 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           )}
 
           {/* Location */}
-          {(locationDisplay || event.mapLink) && (
+          {(locationDisplay || mapLink) && (
             <div>
               <span className="font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] text-brand-black/50">
                 Location
               </span>
-              {event.mapLink ? (
+              {mapLink ? (
                 <a
-                  href={event.mapLink}
+                  href={mapLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}

@@ -5,13 +5,13 @@ import { set, unset, PatchEvent, type ObjectInputProps } from "sanity";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 import { Stack, Text, Card } from "@sanity/ui";
 import { useState } from "react";
+import { googleMapsUrl } from "@/lib/maps";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface LocationValue {
   locationName?: string;
   displayAddress?: string;
-  mapLink?: string;
   placeId?: string;
 }
 
@@ -24,6 +24,16 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  // Mirrors what is typed in the uncontrolled address input, purely so the
+  // component can tell "typed but never picked from the dropdown" apart from a
+  // resolved selection. Never fed back into the input's value.
+  const [typedAddress, setTypedAddress] = useState(value?.displayAddress ?? "");
+
+  const mapLink = googleMapsUrl(value ?? {});
+  // Google writes the resolved address into the input node directly, which does not
+  // fire React's onChange — place_changed resyncs typedAddress, so a mismatch here
+  // only ever means the author typed free text and never chose a suggestion.
+  const isUnresolved = typedAddress.trim() !== (value?.displayAddress ?? "").trim();
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -48,17 +58,17 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
 
         autocompleteRef.current.addListener("place_changed", () => {
           const place = autocompleteRef.current!.getPlace();
-          if (!place.place_id) return;
+          // The Maps URLs search action needs a non-empty query, so an address is
+          // as load-bearing as the place ID. Refuse the selection without both
+          // rather than saving half a location.
+          const displayAddress = (place.formatted_address ?? place.name ?? "").trim();
+          if (!place.place_id || !displayAddress) return;
 
-          const displayAddress = place.formatted_address ?? "";
-          const mapLink = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`;
-          const placeId = place.place_id;
-
+          setTypedAddress(displayAddress);
           onChange(
             PatchEvent.from([
               set(displayAddress, ["displayAddress"]),
-              set(mapLink, ["mapLink"]),
-              set(placeId, ["placeId"]),
+              set(place.place_id, ["placeId"]),
             ])
           );
         });
@@ -83,13 +93,8 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
   };
 
   const handleClear = () => {
-    onChange(
-      PatchEvent.from([
-        unset(["displayAddress"]),
-        unset(["mapLink"]),
-        unset(["placeId"]),
-      ])
-    );
+    onChange(PatchEvent.from([unset(["displayAddress"]), unset(["placeId"])]));
+    setTypedAddress("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -157,6 +162,7 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
           defaultValue={value?.displayAddress ?? ""}
           placeholder="Search for an address or venue…"
           readOnly={readOnly ?? false}
+          onChange={(e) => setTypedAddress(e.currentTarget.value)}
           onBlur={(e) => {
             if (!e.currentTarget.value.trim()) handleClear();
           }}
@@ -183,14 +189,18 @@ export function GooglePlacesInput(props: GooglePlacesInputProps) {
         </Card>
       )}
 
-      {value?.mapLink && (
+      {isUnresolved && (
+        <Card padding={3} tone="caution" radius={2}>
+          <Text size={1}>
+            This address is not saved. Pick a suggestion from the Google dropdown to give
+            this event a working map link.
+          </Text>
+        </Card>
+      )}
+
+      {mapLink && (
         <Text size={1} muted>
-          <a
-            href={value.mapLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "inherit" }}
-          >
+          <a href={mapLink} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>
             View on Google Maps →
           </a>
         </Text>

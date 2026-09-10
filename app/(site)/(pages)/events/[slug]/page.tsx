@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, MapPin, ExternalLink } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { googleMapsUrl } from "@/lib/maps";
 import {
   formatEventDate,
   formatEventDateRange,
@@ -61,7 +62,7 @@ interface EventDetail {
   title: string;
   locationName: string | null;
   displayAddress: string | null;
-  mapLink: string | null;
+  placeId: string | null;
   type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
   schedule: ScheduleEntry[] | null;
   note: string | null;
@@ -86,7 +87,7 @@ const EVENT_QUERY = `*[_type == "event" && slug.current == $slug][0] {
   title,
   "locationName": location.locationName,
   "displayAddress": location.displayAddress,
-  "mapLink": location.mapLink,
+  "placeId": location.placeId,
   type,
   schedule,
   note,
@@ -369,6 +370,7 @@ export default async function EventDetailPage({
     : [];
   const today = todayInCT();
   const upcoming = schedule.filter((d) => d.date >= today);
+  const mapLink = googleMapsUrl(event);
 
   const descriptionPlainText = event.description
     ?.filter((b) => b._type === "block")
@@ -470,9 +472,9 @@ export default async function EventDetailPage({
             })()}
             {/* Line 3: location — as a link if mapLink exists */}
             {event.locationName && (
-              event.mapLink ? (
+              mapLink ? (
                 <a
-                  href={event.mapLink}
+                  href={mapLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-sans font-semibold text-sm text-brand-grey/60 uppercase tracking-[0.1em] hover:text-brand-grey transition-colors underline-offset-2 hover:underline"
@@ -508,9 +510,9 @@ export default async function EventDetailPage({
       <section id="details" className="bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
           {/* View Map — moved above description */}
-          {event.mapLink && (
+          {mapLink && (
             <a
-              href={event.mapLink}
+              href={mapLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-display font-bold text-sm uppercase tracking-[0.1em] text-brand-orange hover:text-brand-black transition-colors mb-8"

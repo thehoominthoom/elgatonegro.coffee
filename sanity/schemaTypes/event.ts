@@ -184,16 +184,28 @@ export const event = defineType({
           type: "string",
         }),
         defineField({
-          name: "mapLink",
-          title: "Google Maps Link",
-          type: "url",
-        }),
-        defineField({
           name: "placeId",
           title: "Place ID",
           type: "string",
         }),
       ],
+      // Both halves are written together when a Google suggestion is picked, so one
+      // without the other means the address was typed and never selected. Blocking
+      // publish is what stops that reaching the site as a location with no map link.
+      validation: (Rule) =>
+        Rule.custom((location) => {
+          const { displayAddress, placeId } = (location ?? {}) as {
+            displayAddress?: string;
+            placeId?: string;
+          };
+          if (displayAddress && !placeId) {
+            return "Pick this address from the Google dropdown so the event gets a map link.";
+          }
+          if (placeId && !displayAddress) {
+            return "This location has a Place ID but no address. Re-select it from the Google dropdown.";
+          }
+          return true;
+        }),
     }),
 
     // 9. Schedule
