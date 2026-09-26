@@ -7,6 +7,7 @@ import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
 import { googleMapsUrl } from "@/lib/maps";
 import { clients } from "@/lib/clients";
+import { SHOP_VISIBLE } from "@/lib/site-config";
 import type { SanityEvent } from "@/lib/home/types";
 import { addDays, todayInCT } from "@/lib/home/dates";
 import { buildStripRows, WINDOW_DAYS } from "@/lib/home/events";
@@ -126,9 +127,11 @@ export default async function Home() {
   let sanityEvents: SanityEvent[] = [];
   let featuredProducts: Product[] = [];
 
+  // No point paying for a Shopify round trip on every revalidation while the
+  // store section is gated out — nothing renders the result.
   const [eventsResult, productsResult] = await Promise.allSettled([
     client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
-    getAllProducts(6),
+    SHOP_VISIBLE ? getAllProducts(6) : Promise.resolve<Product[]>([]),
   ]);
 
   if (eventsResult.status === "fulfilled") sanityEvents = eventsResult.value;
@@ -315,165 +318,179 @@ export default async function Home() {
       </section>
 
       {/* ── 3. Ecommerce — Shop Preview ───────────────────────────────────── */}
-      <section className="bg-brand-grey grain-overlay py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          {/* Section header — minimal eyebrow */}
-          <div className="flex items-center justify-between mb-12 pb-4 border-b border-brand-black/10">
-            <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60">
-              The Store
-            </p>
-            <Link
-              href="/shop"
-              className="group inline-flex items-center gap-2 font-display text-sm md:text-base uppercase tracking-[0.2em] text-brand-black/50 hover:text-brand-orange transition-colors"
-            >
-              Full Shop <ArrowRight size={10} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+      {/* Gated out entirely while SHOP_VISIBLE is false — the <section> goes
+          with it, so no empty band or spacing artefact is left behind. */}
+      {SHOP_VISIBLE && (
+        <section className="bg-brand-grey grain-overlay py-20 md:py-28">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+            {/* Section header — minimal eyebrow */}
+            <div className="flex items-center justify-between mb-12 pb-4 border-b border-brand-black/10">
+              <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-black/60">
+                The Store
+              </p>
+              <Link
+                href="/shop"
+                className="group inline-flex items-center gap-2 font-display text-sm md:text-base uppercase tracking-[0.2em] text-brand-black/50 hover:text-brand-orange transition-colors"
+              >
+                Full Shop <ArrowRight size={10} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
 
-          {featuredProducts.length === 0 ? (
-            <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
-              Products coming soon.
-            </p>
-          ) : (
-            <>
-              {/* Featured product — two-column editorial spread */}
-              <div className="grid grid-cols-1 md:grid-cols-[55%_1fr] gap-8 md:gap-16 items-center">
-                {/* Left column — image */}
-                <Link
-                  href={`/shop/products/${featuredProducts[0].handle}`}
-                  className="group block"
-                >
-                  <div className="relative overflow-hidden aspect-square bg-brand-black grain-overlay">
-                    {featuredProducts[0].featuredImage ? (
-                      <Image
-                        src={featuredProducts[0].featuredImage.url}
-                        alt={featuredProducts[0].featuredImage.altText ?? featuredProducts[0].title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 55vw"
-                        className="object-cover photo-treatment transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-brand-black/10" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-transparent to-transparent" />
-                    {!featuredProducts[0].availableForSale && (
-                      <span className="absolute top-4 right-4 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-2 py-1 rounded-sm">
-                        Sold Out
-                      </span>
-                    )}
-                  </div>
-                </Link>
-
-                {/* Right column — text */}
-                <div>
-                  {featuredProducts[0].vendor && (
-                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-2">
-                      {featuredProducts[0].vendor}
-                    </p>
-                  )}
-                  <h3 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black leading-[1.1]">
-                    {featuredProducts[0].title}
-                  </h3>
-                  <p className="font-display font-bold text-xl text-brand-orange mt-4">
-                    {formatPrice(
-                      featuredProducts[0].priceRange.minVariantPrice.amount,
-                      featuredProducts[0].priceRange.minVariantPrice.currencyCode
-                    )}
-                  </p>
-                  {(() => {
-                    const roast = getMetafieldValues(featuredProducts[0].roastLevel);
-                    const flavor = getMetafieldValues(featuredProducts[0].flavorNotes);
-                    if (roast.length === 0 && flavor.length === 0) return null;
-                    return (
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {roast[0] && (
-                          <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/70 border border-brand-black/25 px-2 py-1 rounded-sm">
-                            {roast[0]}
-                          </span>
-                        )}
-                        {flavor.length > 0 && (
-                          <span className="font-sans text-xs text-brand-black/60 px-2 py-1">
-                            {flavor.join(", ")}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-
-              {/* Remaining products — 4-column grid */}
-              <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                {featuredProducts.slice(1, 5).map((product, i) => (
+            {featuredProducts.length === 0 ? (
+              <p className="font-sans text-sm text-brand-black/40 py-12 text-center">
+                Products coming soon.
+              </p>
+            ) : (
+              <>
+                {/* Featured product — two-column editorial spread */}
+                <div className="grid grid-cols-1 md:grid-cols-[55%_1fr] gap-8 md:gap-16 items-center">
+                  {/* Left column — image */}
                   <Link
-                    key={product.id}
-                    href={`/shop/products/${product.handle}`}
-                    className={`group${i >= 2 ? " hidden md:block" : " block"}`}
+                    href={`/shop/products/${featuredProducts[0].handle}`}
+                    className="group block"
                   >
-                    <div className="relative overflow-hidden aspect-square bg-brand-black grain-overlay-sm">
-                      {product.featuredImage ? (
+                    <div className="relative overflow-hidden aspect-square bg-brand-black grain-overlay">
+                      {featuredProducts[0].featuredImage ? (
                         <Image
-                          src={product.featuredImage.url}
-                          alt={product.featuredImage.altText ?? product.title}
+                          src={featuredProducts[0].featuredImage.url}
+                          alt={featuredProducts[0].featuredImage.altText ?? featuredProducts[0].title}
                           fill
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                          className="object-cover photo-treatment-sm transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 55vw"
+                          className="object-cover photo-treatment transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full bg-brand-black/10" />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 via-transparent to-transparent" />
-                      {!product.availableForSale && (
-                        <span className="absolute top-2 right-2 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-1.5 py-0.5 rounded-sm">
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-transparent to-transparent" />
+                      {!featuredProducts[0].availableForSale && (
+                        <span className="absolute top-4 right-4 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-2 py-1 rounded-sm">
                           Sold Out
                         </span>
                       )}
                     </div>
-                    <div className="pt-4">
-                      {product.vendor && (
-                        <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-brand-black/60 mb-1">
-                          {product.vendor}
-                        </p>
-                      )}
-                      <h3 className="font-display font-bold text-sm uppercase tracking-tight text-brand-black leading-tight mb-1">
-                        {product.title}
-                      </h3>
-                      <p className="font-display font-bold text-sm text-brand-orange">
-                        {formatPrice(
-                          product.priceRange.minVariantPrice.amount,
-                          product.priceRange.minVariantPrice.currencyCode
-                        )}
-                      </p>
-                      {(() => {
-                        const roast = getMetafieldValues(product.roastLevel);
-                        const flavor = getMetafieldValues(product.flavorNotes);
-                        if (roast.length === 0 && flavor.length === 0) return null;
-                        return (
-                          <div className="flex flex-col items-start gap-1.5 mt-1.5">
-                            {roast[0] && (
-                              <span className="font-sans text-[11px] uppercase tracking-[0.15em] text-brand-black/65 border border-brand-black/25 px-1.5 py-0.5 rounded-sm">
-                                {roast[0]}
-                              </span>
-                            )}
-                            {flavor.length > 0 && (
-                              <span className="font-sans text-[11px] text-brand-black/55 px-1.5 py-0.5">
-                                {flavor.join(", ")}
-                              </span>
-                            )}
-                          </div>
-                        );
-                      })()}
-                    </div>
                   </Link>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </section>
+
+                  {/* Right column — text */}
+                  <div>
+                    {featuredProducts[0].vendor && (
+                      <p className="font-sans text-xs uppercase tracking-[0.2em] text-brand-black/60 mb-2">
+                        {featuredProducts[0].vendor}
+                      </p>
+                    )}
+                    <h3 className="font-display font-bold text-3xl md:text-4xl uppercase tracking-tight text-brand-black leading-[1.1]">
+                      {featuredProducts[0].title}
+                    </h3>
+                    <p className="font-display font-bold text-xl text-brand-orange mt-4">
+                      {formatPrice(
+                        featuredProducts[0].priceRange.minVariantPrice.amount,
+                        featuredProducts[0].priceRange.minVariantPrice.currencyCode
+                      )}
+                    </p>
+                    {(() => {
+                      const roast = getMetafieldValues(featuredProducts[0].roastLevel);
+                      const flavor = getMetafieldValues(featuredProducts[0].flavorNotes);
+                      if (roast.length === 0 && flavor.length === 0) return null;
+                      return (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {roast[0] && (
+                            <span className="font-sans text-xs uppercase tracking-[0.15em] text-brand-black/70 border border-brand-black/25 px-2 py-1 rounded-sm">
+                              {roast[0]}
+                            </span>
+                          )}
+                          {flavor.length > 0 && (
+                            <span className="font-sans text-xs text-brand-black/60 px-2 py-1">
+                              {flavor.join(", ")}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Remaining products — 4-column grid */}
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {featuredProducts.slice(1, 5).map((product, i) => (
+                    <Link
+                      key={product.id}
+                      href={`/shop/products/${product.handle}`}
+                      className={`group${i >= 2 ? " hidden md:block" : " block"}`}
+                    >
+                      <div className="relative overflow-hidden aspect-square bg-brand-black grain-overlay-sm">
+                        {product.featuredImage ? (
+                          <Image
+                            src={product.featuredImage.url}
+                            alt={product.featuredImage.altText ?? product.title}
+                            fill
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover photo-treatment-sm transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-brand-black/10" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 via-transparent to-transparent" />
+                        {!product.availableForSale && (
+                          <span className="absolute top-2 right-2 z-[1] font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-black/80 text-brand-grey px-1.5 py-0.5 rounded-sm">
+                            Sold Out
+                          </span>
+                        )}
+                      </div>
+                      <div className="pt-4">
+                        {product.vendor && (
+                          <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-brand-black/60 mb-1">
+                            {product.vendor}
+                          </p>
+                        )}
+                        <h3 className="font-display font-bold text-sm uppercase tracking-tight text-brand-black leading-tight mb-1">
+                          {product.title}
+                        </h3>
+                        <p className="font-display font-bold text-sm text-brand-orange">
+                          {formatPrice(
+                            product.priceRange.minVariantPrice.amount,
+                            product.priceRange.minVariantPrice.currencyCode
+                          )}
+                        </p>
+                        {(() => {
+                          const roast = getMetafieldValues(product.roastLevel);
+                          const flavor = getMetafieldValues(product.flavorNotes);
+                          if (roast.length === 0 && flavor.length === 0) return null;
+                          return (
+                            <div className="flex flex-col items-start gap-1.5 mt-1.5">
+                              {roast[0] && (
+                                <span className="font-sans text-[11px] uppercase tracking-[0.15em] text-brand-black/65 border border-brand-black/25 px-1.5 py-0.5 rounded-sm">
+                                  {roast[0]}
+                                </span>
+                              )}
+                              {flavor.length > 0 && (
+                                <span className="font-sans text-[11px] text-brand-black/55 px-1.5 py-0.5">
+                                  {flavor.join(", ")}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── 4a. Clients ────────────────────────────────────────────────── */}
-      <section className="relative bg-brand-black py-14 md:py-20 overflow-hidden grain-overlay-dark">
+      {/* With the store section gated out, this dark band sits directly under
+          the equally dark events strip. The hairline separator is the same
+          device the strip uses at its own top edge — without it the two read
+          as one section and "Who We've Worked With" looks like a subheading of
+          the events list. It disappears with SHOP_VISIBLE, since the light
+          store band separates them on its own. */}
+      <section
+        className={`relative bg-brand-black py-14 md:py-20 overflow-hidden grain-overlay-dark${
+          SHOP_VISIBLE ? "" : " border-t border-brand-grey/10"
+        }`}
+      >
         {/* Background image */}
         <Image
           src="/images/hero/juan-stamping-cups.webp"

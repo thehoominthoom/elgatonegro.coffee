@@ -4,12 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, User, Menu, X } from "lucide-react";
 import { useCart } from "@/components/shop/CartProvider";
+import { SHOP_VISIBLE } from "@/lib/site-config";
 import { useNavDrawer } from "./NavDrawer";
 
 const navLinks: Array<{ label: string; href: string }> = [
   { label: "Find Us", href: "/events" },
   { label: "Services", href: "/services" },
-  { label: "Shop", href: "/shop" },
+  // Gated, not deleted — SHOP_VISIBLE in lib/site-config.ts puts it back here,
+  // in this position.
+  ...(SHOP_VISIBLE ? [{ label: "Shop", href: "/shop" }] : []),
   { label: "Menu", href: "/menu" },
   { label: "About", href: "/about" },
 ];
