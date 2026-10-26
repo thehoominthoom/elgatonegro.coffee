@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
+import { LocationsSection } from "@/components/locations/LocationsSection";
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
 import { googleMapsUrl } from "@/lib/maps";
@@ -12,6 +13,8 @@ import type { SanityEvent } from "@/lib/home/types";
 import { addDays, todayInCT } from "@/lib/home/dates";
 import { buildStripRows, WINDOW_DAYS } from "@/lib/home/events";
 import { buildHeroSlides } from "@/lib/home/hero";
+import { getLocationDisplay, getLocations, type LocationDisplay } from "@/lib/locations";
+import { locationJsonLd, serializeJsonLd } from "@/lib/seo/location-graph";
 import { getAllProducts } from "@/lib/shopify/storefront";
 import type { Product } from "@/lib/shopify/types";
 import { getMetafieldValues } from "@/lib/shopify/utils";
@@ -85,33 +88,42 @@ const services = [
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
-export const metadata: Metadata = {
-  title: { absolute: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart" },
-  alternates: { canonical: "/" },
-  description:
-    "Nashville's mobile espresso cart for pop-ups, weddings, brand activations, conventions, and private events. Find us, book the cart, or shop the brand.",
-  openGraph: {
-    title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+// From The Exchange's first open day the description names it. The switch is
+// automatic: generateMetadata re-runs on every regeneration, which the page's
+// 60 s fetch revalidation drives. YYYY-MM-DD strings compare in CT calendar days.
+const EXCHANGE_OPENS = "2026-11-02";
+
+export function generateMetadata(): Metadata {
+  return {
+    title: { absolute: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart" },
+    alternates: { canonical: "/" },
     description:
-      "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events.",
-    type: "website",
-    images: [
-      {
-        url: "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
-        width: 1200,
-        height: 630,
-        alt: "Phil and Juan setting up the El Gato Negro cart at The Exchange before service",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
-    description:
-      "Nashville mobile espresso cart. Pop-ups, weddings, brand activations, and private events.",
-    images: ["/images/hero/the_exchange-cart-setup-phil.juan-01.webp"],
-  },
-};
+      todayInCT() >= EXCHANGE_OPENS
+        ? "Nashville's mobile coffee cart. Find us inside The Exchange in East Nashville six mornings a week, or book the cart for weddings, pop-ups and private events."
+        : "Nashville's mobile espresso cart for pop-ups, weddings, brand activations, conventions, and private events. Find us or book the cart.",
+    openGraph: {
+      title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+      description:
+        "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events.",
+      type: "website",
+      images: [
+        {
+          url: "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
+          width: 1200,
+          height: 630,
+          alt: "Phil and Juan setting up the El Gato Negro cart at The Exchange before service",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
+      description:
+        "Nashville mobile espresso cart. Pop-ups, weddings, brand activations, and private events.",
+      images: ["/images/hero/the_exchange-cart-setup-phil.juan-01.webp"],
+    },
+  };
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -129,9 +141,12 @@ export default async function Home() {
 
   // No point paying for a Shopify round trip on every revalidation while the
   // store section is gated out — nothing renders the result.
-  const [eventsResult, productsResult] = await Promise.allSettled([
-    client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
-    SHOP_VISIBLE ? getAllProducts(6) : Promise.resolve<Product[]>([]),
+  const [[eventsResult, productsResult], locations] = await Promise.all([
+    Promise.allSettled([
+      client.fetch<SanityEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
+      SHOP_VISIBLE ? getAllProducts(6) : Promise.resolve<Product[]>([]),
+    ]),
+    getLocations(),
   ]);
 
   if (eventsResult.status === "fulfilled") sanityEvents = eventsResult.value;
@@ -139,6 +154,10 @@ export default async function Home() {
 
   const today = todayInCT();
   const heroSlides = buildHeroSlides(sanityEvents, today);
+  const locationDisplays = locations
+    .map((loc) => getLocationDisplay(loc, today))
+    .filter((loc): loc is LocationDisplay => loc !== null);
+  const locationNodes = locations.map((loc) => locationJsonLd(loc, today)).filter((node) => node !== null);
 
   // buildStripRows returns rows sorted ascending by sortDate, and only falls back
   // to the next few upcoming events when the 7-day window produced nothing at
@@ -185,6 +204,13 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
       />
+      {locationNodes.map((node) => (
+        <script
+          key={node["@id"]}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(node) }}
+        />
+      ))}
 
       {/* Stable page H1 — the carousel title is an h2 and disappears with zero events */}
       <h1 className="sr-only">
@@ -193,6 +219,9 @@ export default async function Home() {
 
       {/* ── 1. Culture — Hero Carousel ────────────────────────────────────── */}
       <HeroCarousel slides={heroSlides} />
+
+      {/* ── 2a. Find Us — Locations ───────────────────────────────────────── */}
+      <LocationsSection locations={locationDisplays} />
 
       {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
       <section

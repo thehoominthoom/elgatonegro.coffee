@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { EventCalendar } from "@/components/events/EventCalendar";
 import type { CalendarEvent } from "@/components/events/EventCalendar";
+import { LocationsSection } from "@/components/locations/LocationsSection";
+import { todayInCT } from "@/lib/home/dates";
+import { getLocationDisplay, getLocations, type LocationDisplay } from "@/lib/locations";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -72,12 +75,18 @@ const EVENTS_QUERY = `*[
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function EventsPage() {
-  let events: CalendarEvent[] = [];
-  try {
-    events = await client.fetch<CalendarEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } });
-  } catch {
-    // Sanity unavailable — render empty calendar
-  }
+  const [events, locations] = await Promise.all([
+    client
+      .fetch<CalendarEvent[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } })
+      // Sanity unavailable — render empty calendar
+      .catch((): CalendarEvent[] => []),
+    getLocations(),
+  ]);
+
+  const today = todayInCT();
+  const locationDisplays = locations
+    .map((loc) => getLocationDisplay(loc, today))
+    .filter((loc): loc is LocationDisplay => loc !== null);
 
   return (
     <>
@@ -96,6 +105,7 @@ export default async function EventsPage() {
       {/* ── Calendar ─────────────────────────────────────────────── */}
       <main className="min-h-screen bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-10">
+          <LocationsSection locations={locationDisplays} variant="compact" />
           <EventCalendar events={events} />
         </div>
       </main>

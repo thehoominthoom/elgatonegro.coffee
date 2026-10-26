@@ -57,6 +57,22 @@ function monthDayLabel(dateStr: string): string {
   return `${MONTH_NAMES[month - 1]} ${day}`;
 }
 
+/** "Mon, Nov 2" — the one date shape the Locations section uses. */
+export function dayDateLabel(dateStr: string): string {
+  return `${weekdayLabel(dateStr)}, ${monthDayLabel(dateStr)}`;
+}
+
+/** "07:00" → "7:00 AM", "12:00" → "12:00 PM". The 24-hour form is what the
+ *  location schema stores; this hands formatTimeRange the shape it compacts.
+ *  Anything that isn't HH:mm passes through untouched. */
+export function to12h(value: string | null | undefined): string {
+  const match = /^(\d{2}):(\d{2})$/.exec(trimTime(value));
+  if (!match) return trimTime(value);
+  const hour = Number(match[1]);
+  const display = hour % 12 === 0 ? 12 : hour % 12;
+  return `${display}:${match[2]} ${hour < 12 ? "AM" : "PM"}`;
+}
+
 /** Schedule times are free-typed in Sanity — treat absent or blank as "no time". */
 export function trimTime(value: string | null | undefined): string {
   return typeof value === "string" ? value.trim() : "";
