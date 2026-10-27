@@ -220,10 +220,7 @@ export default async function Home() {
       {/* ── 1. Culture — Hero Carousel ────────────────────────────────────── */}
       <HeroCarousel slides={heroSlides} />
 
-      {/* ── 2a. Find Us — Locations ───────────────────────────────────────── */}
-      <LocationsSection locations={locationDisplays} />
-
-      {/* ── 2b. Events Strip ──────────────────────────────────────────────── */}
+      {/* ── 2a. Events Strip ──────────────────────────────────────────────── */}
       <section
         aria-labelledby={stripRows.length > 0 ? "events-strip-heading" : undefined}
         className="bg-brand-black grain-overlay-dark border-t border-brand-grey/10 pt-8 md:pt-12 pb-8 md:pb-12"
@@ -345,6 +342,9 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* ── 2b. Find Us — Locations ───────────────────────────────────────── */}
+      <LocationsSection locations={locationDisplays} />
 
       {/* ── 3. Ecommerce — Shop Preview ───────────────────────────────────── */}
       {/* Gated out entirely while SHOP_VISIBLE is false — the <section> goes
@@ -509,12 +509,13 @@ export default async function Home() {
       )}
 
       {/* ── 4a. Clients ────────────────────────────────────────────────── */}
-      {/* With the store section gated out, this dark band sits directly under
-          the equally dark events strip. The hairline separator is the same
-          device the strip uses at its own top edge — without it the two read
-          as one section and "Who We've Worked With" looks like a subheading of
-          the events list. It disappears with SHOP_VISIBLE, since the light
-          store band separates them on its own. */}
+      {/* With the store section gated out and no published location, this dark
+          band sits directly under the equally dark events strip. The hairline
+          separator is the same device the strip uses at its own top edge —
+          without it the two read as one section and "Who We've Worked With"
+          looks like a subheading of the events list. When the light Find Us
+          band sits between them it is a no-op. It disappears with SHOP_VISIBLE,
+          since the light store band separates them on its own. */}
       <section
         className={`relative bg-brand-black py-14 md:py-20 overflow-hidden grain-overlay-dark${
           SHOP_VISIBLE ? "" : " border-t border-brand-grey/10"
