@@ -6,6 +6,7 @@ import { ArrowRight, MapPin, ExternalLink } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { googleMapsUrl } from "@/lib/maps";
+import { serializeJsonLd } from "@/lib/seo/location-graph";
 import {
   formatEventDate,
   formatEventDateRange,
@@ -420,7 +421,7 @@ export default async function EventDetailPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(eventJsonLd) }}
       />
 
       {/* ── 1. Hero ──────────────────────────────────────────────────────── */}
