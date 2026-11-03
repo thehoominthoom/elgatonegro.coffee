@@ -36,9 +36,12 @@ interface Event {
 // Only fetch events that are public and have a schedule entry on or after today (CT).
 // GROQ dateTime() runs in UTC; subtract 30h to cover the full CT calendar day —
 // event remains visible until midnight CT (30h covers CST worst-case end of day).
+// A promotion is someone else's event with no cart at it, so it never reaches the
+// bar. A document with no type still matches: GROQ's != is true against a missing field.
 const EVENTS_QUERY = `*[
   _type == "event" &&
   isPublic == true &&
+  type != "promo" &&
   count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
 ] {
   _id,

@@ -14,9 +14,9 @@ export interface CalendarEvent {
   locationName: string | null;
   displayAddress: string | null;
   placeId: string | null;
-  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag" | "promo";
   note: string | null;
-  schedule: Array<{ _key: string; date: string; openTime: string; closeTime: string }> | null;
+  schedule: Array<{ _key: string; date: string; openTime?: string | null; closeTime?: string | null }> | null;
   recurrenceLabel: string | null;
   eventPageType: "internal" | "internal-link" | "external" | null;
   externalUrl: string | null;
@@ -117,10 +117,11 @@ function eventsOnDate(events: CalendarEvent[], dateStr: string): CalendarEvent[]
 function dotColor(type: CalendarEvent["type"]): string {
   if (type === "ticketed") return "bg-brand-orange";
   if (type === "fundraiser") return "bg-brand-teal";
+  if (type === "promo") return "bg-brand-green";
   return "bg-brand-black";
 }
 
-/** Badge markup for ticketed / fundraiser types. */
+/** Badge markup for ticketed / fundraiser / promo types. */
 function TypeBadge({ type }: { type: CalendarEvent["type"] }) {
   if (type === "ticketed") {
     return (
@@ -133,6 +134,13 @@ function TypeBadge({ type }: { type: CalendarEvent["type"] }) {
     return (
       <span className="inline-flex font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-teal text-brand-grey px-1.5 py-0.5 shrink-0">
         Fundraiser
+      </span>
+    );
+  }
+  if (type === "promo") {
+    return (
+      <span className="inline-flex font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-green text-brand-grey px-1.5 py-0.5 shrink-0">
+        Community Event
       </span>
     );
   }
@@ -149,6 +157,11 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
 
   // All dates for this event — used for range display when expanded
   const allDates = schedule.map((s) => s.date).sort();
+
+  // A promotion has no hours, so its date range takes their place on the card.
+  const isPromo = event.type === "promo";
+  const when = isPromo ? formatDateRange(allDates) : dayHours && `${dayHours} CT`;
+  const linkLabel = isPromo ? "Learn More" : "View Event";
 
   const locationDisplay =
     event.locationName ||
@@ -171,9 +184,9 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           <span className="font-display font-bold text-lg uppercase tracking-tight text-brand-black leading-tight">
             {event.title}
           </span>
-          {dayHours && (
+          {when && (
             <span className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/60">
-              {dayHours} CT
+              {when}
             </span>
           )}
           {event.note && (
@@ -208,7 +221,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           )}
 
           {/* All times */}
-          {schedule.length > 0 && (
+          {schedule.length > 0 && !isPromo && (
             <div>
               <span className="font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] text-brand-black/50">
                 Hours
@@ -266,7 +279,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
-              View Event <ExternalLink size={11} />
+              {linkLabel} <ExternalLink size={11} />
             </a>
           )}
           {event.eventPageType === "internal-link" && event.internalPath && (
@@ -275,7 +288,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
-              View Event
+              {linkLabel}
             </a>
           )}
           {event.eventPageType === "internal" && event.slug && (
@@ -284,7 +297,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
-              View Event
+              {linkLabel}
             </a>
           )}
         </div>

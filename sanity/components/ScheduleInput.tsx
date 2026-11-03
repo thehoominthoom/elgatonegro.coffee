@@ -10,8 +10,8 @@ import { generateTimeOptions } from "../schemaTypes/event";
 interface ScheduleDay {
   _key: string;
   date: string;
-  openTime: string;
-  closeTime: string;
+  openTime?: string;
+  closeTime?: string;
 }
 
 type Mode = "single" | "multiday" | "recurring";
@@ -188,10 +188,12 @@ function DateInput({
 
 function ScheduleRow({
   row,
+  showTimes,
   onUpdate,
   onRemove,
 }: {
   row: ScheduleDay;
+  showTimes: boolean;
   onUpdate: (updated: ScheduleDay) => void;
   onRemove: () => void;
 }) {
@@ -223,17 +225,21 @@ function ScheduleRow({
           color: "var(--card-fg-color)",
         }}
       />
-      <TimeSelect
-        value={row.openTime}
-        onChange={(v) => onUpdate({ ...row, openTime: v })}
-        placeholder="Opens"
-      />
-      <span style={{ fontSize: "12px", color: "var(--card-muted-fg-color)" }}>–</span>
-      <TimeSelect
-        value={row.closeTime}
-        onChange={(v) => onUpdate({ ...row, closeTime: v })}
-        placeholder="Closes"
-      />
+      {showTimes && (
+        <>
+          <TimeSelect
+            value={row.openTime ?? ""}
+            onChange={(v) => onUpdate({ ...row, openTime: v })}
+            placeholder="Opens"
+          />
+          <span style={{ fontSize: "12px", color: "var(--card-muted-fg-color)" }}>–</span>
+          <TimeSelect
+            value={row.closeTime ?? ""}
+            onChange={(v) => onUpdate({ ...row, closeTime: v })}
+            placeholder="Closes"
+          />
+        </>
+      )}
       <button
         type="button"
         onClick={onRemove}
@@ -264,6 +270,7 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
 
   const documentId = useFormValue(["_id"]) as string | undefined;
   const documentType = useFormValue(["_type"]) as string | undefined;
+  const showTimes = useFormValue(["type"]) !== "promo";
   // useDocumentOperation requires a stable non-undefined id + type.
   // Strip the drafts. prefix — the hook expects the published document ID.
   // Fall back to empty strings — the patch calls below are guarded by the documentId check.
@@ -309,11 +316,20 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
     patchRows(rows.filter((_, i) => i !== index));
   }
 
+  // A promotion stores date-only rows: no time keys at all, not blank ones.
+  function timeKeys(openTime: string, closeTime: string) {
+    return showTimes ? { openTime, closeTime } : {};
+  }
+
+  const singleReady = singleDate && (!showTimes || (singleOpen && singleClose));
+  const multiReady = multiStart && multiEnd && (!showTimes || (multiDefaultOpen && multiDefaultClose));
+  const recurReady = recurEndDate && (!showTimes || (recurDefaultOpen && recurDefaultClose));
+
   // ── Mode A — single day ──────────────────────────────────────────────────
 
   function applySingle() {
-    if (!singleDate || !singleOpen || !singleClose) return;
-    patchRows([{ _key: nanoid(), date: singleDate, openTime: singleOpen, closeTime: singleClose }]);
+    if (!singleReady) return;
+    patchRows([{ _key: nanoid(), date: singleDate, ...timeKeys(singleOpen, singleClose) }]);
     setSingleDate("");
     setSingleOpen("");
     setSingleClose("");
@@ -322,15 +338,14 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
   // ── Mode B — multi-day ───────────────────────────────────────────────────
 
   function applyMultiDay() {
-    if (!multiStart || !multiEnd || !multiDefaultOpen || !multiDefaultClose) return;
+    if (!multiReady) return;
     const dates = generateDatesForRange(multiStart, multiEnd);
     if (!dates.length) return;
     patchRows(
       dates.map((d) => ({
         _key: nanoid(),
         date: d,
-        openTime: multiDefaultOpen,
-        closeTime: multiDefaultClose,
+        ...timeKeys(multiDefaultOpen, multiDefaultClose),
       }))
     );
   }
@@ -338,15 +353,14 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
   // ── Mode C — recurring ───────────────────────────────────────────────────
 
   function applyRecurring() {
-    if (!recurEndDate || !recurDefaultOpen || !recurDefaultClose) return;
+    if (!recurReady) return;
     const dates = generateRecurringDates(recurPattern, recurWeekday, recurEndDate);
     if (!dates.length) return;
     patchRows(
       dates.map((d) => ({
         _key: nanoid(),
         date: d,
-        openTime: recurDefaultOpen,
-        closeTime: recurDefaultClose,
+        ...timeKeys(recurDefaultOpen, recurDefaultClose),
       }))
     );
     if (documentId) {
@@ -411,21 +425,25 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
           <Stack space={3}>
             <div style={{ display: "flex", alignItems: "flex-end", gap: "8px", flexWrap: "wrap" }}>
               <DateInput value={singleDate} onChange={setSingleDate} label="Date" />
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Opens</span>
-                <TimeSelect value={singleOpen} onChange={setSingleOpen} placeholder="Opens" />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Closes</span>
-                <TimeSelect value={singleClose} onChange={setSingleClose} placeholder="Closes" />
-              </div>
+              {showTimes && (
+                <>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Opens</span>
+                    <TimeSelect value={singleOpen} onChange={setSingleOpen} placeholder="Opens" />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Closes</span>
+                    <TimeSelect value={singleClose} onChange={setSingleClose} placeholder="Closes" />
+                  </div>
+                </>
+              )}
             </div>
             <div>
               <Button
                 text="Set Day"
                 tone="primary"
                 onClick={applySingle}
-                disabled={!singleDate || !singleOpen || !singleClose}
+                disabled={!singleReady}
               />
             </div>
           </Stack>
@@ -440,22 +458,24 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
               <DateInput value={multiStart} onChange={setMultiStart} label="Start Date" />
               <DateInput value={multiEnd} onChange={setMultiEnd} label="End Date" />
             </div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Opens</span>
-                <TimeSelect value={multiDefaultOpen} onChange={setMultiDefaultOpen} placeholder="Opens" />
+            {showTimes && (
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Opens</span>
+                  <TimeSelect value={multiDefaultOpen} onChange={setMultiDefaultOpen} placeholder="Opens" />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Closes</span>
+                  <TimeSelect value={multiDefaultClose} onChange={setMultiDefaultClose} placeholder="Closes" />
+                </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Closes</span>
-                <TimeSelect value={multiDefaultClose} onChange={setMultiDefaultClose} placeholder="Closes" />
-              </div>
-            </div>
+            )}
             <div>
               <Button
                 text="Apply to All Days"
                 tone="primary"
                 onClick={applyMultiDay}
-                disabled={!multiStart || !multiEnd || !multiDefaultOpen || !multiDefaultClose}
+                disabled={!multiReady}
               />
             </div>
           </Stack>
@@ -495,22 +515,24 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
               </div>
               <DateInput value={recurEndDate} onChange={setRecurEndDate} label="End Date" />
             </div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Opens</span>
-                <TimeSelect value={recurDefaultOpen} onChange={setRecurDefaultOpen} placeholder="Opens" />
+            {showTimes && (
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Opens</span>
+                  <TimeSelect value={recurDefaultOpen} onChange={setRecurDefaultOpen} placeholder="Opens" />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Closes</span>
+                  <TimeSelect value={recurDefaultClose} onChange={setRecurDefaultClose} placeholder="Closes" />
+                </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--card-fg-color)", fontFamily: "inherit" }}>Default Closes</span>
-                <TimeSelect value={recurDefaultClose} onChange={setRecurDefaultClose} placeholder="Closes" />
-              </div>
-            </div>
+            )}
             <div>
               <Button
                 text="Generate Dates"
                 tone="primary"
                 onClick={applyRecurring}
-                disabled={!recurEndDate || !recurDefaultOpen || !recurDefaultClose}
+                disabled={!recurReady}
               />
             </div>
           </Stack>
@@ -527,6 +549,7 @@ export function ScheduleInput(props: ArrayOfObjectsInputProps) {
             <ScheduleRow
               key={row._key || i}
               row={row}
+              showTimes={showTimes}
               onUpdate={(updated) => updateRow(i, updated)}
               onRemove={() => removeRow(i)}
             />

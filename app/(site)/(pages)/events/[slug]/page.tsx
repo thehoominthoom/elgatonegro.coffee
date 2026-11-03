@@ -25,8 +25,8 @@ export const revalidate = 60;
 interface ScheduleEntry {
   _key: string;
   date: string;
-  openTime: string;
-  closeTime: string;
+  openTime?: string | null;
+  closeTime?: string | null;
 }
 
 interface CtaItem {
@@ -64,7 +64,7 @@ interface EventDetail {
   locationName: string | null;
   displayAddress: string | null;
   placeId: string | null;
-  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag" | "promo";
   schedule: ScheduleEntry[] | null;
   note: string | null;
   recurrenceLabel: string | null;
@@ -137,6 +137,7 @@ const TYPE_LABELS: Record<EventDetail["type"], string> = {
   fundraiser: "Fundraiser",
   sale: "Sale",
   "new-swag": "New Swag",
+  promo: "Community Event",
 };
 
 const HERO_BUTTON_TEXT: Record<EventDetail["type"], string> = {
@@ -146,6 +147,7 @@ const HERO_BUTTON_TEXT: Record<EventDetail["type"], string> = {
   fundraiser: "Donate",
   sale: "Shop Now",
   "new-swag": "Shop Now",
+  promo: "Learn More",
 };
 
 function formatDayOfWeek(dateStr: string): string {
@@ -318,7 +320,10 @@ export async function generateMetadata({
     ?.filter((b) => b._type === "block")
     .flatMap((b) => b.children?.map((c) => c.text) ?? [])
     .join(" ")
-    .slice(0, 160) || `${event.title} — El Gato Negro Coffee event.`;
+    .slice(0, 160) ||
+    (event.type === "promo"
+      ? `${event.title} — community event.`
+      : `${event.title} — El Gato Negro Coffee event.`);
 
   return {
     title: event.title,
@@ -372,6 +377,7 @@ export default async function EventDetailPage({
   const today = todayInCT();
   const upcoming = schedule.filter((d) => d.date >= today);
   const mapLink = googleMapsUrl(event);
+  const isPromo = event.type === "promo";
 
   const descriptionPlainText = event.description
     ?.filter((b) => b._type === "block")
@@ -381,16 +387,17 @@ export default async function EventDetailPage({
 
   // A blank time must drop the property rather than emit convertTo24h's "00:00"
   // fallback, which would publish a midnight start or an end before its start.
+  // A promotion has dates and no times, and someone else organises it.
   const firstDay = schedule[0];
   const lastDay = schedule[schedule.length - 1];
-  const startDate =
-    firstDay && trimTime(firstDay.openTime)
-      ? `${firstDay.date}T${convertTo24h(firstDay.openTime)}`
-      : null;
-  const endDate =
-    lastDay && trimTime(lastDay.closeTime)
-      ? `${lastDay.date}T${convertTo24h(lastDay.closeTime)}`
-      : null;
+  const openTime = trimTime(firstDay?.openTime);
+  const closeTime = trimTime(lastDay?.closeTime);
+  const startDate = isPromo
+    ? firstDay?.date
+    : openTime && `${firstDay.date}T${convertTo24h(openTime)}`;
+  const endDate = isPromo
+    ? lastDay?.date
+    : closeTime && `${lastDay.date}T${convertTo24h(closeTime)}`;
 
   const eventJsonLd = {
     "@context": "https://schema.org",
@@ -407,11 +414,13 @@ export default async function EventDetailPage({
         ...(event.displayAddress && { address: event.displayAddress }),
       },
     }),
-    organizer: {
-      "@type": "Organization",
-      name: "El Gato Negro Coffee",
-      url: "https://www.elgatonegro.coffee",
-    },
+    ...(!isPromo && {
+      organizer: {
+        "@type": "Organization",
+        name: "El Gato Negro Coffee",
+        url: "https://www.elgatonegro.coffee",
+      },
+    }),
   };
 
   const heroButtonText = HERO_BUTTON_TEXT[event.type] || "View Details";
@@ -463,7 +472,7 @@ export default async function EventDetailPage({
               </span>
             )}
             {/* Line 2: time context — "Today: 9AM–3PM CT" or "Next: Mon 11AM–2PM CT" */}
-            {upcoming.length > 0 && (() => {
+            {upcoming.length > 0 && !isPromo && (() => {
               const timeContext = getHeroTimeContext(upcoming, today, !!event.recurrenceLabel);
               return timeContext ? (
                 <span className="font-sans font-semibold text-sm text-brand-grey/70 tracking-[0.05em] uppercase">
@@ -530,8 +539,9 @@ export default async function EventDetailPage({
             </div>
           )}
 
-          {/* Schedule strip */}
-          {upcoming.length > 1 && (
+          {/* Schedule strip — not on a promotion: with no hours, a multi-week run is
+              a long list of bare dates between the description and its link. */}
+          {upcoming.length > 1 && !isPromo && (
             <div className="mb-10">
               {upcoming.map((s) => {
                 const hours = formatHours(s.openTime, s.closeTime);

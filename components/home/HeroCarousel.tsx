@@ -14,7 +14,7 @@ export interface HeroSlide {
   timeContext: string | null;
   location: string;
   mapLink: string | null;
-  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
+  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag" | "promo";
   isHappeningNow: boolean;
   recurrenceLabel: string | null;
   note: string | null;
@@ -65,6 +65,7 @@ const HERO_BUTTON_TEXT: Record<HeroSlide["type"], string> = {
   fundraiser: "Donate",
   sale: "Shop Now",
   "new-swag": "Shop Now",
+  promo: "Learn More",
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -238,7 +239,9 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                     ? "Sale"
                     : slide.type === "new-swag"
                       ? "New Swag"
-                      : "We're Serving"}
+                      : slide.type === "promo"
+                        ? "Community Event"
+                        : "We're Serving"}
           </p>
 
           {/* Title */}

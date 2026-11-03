@@ -41,6 +41,19 @@ function collectRows(events: SanityEvent[], from: string, until: string | null):
     const windowDates = sorted.filter((d) => d.date >= from && (until === null || d.date <= until));
     if (!windowDates.length) continue;
 
+    // A promotion is one row with the dates it has left and no hours, not cut to
+    // the window: a crawl running to the 30th must not read as ending this week.
+    if (event.type === "promo") {
+      rows.push({
+        key: event._id,
+        event,
+        displayDate: formatEventDateRange(sorted.filter((d) => d.date >= from)),
+        displayTime: "",
+        sortDate: windowDates[0].date,
+      });
+      continue;
+    }
+
     // Detect consecutive (multi-day) vs recurring (gaps between dates).
     // Every check below operates on windowDates only — dates outside the window
     // must not influence the consecutive test, the range, or the hours. A

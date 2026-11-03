@@ -20,7 +20,8 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
   return withNextDate.slice(0, 6).map(({ event: e, upcoming }) => {
     const isHappeningNow = upcoming.some((d) => d.date === today);
     const dateRange = upcoming.length ? formatEventDateRange(upcoming) : "";
-    const timeContext = upcoming.length ? getHeroTimeContext(upcoming, today, !!e.recurrenceLabel) : null;
+    const timeContext =
+      upcoming.length && e.type !== "promo" ? getHeroTimeContext(upcoming, today, !!e.recurrenceLabel) : null;
     const href =
       e.eventPageType === "external" && e.externalUrl
         ? e.externalUrl

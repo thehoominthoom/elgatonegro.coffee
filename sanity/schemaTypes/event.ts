@@ -36,6 +36,7 @@ export function generateTimeOptions(): Array<{ title: string; value: string }> {
 // fundraiser → "Donate"
 // sale       → "Shop Now"
 // new-swag   → "Shop Now"
+// promo      → "Learn More"
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -62,7 +63,7 @@ export const event = defineType({
       initialValue: true,
     }),
 
-    // 3. Event Type (badge/label only — no structural logic)
+    // 3. Event Type (badge and button; "promo" also drops times and the status bar)
     defineField({
       name: "type",
       title: "Event Type",
@@ -75,6 +76,7 @@ export const event = defineType({
           { title: "Fundraiser", value: "fundraiser" },
           { title: "Sale", value: "sale" },
           { title: "New Swag", value: "new-swag" },
+          { title: "Promotion (we're not serving)", value: "promo" },
         ],
         layout: "radio",
       },
@@ -235,7 +237,11 @@ export const event = defineType({
                 list: generateTimeOptions(),
                 layout: "dropdown",
               },
-              validation: (Rule) => Rule.required(),
+              hidden: ({ document }) => document?.type === "promo",
+              validation: (Rule) =>
+                Rule.custom((value, context) =>
+                  value || context.document?.type === "promo" ? true : "Required"
+                ),
             }),
             defineField({
               name: "closeTime",
@@ -246,7 +252,11 @@ export const event = defineType({
                 list: generateTimeOptions(),
                 layout: "dropdown",
               },
-              validation: (Rule) => Rule.required(),
+              hidden: ({ document }) => document?.type === "promo",
+              validation: (Rule) =>
+                Rule.custom((value, context) =>
+                  value || context.document?.type === "promo" ? true : "Required"
+                ),
             }),
           ],
           preview: {

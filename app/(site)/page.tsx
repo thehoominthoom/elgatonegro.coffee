@@ -291,6 +291,13 @@ export default async function Home() {
                       Fundraiser
                     </span>
                   )}
+                  {/* Shown at every width, unlike the two above: without it a
+                      promotion reads as somewhere the cart will be. */}
+                  {event.type === "promo" && (
+                    <span className="inline-flex font-sans font-extrabold text-[10px] uppercase tracking-[0.15em] bg-brand-green text-brand-grey px-1.5 py-0.5 rounded-sm shrink-0">
+                      Community Event
+                    </span>
+                  )}
                 </span>
 
 
