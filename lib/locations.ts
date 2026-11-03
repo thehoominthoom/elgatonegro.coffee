@@ -56,8 +56,8 @@ const LOCATIONS_QUERY = `*[
 }`;
 
 /** Throws when Sanity can't be reached, for a caller that must tell that apart from no locations. */
-export function fetchLocations(): Promise<SanityLocation[]> {
-  return client.fetch<SanityLocation[]>(LOCATIONS_QUERY, {}, { next: { revalidate: 60 } });
+export function fetchLocations(signal?: AbortSignal): Promise<SanityLocation[]> {
+  return client.fetch<SanityLocation[]>(LOCATIONS_QUERY, {}, { next: { revalidate: 60 }, signal });
 }
 
 export async function getLocations(): Promise<SanityLocation[]> {

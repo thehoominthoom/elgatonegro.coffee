@@ -47,6 +47,12 @@ const EVENTS_QUERY = `*[
   schedule
 }`;
 
+// The layout awaits the bar with no Suspense boundary, so a hung request would
+// hold up the whole page. Sanity's slowest uncached answer measured about 200 ms.
+// A signal, not the client's `timeout`: that one is per attempt, network errors
+// retry past it, and it leaves the request open.
+const SANITY_DEADLINE_MS = 2000;
+
 // ─── Pre-paint script ─────────────────────────────────────────────────────────
 
 // HTML from a cached page paints before React hydrates, so without this the bar
@@ -79,9 +85,10 @@ export async function CartStatusBar() {
   let events: Event[];
   let locations: SanityLocation[];
   try {
+    const signal = AbortSignal.timeout(SANITY_DEADLINE_MS);
     [events, locations] = await Promise.all([
-      client.fetch<Event[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
-      fetchLocations(),
+      client.fetch<Event[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 }, signal }),
+      fetchLocations(signal),
     ]);
   } catch (err) {
     console.error("[CartStatusBar] Sanity fetch failed:", err);
