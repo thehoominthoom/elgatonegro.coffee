@@ -1,26 +1,32 @@
-import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
 import { googleMapsUrl } from "@/lib/maps";
-import { formatHours } from "@/lib/home/dates";
+import { todayInCT } from "@/lib/home/dates";
+import { fetchLocations, locationDirectionsUrl, upcomingExceptions, type SanityLocation } from "@/lib/locations";
+import {
+  barStatus,
+  clockMinutes,
+  entryPhase,
+  readClockCT,
+  STATUS_LABELS,
+  type BarEvent,
+  type BarLocation,
+} from "@/lib/home/status-bar";
+import { CartStatusBarView } from "./CartStatusBarView";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ScheduleDay {
-  _key: string;
-  date: string;      // YYYY-MM-DD
-  openTime: string;  // e.g. "9:00 AM"
-  closeTime: string; // e.g. "3:00 PM"
+  date: string;              // YYYY-MM-DD
+  openTime?: string | null;  // e.g. "9:00 AM"
+  closeTime?: string | null; // e.g. "3:00 PM"
 }
 
 interface Event {
   _id: string;
-  title: string;
   locationName: string | null;
   displayAddress: string | null;
   placeId: string | null;
-  type: "open" | "ticketed" | "private" | "fundraiser" | "sale" | "new-swag";
-  note: string | null;
   schedule: ScheduleDay[] | null;
 }
 
@@ -35,126 +41,82 @@ const EVENTS_QUERY = `*[
   count(schedule[dateTime(date + "T00:00:00Z") >= dateTime(now()) - 60*60*30]) > 0
 ] {
   _id,
-  title,
   "locationName": location.locationName,
   "displayAddress": location.displayAddress,
   "placeId": location.placeId,
-  type,
-  schedule,
-  note
+  schedule
 }`;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Pre-paint script ─────────────────────────────────────────────────────────
 
-/** Today's date in CT as YYYY-MM-DD */
-function todayInCT(): string {
-  return new Date().toLocaleDateString("en-CA", {
-    timeZone: "America/Chicago",
-  });
-}
-
-function getTodaySchedule(event: Event): ScheduleDay | null {
-  if (!event.schedule) return null;
-  const today = todayInCT();
-  return event.schedule.find((d) => d.date === today) ?? null;
-}
+// HTML from a cached page paints before React hydrates, so without this the bar
+// would show the server's "Serving Today" and then change. The script sits right
+// after the bar and sets the same clock-driven values CartStatusBarView will.
+// If the page was cached on an earlier day, the whole bar is out of date, so it
+// stays hidden until React renders the right day. Its text is static: no Sanity
+// content reaches it.
+const PRE_PAINT_SCRIPT = `(function(){
+var readClockCT=${readClockCT},clockMinutes=${clockMinutes},entryPhase=${entryPhase},barStatus=${barStatus},labels=${JSON.stringify(STATUS_LABELS)};
+var bar=document.getElementById("cart-status-bar");if(!bar)return;
+var clock=readClockCT();
+if(clock.slice(0,10)!==bar.dataset.day){bar.dataset.clock="stale";return}
+var entries=bar.querySelectorAll("[data-entry]");if(!entries.length)return;
+var minutes=clockMinutes(clock),phases=[];
+var read=function(v){return v===undefined?null:Number(v)};
+entries.forEach(function(entry){
+var phase=entryPhase(read(entry.dataset.opens),read(entry.dataset.closes),minutes);phases.push(phase);
+entry.querySelector("[data-dot]").dataset.serving=String(phase==="serving");
+var back=entry.querySelector("[data-back]");if(back)back.hidden=phase!=="after";
+});
+var label=labels[barStatus(phases)];
+bar.querySelector('[data-line="1"]').textContent=label[0];
+bar.querySelector('[data-line="2"]').textContent=label[1];
+})()`;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export async function CartStatusBar() {
-  let events: Event[] = [];
+  let events: Event[];
+  let locations: SanityLocation[];
   try {
-    events = await client.fetch<Event[]>(
-      EVENTS_QUERY,
-      {},
-      { next: { revalidate: 60 } }
-    );
+    [events, locations] = await Promise.all([
+      client.fetch<Event[]>(EVENTS_QUERY, {}, { next: { revalidate: 60 } }),
+      fetchLocations(),
+    ]);
   } catch (err) {
     console.error("[CartStatusBar] Sanity fetch failed:", err);
-    // Fallback: render "no carts" state — never crash the layout
-    events = [];
+    // Saying "No Coffee Today" here could be false, so the bar goes. Never crash the layout.
+    return null;
   }
 
-  // Any event type (open, ticketed, private) means the cart is serving
-  const openEvents = events
-    .map((event) => ({ event, schedule: getTodaySchedule(event) }))
-    .filter(({ schedule }) => schedule !== null);
+  const renderedOn = todayInCT();
 
-  const hasOpen = openEvents.length > 0;
-
-  const locationLabel = (event: Event) =>
-    event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : null);
+  // Only what the browser needs to work out this day or any later one.
+  const barLocations: BarLocation[] = locations.map((loc) => ({
+    _id: loc._id,
+    name: loc.name,
+    isPublic: loc.isPublic,
+    startsOn: loc.startsOn,
+    endsOn: loc.endsOn,
+    weeklyHours: loc.weeklyHours,
+    exceptions: upcomingExceptions(loc, renderedOn),
+    displayAddress: loc.place?.displayAddress ?? null,
+    mapUrl: locationDirectionsUrl(loc),
+  }));
+  const barEvents: BarEvent[] = events.map((event) => ({
+    _id: event._id,
+    label: event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : null),
+    displayAddress: event.displayAddress,
+    mapUrl: googleMapsUrl(event),
+    schedule: (event.schedule ?? [])
+      .filter((day) => day.date >= renderedOn)
+      .map(({ date, openTime, closeTime }) => ({ date, openTime, closeTime })),
+  }));
 
   return (
-    <div
-      className={`w-full min-h-14 py-2 border-b border-brand-black/10 ${
-        hasOpen ? "bg-brand-yellow" : "bg-brand-black"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center gap-x-6 overflow-x-auto scrollbar-hide">
-        <span
-          className={`font-sans font-semibold text-sm md:text-base uppercase tracking-[0.3em] shrink-0 ${
-            hasOpen ? "text-brand-black" : "text-brand-grey/60"
-          }`}
-        >
-          {hasOpen ? (
-            <>
-              {openEvents.length >= 2 && (
-                <span className="block text-[10px] tracking-[0.2em] text-brand-black/85">
-                  {openEvents.length} Carts
-                </span>
-              )}
-              <span className="block">Serving</span>
-              <span className="block">Coffee</span>
-            </>
-          ) : (
-            <>
-              <span className="block">No Coffee</span>
-              <span className="block">Today</span>
-            </>
-          )}
-        </span>
-
-        {hasOpen && (
-          <>
-            <span className="hidden md:block self-stretch w-0.5 shrink-0 bg-brand-black/30" />
-
-            {openEvents.map(({ event, schedule }) => {
-              const label = locationLabel(event);
-              const mapLink = googleMapsUrl(event);
-              const hours = formatHours(schedule!.openTime, schedule!.closeTime);
-              return (
-                <div key={event._id} className="flex items-start gap-3 shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0 mt-1.5" />
-                  <div className="flex flex-col">
-                    {hours && (
-                      <span className="font-sans font-semibold text-sm uppercase tracking-[0.05em] text-brand-black whitespace-nowrap">
-                        {hours} CT
-                      </span>
-                    )}
-                    {label && (
-                      mapLink ? (
-                        <Link
-                          href={mapLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] hover:text-brand-black underline-offset-2 hover:underline transition-colors whitespace-nowrap"
-                        >
-                          {label}
-                        </Link>
-                      ) : (
-                        <span className="font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] whitespace-nowrap">
-                          {label}
-                        </span>
-                      )
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </>
-        )}
-      </div>
-    </div>
+    <>
+      <CartStatusBarView locations={barLocations} events={barEvents} renderedOn={renderedOn} />
+      <script dangerouslySetInnerHTML={{ __html: PRE_PAINT_SCRIPT }} />
+    </>
   );
 }

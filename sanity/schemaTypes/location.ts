@@ -184,7 +184,7 @@ export const location = defineType({
       name: "wayfinding",
       title: "Where to Find the Cart",
       type: "string",
-      description: 'One line, e.g. "Inside the store, by the front windows."',
+      description: 'One line, e.g. "Inside the store, in the back corner by the side windows."',
       validation: (Rule) => Rule.required(),
     }),
 

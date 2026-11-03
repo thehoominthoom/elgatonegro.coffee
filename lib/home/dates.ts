@@ -46,7 +46,7 @@ export function formatEventDateRange(schedule: ScheduleDay[]): string {
 
 /** "Sat" — no distance threshold. The caller picks weekday or date by what the
  *  line above already shows, not by how far away the day is. */
-function weekdayLabel(dateStr: string): string {
+export function weekdayLabel(dateStr: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
   return DAY_NAMES[new Date(year, month - 1, day).getDay()];
 }
@@ -131,10 +131,22 @@ export function getHeroTimeContext(schedule: ScheduleDay[], today: string, isRec
 }
 
 const TIME_PATTERN = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
+const CLOCK_TIME_PATTERN = /^(\d{1,2})(?::(\d{2}))?\s?(AM|PM)$/i;
+
+/** "7:30 AM" → 450, minutes since midnight. null for a blank time or anything
+ *  free-typed that can't be placed on a clock, such as "Noon". */
+export function timeToMinutes(value: string | null | undefined): number | null {
+  const match = CLOCK_TIME_PATTERN.exec(trimTime(value));
+  if (!match) return null;
+  const hour = Number(match[1]);
+  const minute = Number(match[2] ?? 0);
+  if (hour < 1 || hour > 12 || minute > 59) return null;
+  return (hour % 12 + (match[3].toUpperCase() === "PM" ? 12 : 0)) * 60 + minute;
+}
 
 /** Drop ":00" from a whole hour. Anything that isn't H:MM AM/PM — someone will
  *  eventually type "Noon" — passes through rather than getting mangled. */
-function compactTime(value: string | null | undefined): string {
+export function compactTime(value: string | null | undefined): string {
   const trimmed = trimTime(value);
   const match = TIME_PATTERN.exec(trimmed);
   if (!match) return trimmed;
@@ -142,9 +154,10 @@ function compactTime(value: string | null | undefined): string {
   return minute === "00" ? `${hour} ${meridiem}` : `${hour}:${minute} ${meridiem}`;
 }
 
-/** Compact form for the events strip — "9 AM–3 PM". Tight en-dash, both
- *  meridiems always, no CT suffix. Casing comes from the `uppercase` class.
- *  Strip only: the long "9:00 AM – 3:00 PM CT" surfaces stay long on purpose.
+/** Compact form — "9 AM–3 PM". Tight en-dash, both meridiems always, no CT
+ *  suffix. Casing comes from the `uppercase` class. The events strip, Find Us
+ *  and the status bar use it; the status bar adds its own CT. The long
+ *  "9:00 AM – 3:00 PM CT" surfaces stay long on purpose.
  *  A missing close time compacts to the open alone — "9 AM". */
 export function formatTimeRange(open: string | null | undefined, close: string | null | undefined): string {
   return formatHours(compactTime(open), compactTime(close), "–");
