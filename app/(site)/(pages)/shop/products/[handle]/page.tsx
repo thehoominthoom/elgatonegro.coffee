@@ -9,6 +9,7 @@ import {
 } from "@/lib/shopify/storefront";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { serializeJsonLd } from "@/lib/seo/location-graph";
 
 export const revalidate = 3600;
 
@@ -132,11 +133,11 @@ export default async function ProductPage({
     <main className="min-h-screen bg-brand-grey grain-overlay">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <div className="mx-auto max-w-7xl px-4 md:px-6 pt-8 md:pt-12 pb-16 md:pb-24 relative z-10">
         {/* Breadcrumb */}
