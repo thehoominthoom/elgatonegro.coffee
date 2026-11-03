@@ -1,8 +1,9 @@
 import { client } from "@/sanity/lib/client";
 import { trimAddress } from "@/lib/utils";
 import { googleMapsUrl } from "@/lib/maps";
-import { todayInCT } from "@/lib/home/dates";
-import { fetchLocations, locationDirectionsUrl, upcomingExceptions, type SanityLocation } from "@/lib/locations";
+import { addDays, todayInCT } from "@/lib/home/dates";
+import { fetchLocations, isLive, locationDirectionsUrl, upcomingExceptions, type SanityLocation } from "@/lib/locations";
+import { EXCEPTION_WINDOW_DAYS } from "@/lib/location-rules";
 import {
   barStatus,
   clockMinutes,
@@ -53,6 +54,11 @@ const EVENTS_QUERY = `*[
 // retry past it, and it leaves the request open.
 const SANITY_DEADLINE_MS = 2000;
 
+// A cached page can be this old before Vercel drops it: 31 days unvisited. It
+// still has to work out its "back" line then, so the browser gets the exceptions
+// for the whole look-ahead from the day it is finally opened.
+const CACHED_PAGE_MARGIN_DAYS = 31;
+
 // ─── Pre-paint script ─────────────────────────────────────────────────────────
 
 // HTML from a cached page paints before React hydrates, so without this the bar
@@ -99,17 +105,21 @@ export async function CartStatusBar() {
   const renderedOn = todayInCT();
 
   // Only what the browser needs to work out this day or any later one.
-  const barLocations: BarLocation[] = locations.map((loc) => ({
-    _id: loc._id,
-    name: loc.name,
-    isPublic: loc.isPublic,
-    startsOn: loc.startsOn,
-    endsOn: loc.endsOn,
-    weeklyHours: loc.weeklyHours,
-    exceptions: upcomingExceptions(loc, renderedOn),
-    displayAddress: loc.place?.displayAddress ?? null,
-    mapUrl: locationDirectionsUrl(loc),
-  }));
+  const exceptionsUntil = addDays(renderedOn, EXCEPTION_WINDOW_DAYS + CACHED_PAGE_MARGIN_DAYS);
+  const barLocations: BarLocation[] = locations
+    .filter((loc) => isLive(loc, renderedOn))
+    .map((loc) => ({
+      _id: loc._id,
+      name: loc.name,
+      startsOn: loc.startsOn,
+      endsOn: loc.endsOn,
+      weeklyHours: loc.weeklyHours?.map(({ day, open, close }) => ({ day, open, close })),
+      exceptions: upcomingExceptions(loc, renderedOn)
+        .filter((e) => e.date <= exceptionsUntil)
+        .map(({ date, closed, open, close, note }) => ({ date, closed, open, close, note })),
+      displayAddress: loc.place?.displayAddress ?? null,
+      mapUrl: locationDirectionsUrl(loc),
+    }));
   const barEvents: BarEvent[] = events.map((event) => ({
     _id: event._id,
     label: event.locationName || (event.displayAddress ? trimAddress(event.displayAddress) : null),
