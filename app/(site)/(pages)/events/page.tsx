@@ -66,6 +66,7 @@ const EVENTS_QUERY = `*[
   recurrenceLabel,
   eventPageType,
   externalUrl,
+  externalNewTab,
   internalPath,
   "slug": slug.current,
   cta,

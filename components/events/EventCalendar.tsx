@@ -20,6 +20,7 @@ export interface CalendarEvent {
   recurrenceLabel: string | null;
   eventPageType: "internal" | "internal-link" | "external" | null;
   externalUrl: string | null;
+  externalNewTab: boolean | null;
   internalPath: string | null;
   slug: string | null;
   description: unknown;
@@ -274,8 +275,7 @@ function EventCard({ event, dateStr }: { event: CalendarEvent; dateStr: string }
           {event.eventPageType === "external" && event.externalUrl && (
             <a
               href={event.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(event.externalNewTab === true ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={(e) => e.stopPropagation()}
               className="self-start inline-flex items-center gap-1.5 font-sans font-extrabold text-xs uppercase tracking-[0.15em] bg-brand-orange text-brand-grey px-4 py-2 hover:bg-brand-black transition-colors"
             >
