@@ -51,6 +51,7 @@ const EVENTS_QUERY = `*[
   type,
   eventPageType,
   externalUrl,
+  externalNewTab,
   internalPath,
   image,
   "slug": slug.current,
@@ -247,6 +248,7 @@ export default async function Home() {
                 : event.eventPageType === "internal" && event.slug
                 ? `/events/${event.slug}`
                 : "/events";
+            const newTab = event.eventPageType === "external" && !!event.externalUrl && event.externalNewTab === true;
             const locationLabel = event.locationName || (event.location ? trimAddress(event.location) : "");
             const mapLink = googleMapsUrl({ placeId: event.placeId, displayAddress: event.location });
             return (
@@ -277,6 +279,7 @@ export default async function Home() {
                 <span className="flex items-center gap-3">
                   <Link
                     href={eventHref}
+                    {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     className="font-display font-bold text-lg md:text-xl lg:text-2xl uppercase tracking-tight text-brand-grey group-hover:text-brand-orange transition-colors after:content-[''] after:absolute after:inset-0"
                   >
                     {event.title}

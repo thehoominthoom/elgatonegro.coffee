@@ -19,6 +19,7 @@ export interface SanityEvent {
   note: string | null;
   eventPageType: "internal" | "internal-link" | "external" | null;
   externalUrl: string | null;
+  externalNewTab: boolean | null;
   internalPath: string | null;
   description: unknown[] | null;
   slug: string | null;

@@ -30,6 +30,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
         : e.eventPageType === "internal" && e.slug
         ? `/events/${e.slug}`
         : "/events";
+    const newTab = e.eventPageType === "external" && !!e.externalUrl && e.externalNewTab === true;
     return {
       id: e._id,
       title: e.title,
@@ -45,6 +46,7 @@ export function buildHeroSlides(events: SanityEvent[], today: string): HeroSlide
         ? urlFor(e.image).width(1440).url()
         : "/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
       href,
+      newTab,
     };
   });
 }

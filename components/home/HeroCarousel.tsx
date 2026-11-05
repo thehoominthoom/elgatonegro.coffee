@@ -20,6 +20,7 @@ export interface HeroSlide {
   note: string | null;
   image: string;
   href: string;
+  newTab: boolean;
 }
 
 interface HeroCarouselProps {
@@ -300,6 +301,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           {/* View Event */}
           <Link
             href={slide.href}
+            {...(slide.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className="group inline-flex items-center gap-3 bg-brand-orange text-brand-grey px-8 py-3.5 rounded-sm font-display font-bold text-sm uppercase tracking-[0.1em] hover:bg-brand-yellow transition-colors"
             style={textAnim(transitioning, "viewEvent", mounted)}
           >
