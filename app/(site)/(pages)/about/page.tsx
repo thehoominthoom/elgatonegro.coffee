@@ -235,11 +235,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 3. First Day + Name Disaster ───────────────────────────────── */}
+      {/* ── 3. Early Days + Name Disaster ──────────────────────────────── */}
       <section className="bg-brand-grey grain-overlay">
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
           <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
-            Day one
+            Early days
           </p>
           <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl uppercase text-brand-black tracking-tight leading-[0.95] max-w-4xl mb-10 md:mb-14">
             The bomb, the bad shots, and the name we almost ruined ourselves
@@ -267,19 +267,19 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Photo cluster — day-one evidence */}
+            {/* Photo cluster — early-days evidence */}
             <div className="md:col-span-7">
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm grain-overlay-sm">
                 <Image
                   src="/images/about/the_exchange-bts.founding.cart-setup-none-04.webp"
-                  alt="The first El Gato Negro setup on day one — espresso machine, grinder, and water jugs rigged under folding tables at The Exchange running store"
+                  alt="El Gato Negro's first day serving at The Exchange running store: an espresso machine and grinder on white folding tables in front of tall windows, with water jugs and a small pump on the floor underneath."
                   fill
                   sizes="(max-width: 768px) 100vw, 55vw"
                   className="object-cover photo-treatment-sm"
                 />
               </div>
               <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
-                Day one, the folding table in question.
+                Day one at The Exchange, same folding table.
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-3 md:mt-4 items-start">
@@ -471,6 +471,42 @@ export default function AboutPage() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5b. The Exchange ───────────────────────────────────────────── */}
+      <section className="bg-brand-grey grain-overlay">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28">
+          <p className="font-display font-bold text-base md:text-lg uppercase tracking-[0.25em] text-brand-green mb-4">
+            Woodland St
+          </p>
+          <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl uppercase text-brand-black tracking-tight leading-[0.95] max-w-3xl mb-10 md:mb-14">
+            James was getting a coffee cart with or without us.
+          </h2>
+
+          <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5 max-w-2xl">
+            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+              He said so to Juan plainly, the way you do with someone you know
+              well. The cart was happening, and he&apos;d rather it was us. The
+              first time we poured at The Exchange Running Collective, it was
+              off folding tables, and you&apos;ve seen the photo.
+            </p>
+            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+              It took time after that, and a lot of showing up, and somewhere in
+              there they just became family. What got us was watching what James
+              and Lauren do with a running store. They made The First Mile for
+              people who&apos;ve never run one, and they get East
+              Nashville&apos;s small business owners into the same room.
+            </p>
+            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+              Now we&apos;re in the back corner by the side windows, six mornings
+              a week. Come at seven, before it fills with runners, when it&apos;s
+              quiet and the light&apos;s coming through those windows and
+              everything&apos;s mellow. We&apos;ve got that corner because a
+              friend was getting a cart anyway and wanted it to be us. Thank you,
+              James. Thank you, Lauren.
+            </p>
           </div>
         </div>
       </section>
