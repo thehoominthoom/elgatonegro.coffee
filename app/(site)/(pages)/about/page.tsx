@@ -113,6 +113,21 @@ const yearOneStrip = [
   },
 ];
 
+const woodlandPhotos = [
+  {
+    src: "/images/about/the_exchange-community-portrait.outdoor-ben.phil.juan.james-01.webp",
+    alt: "From left: Phil, Juan, James and Ben, standing together on the sidewalk outside The Exchange Running Collective, under the store's hanging sign. A film photo, with an orange light leak at the left edge.",
+    caption: "Out front of The Exchange, on film.",
+    position: "object-bottom",
+  },
+  {
+    src: "/images/about/trail_race-community-running.outdoor-james.lauren-01.webp",
+    alt: "James and Lauren running side by side on a dirt trail through green woods. James wears an Exchange cap, and Lauren has a red bandana and a race number on her ankle.",
+    caption: "James and Lauren, doing the running part.",
+    position: "object-[center_75%]",
+  },
+];
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
@@ -485,28 +500,57 @@ export default function AboutPage() {
             James was getting a coffee cart with or without us.
           </h2>
 
-          <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5 max-w-2xl">
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              He said so to Juan plainly, the way you do with someone you know
-              well. The cart was happening, and he&apos;d rather it was us. The
-              first time we poured at The Exchange Running Collective, it was
-              off folding tables, and you&apos;ve seen the photo.
-            </p>
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              It took time after that, and a lot of showing up, and somewhere in
-              there they just became family. What got us was watching what James
-              and Lauren do with a running store. They put on events that give
-              the whole neighborhood a reason to show up, and they get East
-              Nashville&apos;s small business owners into the same room.
-            </p>
-            <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
-              Now we&apos;re in the back corner by the side windows, six mornings
-              a week. Come at seven, before it fills with runners, when it&apos;s
-              quiet and the light&apos;s coming through those windows and
-              everything&apos;s mellow. We&apos;ve got that corner because a
-              friend was getting a cart anyway and wanted it to be us. Thank you,
-              James. Thank you, Lauren.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+            {/* Text column */}
+            <div className="lg:col-span-7">
+              <div className="border-l-2 border-brand-orange pl-5 md:pl-6 space-y-5 max-w-2xl">
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  He said so to Juan plainly, the way you do with someone you
+                  know well. The cart was happening, and he&apos;d rather it was
+                  us. The first time we poured at The Exchange Running
+                  Collective, it was off folding tables, and you&apos;ve seen the
+                  photo.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  It took time after that, and a lot of showing up, and somewhere
+                  in there they just became family. What got us was watching what
+                  James and Lauren do with a running store. They put on events
+                  that give the whole neighborhood a reason to show up, and they
+                  get East Nashville&apos;s small business owners into the same
+                  room.
+                </p>
+                <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
+                  Now we&apos;re in the back corner by the side windows, six
+                  mornings a week. Come at seven, before it fills with runners,
+                  when it&apos;s quiet and the light&apos;s coming through those
+                  windows and everything&apos;s mellow. We&apos;ve got that corner
+                  because a friend was getting a cart anyway and wanted it to be
+                  us. Thank you, James. Thank you, Lauren.
+                </p>
+              </div>
+            </div>
+
+            {/* Photo row — Section 3 inset pattern, two frames */}
+            <div className="lg:col-span-5">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 items-start max-w-lg lg:max-w-none">
+                {woodlandPhotos.map((photo) => (
+                  <div key={photo.src}>
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-sm grain-overlay-sm">
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        sizes="(max-width: 767px) 50vw, (max-width: 1023px) 250px, 240px"
+                        className={`object-cover ${photo.position} photo-treatment-sm`}
+                      />
+                    </div>
+                    <p className="font-sans font-extrabold text-xs uppercase tracking-[0.15em] text-brand-black/50 mt-2">
+                      {photo.caption}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
