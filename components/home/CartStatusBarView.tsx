@@ -24,6 +24,18 @@ function subscribeToClock(onChange: () => void) {
 
 const PLACE_CLASS = "font-sans font-semibold text-[10px] text-brand-black/85 uppercase tracking-[0.1em] whitespace-nowrap";
 
+/** A breakpoint, not the clock, picks the name, so server HTML, pre-paint and
+ *  hydration all agree. The hidden one is display:none, so it is never read out. */
+function placeName(label: string, shortLabel: string | null) {
+  if (!shortLabel) return label;
+  return (
+    <>
+      <span className="sm:hidden">{shortLabel}</span>
+      <span className="hidden sm:inline">{label}</span>
+    </>
+  );
+}
+
 interface Props {
   locations: BarLocation[];
   events: BarEvent[];
@@ -76,7 +88,7 @@ export function CartStatusBarView({ locations, events, renderedOn }: Props) {
           <span className={`hidden md:block self-stretch w-0.5 shrink-0 ${isOpen ? "bg-brand-black/30" : "bg-brand-grey/30"}`} />
         )}
 
-        {entries.map(({ key, hours, label, mapUrl, opensAt, closesAt, back }, i) => (
+        {entries.map(({ key, hours, label, shortLabel, mapUrl, opensAt, closesAt, back }, i) => (
           <div
             key={key}
             data-entry
@@ -104,10 +116,10 @@ export function CartStatusBarView({ locations, events, renderedOn }: Props) {
                     rel="noopener noreferrer"
                     className={`${PLACE_CLASS} hover:text-brand-black underline-offset-2 hover:underline transition-colors`}
                   >
-                    {label}
+                    {placeName(label, shortLabel)}
                   </Link>
                 ) : (
-                  <span className={PLACE_CLASS}>{label}</span>
+                  <span className={PLACE_CLASS}>{placeName(label, shortLabel)}</span>
                 )
               )}
               {back && (

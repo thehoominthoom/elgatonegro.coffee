@@ -42,6 +42,7 @@ const LOCATIONS_QUERY = `*[
 ] | order(order asc, name asc) {
   _id,
   name,
+  shortName,
   "slug": slug.current,
   isPublic,
   place,

@@ -114,6 +114,7 @@ export async function CartStatusBar() {
     .map((loc) => ({
       _id: loc._id,
       name: loc.name,
+      shortName: loc.shortName?.trim() || null,
       startsOn: loc.startsOn,
       endsOn: loc.endsOn,
       weeklyHours: loc.weeklyHours?.map(({ day, open, close }) => ({ day, open, close })),

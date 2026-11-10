@@ -113,6 +113,13 @@ export const location = defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "shortName",
+      title: "Short Name",
+      type: "string",
+      description:
+        'Optional. Shown in the status bar on phones when the full name is too long, e.g. "The Exchange". Leave empty to always use the full name.',
+    }),
 
     // 3. Slug
     defineField({

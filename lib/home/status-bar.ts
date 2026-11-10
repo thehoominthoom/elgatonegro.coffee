@@ -6,6 +6,8 @@ import { formatTimeRange, timeToMinutes, to12h } from "@/lib/home/dates";
 export interface BarLocation extends LocationSchedule {
   _id: string;
   name: string;
+  /** Shown in place of `name` on phones, where the full name can overflow the bar. */
+  shortName: string | null;
   displayAddress: string | null;
   mapUrl: string | null;
 }
@@ -22,6 +24,8 @@ export interface BarEntry {
   key: string;
   hours: string;
   label: string | null;
+  /** Only ever set on a Location's entry: its short name, shown below `sm`. */
+  shortLabel: string | null;
   mapUrl: string | null;
   opensAt: number | null;
   closesAt: number | null;
@@ -112,6 +116,7 @@ export function buildBarDay(locations: BarLocation[], events: BarEvent[], today:
         key: loc._id,
         hours: barHours(to12h(status.opens), to12h(status.closes)),
         label: loc.name,
+        shortLabel: loc.shortName,
         mapUrl: loc.mapUrl,
         opensAt: timeToMinutes(to12h(status.opens)),
         closesAt: timeToMinutes(to12h(status.closes)),
@@ -134,6 +139,7 @@ export function buildBarDay(locations: BarLocation[], events: BarEvent[], today:
       key: event._id,
       hours: barHours(row.openTime, row.closeTime),
       label: event.label,
+      shortLabel: null,
       mapUrl: event.mapUrl,
       opensAt: timeToMinutes(row.openTime),
       closesAt: timeToMinutes(row.closeTime),

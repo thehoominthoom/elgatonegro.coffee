@@ -23,6 +23,7 @@ export interface LocationException {
 export interface SanityLocation {
   _id: string;
   name: string;
+  shortName?: string | null;
   slug: string;
   isPublic?: boolean;
   place?: { placeId?: string; displayAddress?: string } | null;
