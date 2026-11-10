@@ -495,8 +495,8 @@ export default function AboutPage() {
             <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
               It took time after that, and a lot of showing up, and somewhere in
               there they just became family. What got us was watching what James
-              and Lauren do with a running store. They made The First Mile for
-              people who&apos;ve never run one, and they get East
+              and Lauren do with a running store. They organize events to give
+              the community a place to come together, and they get East
               Nashville&apos;s small business owners into the same room.
             </p>
             <p className="font-sans text-sm md:text-base leading-relaxed text-brand-black/70">
