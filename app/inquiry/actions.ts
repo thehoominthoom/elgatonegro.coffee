@@ -98,6 +98,7 @@ export async function submitGeneralInquiry(
     resend.emails.send({
       from: "EGN Website <no-reply@elgatonegro.coffee>",
       to: ["sales@elgatonegro.coffee"],
+      replyTo: email,
       subject: `New Inquiry — ${name} · ${serviceLabel}`,
       react: InquiryNotification({
         name,
@@ -115,6 +116,8 @@ export async function submitGeneralInquiry(
     resend.emails.send({
       from: "EGN Website <no-reply@elgatonegro.coffee>",
       to: [email],
+      // The email tells visitors to reply; no-reply@ is not read.
+      replyTo: "sales@elgatonegro.coffee",
       subject: `We got your inquiry, ${firstName}.`,
       react: InquiryConfirmation({
         firstName,
