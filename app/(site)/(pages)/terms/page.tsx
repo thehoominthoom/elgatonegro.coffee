@@ -89,10 +89,10 @@ export default function TermsOfServicePage() {
               <li>
                 Notify us immediately at{" "}
                 <Link
-                  href="mailto:hello@elgatonegro.coffee"
+                  href="mailto:shop@elgatonegro.coffee"
                   className="text-brand-orange hover:text-brand-yellow transition-colors"
                 >
-                  hello@elgatonegro.coffee
+                  shop@elgatonegro.coffee
                 </Link>{" "}
                 if you suspect unauthorized access to your account.
               </li>
@@ -314,10 +314,10 @@ export default function TermsOfServicePage() {
                 </strong>{" "}
                 Before filing any formal claim, you agree to contact us at{" "}
                 <Link
-                  href="mailto:hello@elgatonegro.coffee"
+                  href="mailto:shop@elgatonegro.coffee"
                   className="text-brand-orange hover:text-brand-yellow transition-colors"
                 >
-                  hello@elgatonegro.coffee
+                  shop@elgatonegro.coffee
                 </Link>{" "}
                 and attempt to resolve the dispute informally for at least 30
                 days.
@@ -363,10 +363,10 @@ export default function TermsOfServicePage() {
               any reason, including but not limited to violation of these Terms.
               You may also close your account at any time by contacting us at{" "}
               <Link
-                href="mailto:hello@elgatonegro.coffee"
+                href="mailto:shop@elgatonegro.coffee"
                 className="text-brand-orange hover:text-brand-yellow transition-colors"
               >
-                hello@elgatonegro.coffee
+                shop@elgatonegro.coffee
               </Link>
               . Upon termination, your right to use the Site ceases immediately.
               Provisions that by their nature should survive termination
@@ -430,10 +430,10 @@ export default function TermsOfServicePage() {
               <p>
                 Email:{" "}
                 <Link
-                  href="mailto:hello@elgatonegro.coffee"
+                  href="mailto:shop@elgatonegro.coffee"
                   className="text-brand-orange hover:text-brand-yellow transition-colors"
                 >
-                  hello@elgatonegro.coffee
+                  shop@elgatonegro.coffee
                 </Link>
               </p>
               <p>
