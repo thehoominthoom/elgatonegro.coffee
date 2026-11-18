@@ -95,6 +95,7 @@ export async function submitOpportunity(
   const { error: sendError } = await resend.emails.send({
     from: "EGN Website <no-reply@elgatonegro.coffee>",
     to: ["gato@elgatonegro.coffee"],
+    replyTo: email,
     subject: `New Application — ${firstName} ${lastName}`,
     react: OpportunityNotification({
       firstName,
