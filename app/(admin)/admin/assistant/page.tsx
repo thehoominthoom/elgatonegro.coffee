@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AIChat from "@/components/admin/AIChat";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const metadata = {
   title: "Assistant — El Gato Negro Admin",
 };
 
-export default function AssistantPage() {
+export default async function AssistantPage() {
+  await requireAdmin();
   return (
     <div className="h-screen flex flex-col bg-brand-black">
       {/* Header */}

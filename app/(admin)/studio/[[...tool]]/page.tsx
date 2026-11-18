@@ -2,6 +2,7 @@ import { NextStudio } from 'next-sanity/studio'
 import { metadata as studioMetadata, viewport } from 'next-sanity/studio'
 import type { Metadata } from 'next'
 import config from '../../../../sanity.config'
+import { requireAdmin } from '@/lib/require-admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function AdminStudioPage() {
+export default async function AdminStudioPage() {
+  await requireAdmin()
   return <NextStudio config={config} />
 }
