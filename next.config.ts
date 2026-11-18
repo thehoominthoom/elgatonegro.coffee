@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { dataset, projectId } from "./sanity/env";
 
 // ─── Security headers ──────────────────────────────────────────────────────
 
@@ -74,11 +75,14 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // EGN's own files only, so no other Sanity project or Shopify store can use
+    // /_next/image on EGN's bill.
     remotePatterns: [
-      { protocol: "https", hostname: "cdn.sanity.io" },
+      // Same project and dataset as the image URL builder (sanity/lib/image.ts)
+      { protocol: "https", hostname: "cdn.sanity.io", pathname: `/images/${projectId}/${dataset}/**` },
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/elgatonegro/**" },
-      // Shopify product images
-      { protocol: "https", hostname: "cdn.shopify.com" },
+      // Shopify product images: EGN's store file path (from its live product image URLs)
+      { protocol: "https", hostname: "cdn.shopify.com", pathname: "/s/files/1/0979/5701/9943/**" },
     ],
   },
 };

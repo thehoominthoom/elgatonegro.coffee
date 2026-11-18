@@ -1,13 +1,6 @@
 import type { NextFetchEvent } from 'next/server';
 import { NextRequest, NextResponse } from 'next/server';
-
-const isAdminHost = (hostname: string) => {
-  return (
-    hostname === 'admin.elgatonegro.coffee' ||
-    hostname === 'admin.localhost' ||
-    hostname.startsWith('admin.localhost:')
-  );
-};
+import { isAdminHost } from '@/lib/admin-host';
 
 async function handleAdminRequest(
   req: NextRequest,
@@ -25,10 +18,11 @@ async function handleAdminRequest(
   const handler = clerkMiddleware(async (auth, clerkReq: NextRequest) => {
     const pathname = clerkReq.nextUrl.pathname;
 
-    // Allow Clerk auth routes through without protection
+    // Allow Clerk auth routes through without protection: /sign-in or /sign-in/…,
+    // the same for /sign-up, never /sign-inX.
     // These live at app/(admin)/sign-in/ — route group doesn't affect URL,
     // so /sign-in resolves directly without rewrite
-    if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
+    if (/^\/sign-(?:in|up)(?:\/|$)/.test(pathname)) {
       return NextResponse.next();
     }
 
@@ -72,5 +66,8 @@ export const config = {
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
+    // Always run for Studio paths, even file-like ones (/studio/a.js) the first pattern
+    // skips, so Clerk can send signed-out visitors to sign-in
+    '/studio/:path*',
   ],
 };

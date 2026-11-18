@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ExternalLink, Bot } from 'lucide-react';
 import { UserButton } from '@clerk/nextjs';
+import { requireAdmin } from '@/lib/require-admin';
 
 const tiles = [
   {
@@ -43,7 +44,8 @@ const tiles = [
   },
 ] as const;
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  await requireAdmin();
   return (
     <div className="min-h-screen bg-brand-black">
       {/* Header */}
