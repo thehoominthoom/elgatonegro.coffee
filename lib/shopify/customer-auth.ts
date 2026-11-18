@@ -1,9 +1,11 @@
 // ─── Shopify Customer Account API — OAuth 2.0 + PKCE ──────────────────────────
 //
 // Handles authorization code flow with PKCE for Shopify's Customer Account API.
-// Confidential client: token requests use Basic Auth (client_id:client_secret).
+// Confidential client: every token endpoint request (code exchange and refresh)
+// sends HTTP Basic client auth (client_id:client_secret) plus client_id in the body.
 
 const CLIENT_ID = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID!;
+const CLIENT_SECRET = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET;
 const CUSTOMER_ACCOUNT_API_URL = process.env.SHOPIFY_CUSTOMER_ACCOUNT_API_URL!;
 const APP_URL = process.env.APP_URL!;
 
@@ -93,6 +95,20 @@ export async function buildAuthorizationUrl(params: {
 
 // ─── Token exchange ─────────────────────────────────────────────────────────
 
+function tokenRequestHeaders(): HeadersInit {
+  if (!CLIENT_SECRET) {
+    const message =
+      "SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET is not set; customer sign-in and token refresh are disabled";
+    console.error(message);
+    throw new Error(message);
+  }
+
+  return {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Authorization: "Basic " + btoa(`${CLIENT_ID}:${CLIENT_SECRET}`),
+  };
+}
+
 export interface TokenResponse {
   access_token: string;
   refresh_token: string;
@@ -118,9 +134,7 @@ export async function exchangeCodeForTokens(
 
   const res = await fetch(config.token_endpoint, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    headers: tokenRequestHeaders(),
     body: body.toString(),
   });
 
@@ -147,9 +161,7 @@ export async function refreshAccessToken(
 
   const res = await fetch(config.token_endpoint, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    headers: tokenRequestHeaders(),
     body: body.toString(),
   });
 

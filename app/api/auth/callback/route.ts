@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(`${APP_URL}/account`);
   } catch (error) {
-    console.error("Auth callback error:", error instanceof Error ? error.message : error);
-    console.error("Auth callback full error:", error);
+    // Message only: jose claim errors carry the decoded ID token (email, names, sub) on the error object.
+    console.error("Auth callback error:", error instanceof Error ? error.message : "non-Error thrown");
     return NextResponse.redirect(`${APP_URL}/account/login?error=token_exchange`);
   }
 }
