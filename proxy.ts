@@ -57,6 +57,12 @@ export async function proxy(req: NextRequest, event: NextFetchEvent) {
     return new NextResponse(null, { status: 404 });
   }
 
+  // Studio and Clerk sign-in/sign-up are admin-host only. The Studio page's
+  // requireAdmin() is the backstop for any path this proxy does not see.
+  if (/^\/(?:studio|sign-(?:in|up))(?:\/|$)/.test(req.nextUrl.pathname)) {
+    return new NextResponse(null, { status: 404 });
+  }
+
   return NextResponse.next();
 }
 
@@ -66,8 +72,10 @@ export const config = {
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
-    // Always run for Studio paths, even file-like ones (/studio/a.js) the first pattern
-    // skips, so Clerk can send signed-out visitors to sign-in
+    // Always run for Studio and sign-in paths, even file-like ones (/studio/a.js) the
+    // first pattern skips: the admin host sends signed-out visitors to sign-in, and
+    // the public host returns 404
     '/studio/:path*',
+    '/sign-in/:path*',
   ],
 };
