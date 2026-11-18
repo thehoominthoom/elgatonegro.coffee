@@ -10,6 +10,7 @@ import {
   type OpportunityValues,
 } from "@/lib/opportunities/schema";
 import { OpportunityNotification } from "@/emails/OpportunityNotification";
+import { alertFormFailure, turnstileFault } from "@/lib/alerts/ntfy";
 
 // ── Result type ──────────────────────────────────────────────────────────────
 
@@ -30,6 +31,15 @@ const ratelimit = new Ratelimit({
 export async function submitOpportunity(
   data: OpportunityValues
 ): Promise<OpportunityActionResult> {
+  try {
+    return await handleOpportunity(data);
+  } catch (err) {
+    alertFormFailure("opportunities", 5, err instanceof Error ? err.name : undefined);
+    throw err;
+  }
+}
+
+async function handleOpportunity(data: OpportunityValues): Promise<OpportunityActionResult> {
   // ── 1. Rate limit ─────────────────────────────────────────────────────────
   const headersList = await headers();
   const ip =
@@ -78,8 +88,13 @@ export async function submitOpportunity(
       }),
     }
   );
-  const turnstileData = (await turnstileRes.json()) as { success: boolean };
+  const turnstileData = (await turnstileRes.json()) as {
+    success: boolean;
+    "error-codes"?: string[];
+  };
   if (!turnstileData.success) {
+    const fault = turnstileFault(turnstileRes.status, turnstileData["error-codes"]);
+    if (fault) alertFormFailure("opportunities", 5, fault, turnstileRes.status);
     console.warn("[opportunities] Turnstile verification failed for IP:", ip);
     return {
       success: false,
@@ -112,6 +127,7 @@ export async function submitOpportunity(
   });
 
   if (sendError) {
+    alertFormFailure("opportunities", 5, sendError.name, sendError.statusCode);
     console.error("[opportunities] Resend error:", sendError.message);
     return {
       success: false,
