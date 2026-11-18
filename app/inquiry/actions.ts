@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { unstable_rethrow } from "next/navigation";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
@@ -36,6 +37,7 @@ export async function submitGeneralInquiry(
   try {
     return await handleInquiry(data);
   } catch (err) {
+    unstable_rethrow(err); // redirect() and notFound() are not failures
     alertFormFailure("inquiry", 5, err instanceof Error ? err.name : undefined);
     throw err;
   }

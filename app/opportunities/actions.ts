@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { unstable_rethrow } from "next/navigation";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
@@ -34,6 +35,7 @@ export async function submitOpportunity(
   try {
     return await handleOpportunity(data);
   } catch (err) {
+    unstable_rethrow(err); // redirect() and notFound() are not failures
     alertFormFailure("opportunities", 5, err instanceof Error ? err.name : undefined);
     throw err;
   }

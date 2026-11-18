@@ -4,6 +4,10 @@ import { Redis } from "@upstash/redis";
 
 type AlertForm = "inquiry" | "opportunities";
 
+// Per-instance record of alerts sent while Redis was failing (key → time sent).
+const sentWithoutRedis = new Map<string, number>();
+const FALLBACK_WINDOW_MS = 15 * 60 * 1000;
+
 // Siteverify codes that mean our secret or Cloudflare is broken, not that the visitor failed.
 const TURNSTILE_FAULTS = ["missing-input-secret", "invalid-input-secret", "bad-request", "internal-error"];
 
@@ -46,12 +50,23 @@ async function sendAlert(
     console.warn("[alert] NTFY_ALERT_URL is not set; form failure alert skipped");
     return;
   }
+  if (!url.startsWith("https://")) {
+    console.warn("[alert] NTFY_ALERT_URL is not an https:// URL; form failure alert skipped");
+    return;
+  }
 
-  // At most one alert per form and priority per hour. A Redis failure sends anyway.
+  // At most one alert per form and priority per hour.
+  const key = `egn:alert:${form}:${priority}`;
+  let redis: Redis | null = null;
   try {
-    const first = await Redis.fromEnv().set(`egn:alert:${form}:${priority}`, 1, { nx: true, ex: 3600 });
-    if (first === null) return;
+    redis = Redis.fromEnv();
+    if ((await redis.set(key, 1, { nx: true, ex: 3600 })) === null) return;
   } catch {
+    // Fail open, but cap each instance: with Redis down, every request would otherwise page.
+    redis = null;
+    const last = sentWithoutRedis.get(key);
+    if (last !== undefined && Date.now() - last < FALLBACK_WINDOW_MS) return;
+    sentWithoutRedis.set(key, Date.now());
     console.warn("[alert] Alert throttle unavailable; sending anyway");
   }
 
@@ -59,16 +74,27 @@ async function sendAlert(
   const name =
     typeof errorName === "string" && /^[\w.-]{1,64}$/.test(errorName) ? errorName : "unknown";
   const status = Number.isInteger(statusCode) ? statusCode : "none";
+  const request: RequestInit = {
+    method: "POST",
+    headers: { Title: `EGN form failing: ${form}`, Priority: String(priority), Tags: "warning" },
+    body: `${name}, status ${status}`,
+  };
 
+  if (await post(url, request)) return;
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  if (await post(url, request)) return;
+
+  // Both tries failed: release the throttle so the next failure can alert.
+  await redis?.del(key).catch(() => console.warn("[alert] Could not release the alert throttle"));
+}
+
+async function post(url: string, request: RequestInit): Promise<boolean> {
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { Title: `EGN form failing: ${form}`, Priority: String(priority), Tags: "warning" },
-      body: `${name}, status ${status}`,
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!res.ok) console.error("[alert] ntfy refused the alert:", res.status);
+    const res = await fetch(url, { ...request, signal: AbortSignal.timeout(5000) });
+    if (res.ok) return true;
+    console.error("[alert] ntfy refused the alert:", res.status);
   } catch (err) {
     console.error("[alert] ntfy request failed:", err instanceof Error ? err.name : "unknown");
   }
+  return false;
 }
