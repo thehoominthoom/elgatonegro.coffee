@@ -57,7 +57,7 @@ export default function RefundPolicyPage() {
               <strong className="text-brand-black/90">
                 7 days of delivery
               </strong>
-              . We will send a replacement or issue store credit.
+              . We will send a replacement or issue a refund.
             </p>
           </div>
 
