@@ -90,13 +90,14 @@ Full-stack ecommerce + lead generation + resource hub website for a coffee cart 
 | Framework        | Next.js 14+ App Router, React, TypeScript   |
 | Styling          | Tailwind CSS + shadcn/ui                    |
 | Auth             | Clerk (admin) + Shopify Customer Account API (customers) |
-| Database         | Neon (serverless PostgreSQL) via Prisma ORM |
+| Database         | None. Shopify holds customers, orders, carts and inventory; leads are email only |
+| Key-value store  | Upstash Redis: form rate-limit keys and POS webhook dedupe keys only |
 | Payments         | Shopify Payments (online) + Helcim (in-person POS) |
 | CMS              | Sanity (hours, locations, events, blog)     |
 | Email            | Resend + React Email                        |
-| Digital delivery | Cloudflare R2 + pre-signed URLs             |
+| Digital delivery | Not built (Cloudflare R2 was planned; no code) |
 | Lead forms       | React Hook Form + Zod + Server Actions      |
-| Image storage    | Cloudinary (next-cloudinary)                |
+| Image storage    | Local files in `public/`, plus Sanity and Shopify CDN images through `next/image`. Not Cloudinary (unused) |
 | Spam protection  | Cloudflare Turnstile                        |
 | Deployment       | Vercel                                      |
 
@@ -108,11 +109,6 @@ npm run dev               # Dev server at localhost:3000
 npm run build             # Production build
 npm run lint              # ESLint
 npx tsc --noEmit          # Type check
-
-npx prisma generate       # Regenerate Prisma client after schema changes
-npx prisma db push        # Push schema to dev database
-npx prisma migrate deploy # Run migrations in production
-npx prisma studio         # Open database GUI
 ```
 
 ## Screenshot Workflow
@@ -155,14 +151,16 @@ app/
 **Admin route protection** is enforced in `middleware.ts` via session role check — never rely on client-side role checks alone.
 
 **Sanity manages:** hours, locations, events, blog posts, service page copy.
-**Postgres (Prisma) manages:** users, orders, cart, inventory, leads, digital download tokens, discount codes.
+**Shopify manages:** customers, addresses, orders, cart, inventory, discount codes.
 These are two separate data sources deliberately — don't conflate them.
 
-**Checkout flow:** Shopify hosted checkout handles all payment processing. Shopify webhooks are the authoritative trigger for order status transitions.
+**There is no database.** Neon/Prisma was planned and never built. Leads (inquiries, job applications) are not stored: `app/inquiry/actions.ts` and `app/opportunities/actions.ts` send them by email through Resend, to sales@ and gato@. **Upstash Redis** holds only the forms' rate-limit keys (3 per IP per hour) and the POS webhook's dedupe keys (10-minute TTL).
 
-**Digital product delivery:** Cloudflare R2 stores files privately. On order confirmation, generate `DownloadToken` rows, create pre-signed R2 URLs (15-min TTL), and send via Resend. Customer can re-request from `/account/downloads`.
+**Checkout flow:** Shopify hosted checkout handles all payment processing and holds the orders.
 
-**Inventory:** Physical only — digital products skip stock checks entirely. Two-phase reservation: reserve on payment confirmed, deduct on shipped. All mutations inside Prisma transactions.
+**Digital product delivery:** not built. The plan was private files in Cloudflare R2, sent as pre-signed URLs through Resend. No code exists.
+
+**Inventory:** Shopify holds stock. In-person Helcim sales reach `app/api/webhooks/pos-sync/route.ts`, which deducts the sold SKUs from Shopify inventory through the Admin API.
 
 **Lead inquiry routing:** `/inquiry` is a single-step unified form. Service pages deep-link with `/inquiry?service=[slug]` to pre-select the service dropdown. Valid slugs (`brand-activations`, `community-conventions`, `weddings-celebrations`, `private-events`) come from the `SERVICE_CONFIGS` map in `lib/inquiry/config.ts`, which also drives service page copy (labels, features, tagline, description).
 
@@ -195,22 +193,7 @@ NEXT_PUBLIC_POLAROID_STYLE=true
 
 ## Environment Variables
 
-```
-DATABASE_URL=                           # Neon pooled URL
-DIRECT_URL=                             # Neon direct URL (migrations only)
-RESEND_API_KEY=
-NEXT_PUBLIC_SANITY_PROJECT_ID=
-NEXT_PUBLIC_SANITY_DATASET=
-SANITY_API_TOKEN=
-CLOUDINARY_URL=
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
-R2_ENDPOINT=
-R2_ACCESS_KEY_ID=
-R2_SECRET_ACCESS_KEY=
-R2_BUCKET_NAME=
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=
-TURNSTILE_SECRET_KEY=
-```
+The full list, grouped by service, is in `.env.example`. `DATABASE_URL`, `DIRECT_URL`, `CLOUDINARY_URL`, `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` and the four `R2_*` entries are there but unused: no code reads them.
 
 ## Build Order
 
