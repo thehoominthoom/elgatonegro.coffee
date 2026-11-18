@@ -35,7 +35,7 @@ export const opportunitySchema = z.object({
     message: "Please select yes or no",
   }),
   additionalInfo: z.string().optional(),
-  turnstileToken: z.string().min(1, "Please complete the security check"),
+  turnstileToken: z.string().min(1, "Please complete the security check").max(2048),
 });
 
 export type OpportunityValues = z.infer<typeof opportunitySchema>;

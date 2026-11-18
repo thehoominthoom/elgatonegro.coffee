@@ -28,7 +28,7 @@ export const generalInquirySchema = z.object({
     message: "Please select a headcount range",
   }),
   message: z.string().optional(),
-  turnstileToken: z.string().min(1, "Please complete the security check"),
+  turnstileToken: z.string().min(1, "Please complete the security check").max(2048),
 });
 
 export type GeneralInquiryValues = z.infer<typeof generalInquirySchema>;

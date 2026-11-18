@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { unstable_rethrow } from "next/navigation";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
@@ -12,6 +13,7 @@ import {
 } from "@/lib/inquiry/general-schema";
 import { InquiryNotification } from "@/emails/InquiryNotification";
 import { InquiryConfirmation } from "@/emails/InquiryConfirmation";
+import { alertFormFailure, turnstileFault } from "@/lib/alerts/ntfy";
 
 // ─── Result type ──────────────────────────────────────────────────────────────
 
@@ -32,6 +34,16 @@ const ratelimit = new Ratelimit({
 export async function submitGeneralInquiry(
   data: GeneralInquiryValues
 ): Promise<InquiryActionResult> {
+  try {
+    return await handleInquiry(data);
+  } catch (err) {
+    unstable_rethrow(err); // redirect() and notFound() are not failures
+    alertFormFailure("inquiry", 5, err instanceof Error ? err.name : undefined);
+    throw err;
+  }
+}
+
+async function handleInquiry(data: GeneralInquiryValues): Promise<InquiryActionResult> {
   // ── 1. Rate limit (fail fast before any verification or DB work) ────────────
   const headersList = await headers();
   const ip =
@@ -79,8 +91,13 @@ export async function submitGeneralInquiry(
       }),
     }
   );
-  const turnstileData = (await turnstileRes.json()) as { success: boolean };
+  const turnstileData = (await turnstileRes.json()) as {
+    success: boolean;
+    "error-codes"?: string[];
+  };
   if (!turnstileData.success) {
+    const fault = turnstileFault(turnstileRes.status, turnstileData["error-codes"]);
+    if (fault) alertFormFailure("inquiry", 5, fault, turnstileRes.status);
     console.warn("[inquiry] Turnstile verification failed for IP:", ip);
     return {
       success: false,
@@ -128,9 +145,11 @@ export async function submitGeneralInquiry(
     }),
   ]);
 
-  if (notification.error || confirmation.error) {
-    const detail = notification.error?.message ?? confirmation.error?.message;
-    console.error("[inquiry] Resend error:", detail);
+  const sendError = notification.error ?? confirmation.error;
+  if (sendError) {
+    // A failed confirmation alone is priority 2: the lead still reached sales@.
+    alertFormFailure("inquiry", notification.error ? 5 : 2, sendError.name, sendError.statusCode);
+    console.error("[inquiry] Resend error:", sendError.message);
     return {
       success: false,
       error: "Something went wrong sending your inquiry. Please try again.",
