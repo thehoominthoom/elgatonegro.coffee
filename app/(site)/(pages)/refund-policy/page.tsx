@@ -21,7 +21,7 @@ export default function RefundPolicyPage() {
             Refund Policy
           </h1>
           <p className="font-sans text-sm text-brand-black/50 mt-4">
-            Last Updated: March 2026
+            Last Updated: November 17, 2026
           </p>
         </div>
       </section>
@@ -57,7 +57,7 @@ export default function RefundPolicyPage() {
               <strong className="text-brand-black/90">
                 7 days of delivery
               </strong>
-              . We will send a replacement or issue store credit.
+              . We will send a replacement or issue a refund.
             </p>
           </div>
 
@@ -99,23 +99,6 @@ export default function RefundPolicyPage() {
             </p>
             <p className="font-sans text-sm leading-relaxed text-brand-black/70">
               Defective items get replaced at no cost to you.
-            </p>
-          </div>
-
-          {/* Digital Goods */}
-          <div>
-            <h2 className="font-sans font-extrabold text-xs uppercase tracking-[0.2em] text-brand-black mb-4">
-              Digital Goods
-            </h2>
-            <p className="font-sans text-sm leading-relaxed text-brand-black/70 mb-3">
-              <strong className="text-brand-black/90">
-                All digital product sales are final.
-              </strong>{" "}
-              No refunds once a file has been delivered or downloaded.
-            </p>
-            <p className="font-sans text-sm leading-relaxed text-brand-black/70">
-              If your file is corrupted or you cannot access your download,
-              contact us and we will get you a working copy.
             </p>
           </div>
 
@@ -168,10 +151,10 @@ export default function RefundPolicyPage() {
             <p className="font-sans text-sm leading-relaxed text-brand-black/70 mb-3">
               Email{" "}
               <Link
-                href="mailto:returns@elgatonegro.coffee"
+                href="mailto:shop@elgatonegro.coffee"
                 className="text-brand-orange hover:text-brand-yellow transition-colors"
               >
-                returns@elgatonegro.coffee
+                shop@elgatonegro.coffee
               </Link>{" "}
               with:
             </p>
