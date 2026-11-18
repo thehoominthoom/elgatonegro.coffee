@@ -21,10 +21,6 @@ export default function AdminLayout({
           // Flip card interior to light so text/inputs read against a lifted surface.
           // Page bg stays dark via the sign-in page's own wrapper.
           colorBackground: '#faf5f4',
-          colorInputBackground: '#ffffff',
-          colorInputText: '#2a201d',
-          colorText: '#2a201d',
-          colorTextSecondary: 'rgba(42, 32, 29, 0.6)',
           colorDanger: '#b43620',
           borderRadius: '2px',
           fontSize: '15px',
