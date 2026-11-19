@@ -196,7 +196,7 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(localBusinessJsonLd) }}
       />
       {locationNodes.map((node) => (
         <script

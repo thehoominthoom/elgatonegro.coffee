@@ -24,12 +24,12 @@ export async function getAllProducts(first = 50): Promise<Product[]> {
 export async function getProductByHandle(
   handle: string
 ): Promise<Product | null> {
-  const data = await shopifyFetch<{ productByHandle: Product | null }>({
+  const data = await shopifyFetch<{ product: Product | null }>({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
     revalidate: 300,
   });
-  return data.productByHandle;
+  return data.product;
 }
 
 export async function getProductRecommendations(
@@ -70,10 +70,10 @@ export async function getCollectionByHandle(
   handle: string,
   productsFirst = 50
 ): Promise<Collection | null> {
-  const data = await shopifyFetch<{ collectionByHandle: Collection | null }>({
+  const data = await shopifyFetch<{ collection: Collection | null }>({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
     variables: { handle, productsFirst },
     revalidate: 3600,
   });
-  return data.collectionByHandle;
+  return data.collection;
 }

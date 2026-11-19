@@ -1021,9 +1021,10 @@ export const adjustInventory = tool({
           userErrors: Array<{ field: string[]; message: string }>;
         };
       }>({
+        // Admin API 2026-04+ rejects the call without @idempotent and changeFromQuantity.
         query: `
-          mutation AdjustInventory($input: InventoryAdjustQuantitiesInput!) {
-            inventoryAdjustQuantities(input: $input) {
+          mutation AdjustInventory($input: InventoryAdjustQuantitiesInput!, $idempotencyKey: String!) {
+            inventoryAdjustQuantities(input: $input) @idempotent(key: $idempotencyKey) {
               inventoryAdjustmentGroup {
                 changes {
                   name
@@ -1036,6 +1037,8 @@ export const adjustInventory = tool({
           }
         `,
         variables: {
+          // Each tool call is a new adjustment, so a fresh key (Shopify's advice for one-off writes).
+          idempotencyKey: crypto.randomUUID(),
           input: {
             name: "available",
             reason: reason ?? "correction",
@@ -1044,6 +1047,8 @@ export const adjustInventory = tool({
                 inventoryItemId,
                 locationId: SHOPIFY_LOCATION_ID,
                 delta,
+                // null: the admin asked for a delta, so no compare against a quantity read earlier.
+                changeFromQuantity: null,
               },
             ],
           },

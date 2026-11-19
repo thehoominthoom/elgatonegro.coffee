@@ -69,9 +69,11 @@ export const ADMIN_VARIANT_BY_SKU_QUERY = `
   }
 `;
 
+// From Admin API 2026-04, every change must pass changeFromQuantity (null allowed) and the
+// mutation must carry @idempotent; without them Shopify rejects the call.
 export const ADMIN_INVENTORY_ADJUST_MUTATION = `
-  mutation InventoryAdjust($input: InventoryAdjustQuantitiesInput!) {
-    inventoryAdjustQuantities(input: $input) {
+  mutation InventoryAdjust($input: InventoryAdjustQuantitiesInput!, $idempotencyKey: String!) {
+    inventoryAdjustQuantities(input: $input) @idempotent(key: $idempotencyKey) {
       inventoryAdjustmentGroup {
         reason
         changes {

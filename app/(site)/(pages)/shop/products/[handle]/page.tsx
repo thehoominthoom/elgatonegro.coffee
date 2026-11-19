@@ -31,13 +31,17 @@ export async function generateMetadata({
   try {
     const product = await getProductByHandle(handle);
     if (!product) return {};
+    // Shopify's "Search engine listing" fields win; || so an empty string also falls back.
+    const title = product.seo.title || product.title;
+    const description =
+      product.seo.description || product.description || `${product.title} from El Gato Negro Coffee.`;
     return {
-      title: product.title,
+      title,
       alternates: { canonical: `/shop/products/${handle}` },
-      description: product.description || `${product.title} from El Gato Negro Coffee.`,
+      description,
       openGraph: {
-        title: `${product.title} — El Gato Negro Shop`,
-        description: product.description,
+        title: `${title} — El Gato Negro Shop`,
+        description,
         images: product.featuredImage
           ? [
               {
@@ -51,8 +55,8 @@ export async function generateMetadata({
       },
       twitter: {
         card: "summary_large_image",
-        title: `${product.title} — El Gato Negro Shop`,
-        description: product.description || `${product.title} from El Gato Negro Coffee.`,
+        title: `${title} — El Gato Negro Shop`,
+        description,
         images: product.featuredImage ? [product.featuredImage.url] : [],
       },
     };

@@ -44,6 +44,14 @@ export interface MetafieldWithReferences {
   };
 }
 
+// ─── SEO ──────────────────────────────────────────────────────────────────────
+
+/** Shopify's "Search engine listing" fields. Null when the merchant left them empty. */
+export interface Seo {
+  title: string | null;
+  description: string | null;
+}
+
 // ─── Product ──────────────────────────────────────────────────────────────────
 
 export interface Product {
@@ -54,6 +62,7 @@ export interface Product {
   availableForSale: boolean;
   description: string;
   descriptionHtml: string;
+  seo: Seo;
   featuredImage: ShopifyImage | null;
   images: { nodes: ShopifyImage[] };
   priceRange: {
@@ -81,6 +90,7 @@ export interface Collection {
   handle: string;
   title: string;
   description: string;
+  seo: Seo;
   image: ShopifyImage | null;
   products: { nodes: Product[] };
 }

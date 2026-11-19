@@ -5,7 +5,7 @@
 // fetches run on the server.
 
 const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
-const SHOPIFY_STOREFRONT_API_VERSION = process.env.SHOPIFY_API_VERSION ?? "2025-01";
+const SHOPIFY_STOREFRONT_API_VERSION = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 
 const PRIVATE_TOKEN = process.env.SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN!;
 const PUBLIC_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
@@ -46,6 +46,9 @@ export async function shopifyFetch<T>({
         : { "Shopify-Storefront-Private-Token": token }),
     },
     body: JSON.stringify({ query, variables }),
+    // A hung Shopify call rejects here, so callers take their normal error path instead of waiting.
+    // Next drops the signal on a stale-cache background refresh, which never blocks a page.
+    signal: AbortSignal.timeout(10_000),
     cache: revalidate !== undefined ? undefined : cache,
     ...(revalidate !== undefined ? { next: { revalidate } } : {}),
   };
