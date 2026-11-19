@@ -136,3 +136,10 @@ export interface Cart {
     totalTaxAmount: Money | null;
   };
 }
+
+/** A cart change: the cart after it (null if Shopify sent none), and Shopify's message when it
+ *  refused the change or changed less than asked, e.g. not enough stock. */
+export interface CartUpdate {
+  cart: Cart | null;
+  notice: string | null;
+}

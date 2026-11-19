@@ -72,13 +72,9 @@ export default async function ProductPage({
 }) {
   const { handle } = await params;
 
-  let product: Awaited<ReturnType<typeof getProductByHandle>> = null;
-  try {
-    product = await getProductByHandle(handle);
-  } catch {
-    notFound();
-  }
-
+  // A Shopify error throws to the shop error boundary: a failed re-render keeps the last good
+  // page, and a failed first render is not cached. Only a product Shopify says is missing 404s.
+  const product = await getProductByHandle(handle);
   if (!product) notFound();
 
   let recommendations: Awaited<ReturnType<typeof getProductRecommendations>> = [];

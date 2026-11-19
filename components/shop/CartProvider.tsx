@@ -15,7 +15,7 @@ import {
   updateCartLine,
   getCart,
 } from "@/lib/shopify/cart";
-import type { Cart, CartLine } from "@/lib/shopify/types";
+import type { Cart, CartLine, CartUpdate } from "@/lib/shopify/types";
 
 // ─── Context shape ────────────────────────────────────────────────────────────
 
@@ -23,6 +23,8 @@ interface CartContextValue {
   cart: Cart | null;
   isOpen: boolean;
   isPending: boolean;
+  /** Why the last change did not go as asked (Shopify's stock message, or a retry hint) */
+  notice: string | null;
   itemCount: number;
   openCart: () => void;
   closeCart: () => void;
@@ -44,6 +46,7 @@ export function useCart(): CartContextValue {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   // Optimistic item count — updates immediately, confirmed on server response
@@ -57,26 +60,42 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const openCart = useCallback(() => setIsOpen(true), []);
-  const closeCart = useCallback(() => setIsOpen(false), []);
+  const closeCart = useCallback(() => {
+    setIsOpen(false);
+    setNotice(null);
+  }, []);
+
+  // This provider sits above every error boundary, so a thrown error here would replace the
+  // whole page. A failed call becomes a notice in the drawer instead.
+  const applyChange = useCallback(async (change: () => Promise<CartUpdate>) => {
+    try {
+      const update = await change();
+      if (update.cart) setCart(update.cart);
+      setNotice(update.notice);
+    } catch {
+      setNotice("We couldn't update your cart. Try again in a moment.");
+    }
+  }, []);
 
   const addItem = useCallback(
     async (variantId: string, quantity = 1) => {
       startTransition(async () => {
         setOptimisticCount((prev) => prev + quantity);
-        const updated = await addToCart(variantId, quantity);
-        setCart(updated);
+        await applyChange(() => addToCart(variantId, quantity));
         setIsOpen(true);
       });
     },
-    [setOptimisticCount]
+    [setOptimisticCount, applyChange]
   );
 
-  const removeItem = useCallback(async (lineId: string) => {
-    startTransition(async () => {
-      const updated = await removeCartLine(lineId);
-      setCart(updated);
-    });
-  }, []);
+  const removeItem = useCallback(
+    async (lineId: string) => {
+      startTransition(async () => {
+        await applyChange(() => removeCartLine(lineId));
+      });
+    },
+    [applyChange]
+  );
 
   const updateItem = useCallback(
     async (lineId: string, quantity: number) => {
@@ -84,11 +103,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return removeItem(lineId);
       }
       startTransition(async () => {
-        const updated = await updateCartLine(lineId, quantity);
-        setCart(updated);
+        await applyChange(() => updateCartLine(lineId, quantity));
       });
     },
-    [removeItem]
+    [removeItem, applyChange]
   );
 
   const itemCount = optimisticCount;
@@ -99,6 +117,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cart,
         isOpen,
         isPending,
+        notice,
         itemCount,
         openCart,
         closeCart,

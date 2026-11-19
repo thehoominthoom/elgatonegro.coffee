@@ -400,6 +400,14 @@ export async function POST(request: NextRequest) {
       `[helcim-webhook] Error processing transaction ${payload.id}:`,
       error instanceof Error ? error.message : error
     );
+    // Free the dedupe key so Helcim's retry is processed. A repeat is safe: each line's
+    // idempotency key makes Shopify apply it once.
+    await redis.del(dedupKey).catch((delError) =>
+      console.error(
+        `[helcim-webhook] Could not clear dedupe key ${dedupKey}:`,
+        delError instanceof Error ? delError.message : delError
+      )
+    );
     return NextResponse.json(
       { error: "Internal processing error" },
       { status: 500 }

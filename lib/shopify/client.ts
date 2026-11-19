@@ -47,7 +47,7 @@ export async function shopifyFetch<T>({
     },
     body: JSON.stringify({ query, variables }),
     // A hung Shopify call rejects here, so callers take their normal error path instead of waiting.
-    // Next drops the signal on a stale-cache background refresh, which never blocks a page.
+    // Next drops the signal when it refreshes a stale cache entry; visitors get the cached copy meanwhile.
     signal: AbortSignal.timeout(10_000),
     cache: revalidate !== undefined ? undefined : cache,
     ...(revalidate !== undefined ? { next: { revalidate } } : {}),

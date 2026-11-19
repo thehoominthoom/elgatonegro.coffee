@@ -299,6 +299,9 @@ export const ADD_TO_CART_MUTATION = `
         field
         message
       }
+      warnings {
+        message
+      }
     }
   }
   ${CART_FRAGMENT}
@@ -317,6 +320,9 @@ export const UPDATE_CART_LINE_MUTATION = `
         field
         message
       }
+      warnings {
+        message
+      }
     }
   }
   ${CART_FRAGMENT}
@@ -333,6 +339,9 @@ export const REMOVE_CART_LINE_MUTATION = `
       }
       userErrors {
         field
+        message
+      }
+      warnings {
         message
       }
     }

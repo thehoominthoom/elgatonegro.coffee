@@ -9,7 +9,7 @@ import { formatMoney, rewriteCheckoutUrl } from "@/lib/shopify/utils";
 import type { CartLine } from "@/lib/shopify/types";
 
 export function CartDrawer() {
-  const { cart, isOpen, isPending, closeCart, removeItem, updateItem } =
+  const { cart, isOpen, isPending, notice, closeCart, removeItem, updateItem } =
     useCart();
 
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -83,6 +83,16 @@ export function CartDrawer() {
           >
             <X size={18} />
           </button>
+        </div>
+
+        {/* Why the last change did not go as asked. The live region stays mounted so the
+            message is announced when it appears. */}
+        <div role="status">
+          {notice && (
+            <p className="px-6 py-3 border-b border-brand-black/10 font-sans text-sm text-brand-orange">
+              {notice}
+            </p>
+          )}
         </div>
 
         {/* Body */}
