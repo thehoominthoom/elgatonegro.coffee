@@ -84,7 +84,9 @@ export default async function ProductPage({
     // Recommendations failure shouldn't break the page
   }
 
-  const firstVariant = product.variants.nodes[0];
+  // The variant ProductDetail selects first, so the Offer price matches the price on screen
+  const defaultVariant =
+    product.variants.nodes.find((v) => v.availableForSale) ?? product.variants.nodes[0];
   const collection = product.collections.nodes[0];
 
   const productJsonLd = {
@@ -99,8 +101,8 @@ export default async function ProductPage({
     },
     offers: {
       "@type": "Offer",
-      price: firstVariant?.price.amount ?? product.priceRange.minVariantPrice.amount,
-      priceCurrency: firstVariant?.price.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
+      price: defaultVariant?.price.amount ?? product.priceRange.minVariantPrice.amount,
+      priceCurrency: defaultVariant?.price.currencyCode ?? product.priceRange.minVariantPrice.currencyCode,
       availability: product.availableForSale
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",

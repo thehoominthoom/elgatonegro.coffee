@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Events & Pop-Ups",
   alternates: { canonical: "/events" },
   description:
-    "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities for Nashville's mobile espresso cart.",
+    "See where El Gato Negro is serving next. Browse upcoming pop-ups, ticketed events, and booking opportunities for Nashville's mobile coffee cart.",
   openGraph: {
     title: "Events & Pop-Ups | El Gato Negro Coffee",
     description:
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Events & Pop-Ups | El Gato Negro Coffee",
     description:
-      "See where El Gato Negro is serving next. Nashville mobile espresso cart.",
+      "See where El Gato Negro is serving next. Nashville mobile coffee cart.",
     images: ["/images/hero/hero-barista_roasting.webp"],
   },
 };

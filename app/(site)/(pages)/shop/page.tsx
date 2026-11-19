@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   title: "Shop Coffee & Merch",
   alternates: { canonical: "/shop" },
   description:
-    "Coffee beans, apparel, and merch from Nashville's mobile espresso cart. Shop the brand, wear the hellcat.",
+    "Coffee beans, apparel, and merch from Nashville's mobile coffee cart. Shop the brand, wear the hellcat.",
   openGraph: {
     title: "Shop Coffee & Merch | El Gato Negro Coffee",
     description:
-      "Coffee beans, apparel, and merch from Nashville's mobile espresso cart. Shop the brand, wear the hellcat.",
+      "Coffee beans, apparel, and merch from Nashville's mobile coffee cart. Shop the brand, wear the hellcat.",
     type: "website",
     images: [{ url: '/images/hero/hero-barista_roasting.webp', width: 1200, height: 630 }],
   },
@@ -31,7 +31,6 @@ const SHOP_CATEGORIES = [
     href: "/shop/collections/coffee-beans",
     image:
       "/images/shop/lakehouse-coffeebeans.coffee_beans-close_up-moongoat-03.webp",
-    alt: "Close-up of coffee beans and a MoonGoat bag on the El Gato Negro cart",
     objectPosition: "center 75%", // keep EGN cup wordmark + moongoat bag in view
   },
   {
@@ -44,7 +43,6 @@ const SHOP_CATEGORIES = [
     title: "Merchandise",
     href: "/shop/collections/merchandise",
     image: "/images/shop/the_exchange-retail-setup-go_get_em_tiger-01.webp",
-    alt: "Retail shelf of El Gato Negro merch at The Exchange",
     objectPosition: "center 40%", // keep the retail shelves with Go Get Em Tiger bags in view
   },
   {
@@ -58,16 +56,20 @@ export default function ShopPage() {
   return (
     <section className="relative w-full -mt-44 md:-mt-36 pt-[7.5rem] md:pt-[5.75rem]">
       {/* ── Mobile hero header ──────────────────────────────────── */}
-      <section className="md:hidden relative bg-brand-black overflow-hidden grain-overlay-dark">
-        <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-12">
-          <p className="font-display font-bold text-base uppercase tracking-[0.25em] text-brand-orange mb-4">
-            What We&apos;re Selling
-          </p>
-          <h1 className="font-display font-bold text-5xl uppercase text-brand-grey tracking-tight">
-            Shop
-          </h1>
-        </div>
-      </section>
+      {/* sr-only goes on a wrapper: on the section, grain-overlay-dark's later
+          position: relative beats sr-only's absolute and pulls the grid up 1px. */}
+      <div className="md:sr-only">
+        <section className="relative bg-brand-black overflow-hidden grain-overlay-dark">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-12">
+            <p className="font-display font-bold text-base uppercase tracking-[0.25em] text-brand-orange mb-4">
+              What We&apos;re Selling
+            </p>
+            <h1 className="font-display font-bold text-5xl uppercase text-brand-grey tracking-tight">
+              Shop
+            </h1>
+          </div>
+        </section>
+      </div>
 
       {/* ── Category grid ──────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2">
@@ -79,7 +81,7 @@ export default function ShopPage() {
           >
             <Image
               src={cat.image}
-              alt={cat.alt ?? cat.title.replace("\n", " ")}
+              alt="" // decorative: the tile's H2 names the link
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               style={cat.objectPosition ? { objectPosition: cat.objectPosition } : undefined}
@@ -98,7 +100,8 @@ export default function ShopPage() {
       </div>
 
       {/* ── Centered "SHOP" overlay — desktop only, sits at the grid intersection.
-          Visual decoration; the mobile hero h1 is the page's sole H1. */}
+          Visual decoration; the mobile hero h1 is the page's sole H1, visually
+          hidden (not removed) from md up so screen readers still get it. */}
       <div className="hidden md:flex absolute inset-0 top-[5.75rem] z-20 items-center justify-center pointer-events-none">
         <p
           aria-hidden="true"
