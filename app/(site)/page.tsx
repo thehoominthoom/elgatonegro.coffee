@@ -89,23 +89,16 @@ const services = [
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
-// From The Exchange's first open day the description names it. The switch is
-// automatic: generateMetadata re-runs on every regeneration, which the page's
-// 60 s fetch revalidation drives. YYYY-MM-DD strings compare in CT calendar days.
-const EXCHANGE_OPENS = "2026-11-02";
-
 export function generateMetadata(): Metadata {
   return {
     title: { absolute: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart" },
     alternates: { canonical: "/" },
     description:
-      todayInCT() >= EXCHANGE_OPENS
-        ? "Nashville's mobile coffee cart. Find us inside The Exchange in East Nashville six mornings a week, or book the cart for weddings, pop-ups and private events."
-        : "Nashville's mobile espresso cart for pop-ups, weddings, brand activations, conventions, and private events. Find us or book the cart.",
+      "Nashville's mobile coffee cart. Find us inside The Exchange in East Nashville six mornings a week, or book the cart for weddings, pop-ups and private events.",
     openGraph: {
       title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
       description:
-        "El Gato Negro is a Nashville-based mobile espresso cart serving pop-ups, weddings, brand activations, conventions, and private events.",
+        "El Gato Negro is a Nashville-based mobile coffee cart serving pop-ups, weddings, brand activations, conventions, and private events.",
       type: "website",
       images: [
         {
@@ -120,7 +113,7 @@ export function generateMetadata(): Metadata {
       card: "summary_large_image",
       title: "El Gato Negro Coffee — Nashville's Mobile Coffee Cart",
       description:
-        "Nashville mobile espresso cart. Pop-ups, weddings, brand activations, and private events.",
+        "Nashville mobile coffee cart. Pop-ups, weddings, brand activations, and private events.",
       images: ["/images/hero/the_exchange-cart-setup-phil.juan-01.webp"],
     },
   };
@@ -180,7 +173,7 @@ export default async function Home() {
     url: "https://www.elgatonegro.coffee",
     logo: "https://www.elgatonegro.coffee/brand/hellcat-color.svg",
     image: "https://www.elgatonegro.coffee/images/hero/the_exchange-cart-setup-phil.juan-01.webp",
-    description: "Nashville's mobile espresso cart — coffee that shows up.",
+    description: "Nashville's mobile coffee cart — coffee that shows up.",
     areaServed: {
       "@type": "City",
       name: "Nashville",

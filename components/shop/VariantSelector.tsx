@@ -20,16 +20,29 @@ export function VariantSelector({
     .map((o) => o.name)
     .filter((name) => name !== "Title") ?? [];
 
-  // Single "Default Title" variant — no selector needed
+  const selectedVariant = variants.find((v) => v.id === selectedVariantId);
+
+  const price = selectedVariant && (
+    <p className="font-sans font-extrabold text-2xl text-brand-orange">
+      {formatMoney(selectedVariant.price)}
+      {selectedVariant.compareAtPrice &&
+        parseFloat(selectedVariant.compareAtPrice.amount) >
+          parseFloat(selectedVariant.price.amount) && (
+          <span className="ml-3 text-base text-brand-black/30 line-through font-normal">
+            {formatMoney(selectedVariant.compareAtPrice)}
+          </span>
+        )}
+    </p>
+  );
+
+  // Single "Default Title" variant — no selector needed, price only
   if (
     optionNames.length === 0 ||
     (optionNames.length === 1 &&
       variants[0]?.selectedOptions[0]?.value === "Default Title")
   ) {
-    return null;
+    return price ?? null;
   }
-
-  const selectedVariant = variants.find((v) => v.id === selectedVariantId);
 
   return (
     <div className="space-y-6">
@@ -93,19 +106,7 @@ export function VariantSelector({
         );
       })}
 
-      {/* Price for selected variant */}
-      {selectedVariant && (
-        <p className="font-sans font-extrabold text-2xl text-brand-orange">
-          {formatMoney(selectedVariant.price)}
-          {selectedVariant.compareAtPrice &&
-            parseFloat(selectedVariant.compareAtPrice.amount) >
-              parseFloat(selectedVariant.price.amount) && (
-              <span className="ml-3 text-base text-brand-black/30 line-through font-normal">
-                {formatMoney(selectedVariant.compareAtPrice)}
-              </span>
-            )}
-        </p>
-      )}
+      {price}
     </div>
   );
 }

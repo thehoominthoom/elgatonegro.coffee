@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     default: "El Gato Negro Coffee",
   },
   description:
-    "Coffee cart service for weddings, corporate events, conventions, and production sets. Shop coffee, merch, and digital products.",
+    "El Gato Negro is a mobile coffee cart in Nashville for weddings, brand activations, conventions, and private events. Book the cart or shop the beans we pour.",
   metadataBase: new URL("https://www.elgatonegro.coffee"),
 };
 
