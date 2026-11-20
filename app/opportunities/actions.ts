@@ -12,6 +12,7 @@ import {
 } from "@/lib/opportunities/schema";
 import { OpportunityNotification } from "@/emails/OpportunityNotification";
 import { alertFormFailure, turnstileFault } from "@/lib/alerts/ntfy";
+import { trackServerEvent } from "@/lib/analytics/track-server";
 
 // ── Result type ──────────────────────────────────────────────────────────────
 
@@ -137,5 +138,6 @@ async function handleOpportunity(data: OpportunityValues): Promise<OpportunityAc
     };
   }
 
+  trackServerEvent("Application sent", headersList);
   return { success: true };
 }

@@ -4,6 +4,7 @@ import { NavDrawerProvider, NavDrawer } from "@/components/layout/NavDrawer";
 import { CartStatusBar } from "@/components/home/CartStatusBar";
 import { CartProvider } from "@/components/shop/CartProvider";
 import { CartDrawer } from "@/components/shop/CartDrawer";
+import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +21,8 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <NavDrawer />
         <CartDrawer />
       </NavDrawerProvider>
+      {/* Public site only: the admin host renders the (admin) layout, which has no analytics */}
+      <SiteAnalytics />
     </CartProvider>
   );
 }

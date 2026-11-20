@@ -113,6 +113,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
         {/* Add to cart */}
         <AddToCartButton
+          productHandle={product.handle}
           variantId={selectedVariant?.id ?? null}
           availableForSale={selectedVariant?.availableForSale ?? false}
         />

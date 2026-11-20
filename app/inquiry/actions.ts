@@ -14,6 +14,7 @@ import {
 import { InquiryNotification } from "@/emails/InquiryNotification";
 import { InquiryConfirmation } from "@/emails/InquiryConfirmation";
 import { alertFormFailure, turnstileFault } from "@/lib/alerts/ntfy";
+import { trackServerEvent } from "@/lib/analytics/track-server";
 
 // ─── Result type ──────────────────────────────────────────────────────────────
 
@@ -156,5 +157,6 @@ async function handleInquiry(data: GeneralInquiryValues): Promise<InquiryActionR
     };
   }
 
+  trackServerEvent("Inquiry sent", headersList, { service: serviceType });
   return { success: true };
 }
