@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="font-sans text-sm text-brand-black/50 mt-4">
-            Last Updated: November 24, 2026
+            Last Updated: November 20, 2026
           </p>
         </div>
       </section>
@@ -49,6 +49,27 @@ export default function PrivacyPolicyPage() {
               Our online shop runs on Shopify. When you shop, check out or use
               your customer account, Shopify collects your details and holds
               them for us. This policy treats that data as data we collect.
+              Shopify also handles some of this data under its own privacy
+              policies, at{" "}
+              <Link
+                href="https://www.shopify.com/legal/privacy"
+                className="text-brand-orange hover:text-brand-yellow transition-colors"
+              >
+                shopify.com/legal/privacy
+              </Link>
+              . If you choose Shop Pay at checkout, Shopify&apos;s Consumer
+              Privacy Policy covers your Shop Pay account, at{" "}
+              <Link
+                href="https://www.shopify.com/legal/privacy/consumers"
+                className="text-brand-orange hover:text-brand-yellow transition-colors"
+              >
+                shopify.com/legal/privacy/consumers
+              </Link>
+              . If you choose to pay in installments with Shop Pay
+              Installments, you&apos;re applying for a loan through Affirm,
+              which runs the service. Affirm receives the details it needs to
+              decide on and run the loan, under Affirm&apos;s own privacy
+              policy.
             </p>
           </div>
 
@@ -125,6 +146,11 @@ export default function PrivacyPolicyPage() {
                 forms.
               </li>
               <li>
+                <strong className="text-brand-black/90">Checkout:</strong>{" "}
+                Shopify records the IP address and device details of each
+                checkout, and uses them to check online orders for fraud.
+              </li>
+              <li>
                 <strong className="text-brand-black/90">Cookies:</strong>{" "}
                 three cookies that keep you signed in and keep your cart. See
                 section 4.
@@ -162,8 +188,8 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>
                 <strong className="text-brand-black/90">Orders:</strong>{" "}
-                taking payment, shipping your order, sending order emails and
-                keeping your order history.
+                taking payment, shipping your order or getting it ready for
+                pickup, sending order emails and keeping your order history.
               </li>
               <li>
                 <strong className="text-brand-black/90">Your account:</strong>{" "}
@@ -188,7 +214,8 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>
                 <strong className="text-brand-black/90">Fraud prevention and security:</strong>{" "}
-                blocking spam and abuse on our forms, and protecting sign-in.
+                blocking spam and abuse on our forms, protecting sign-in, and
+                checking online orders for fraud.
               </li>
             </ul>
           </div>
@@ -223,6 +250,11 @@ export default function PrivacyPolicyPage() {
                     from the card terminal to Helcim. Our site reads only the
                     items sold and their quantities, so we can update shop
                     stock. It reads no customer data.
+                  </li>
+                  <li>
+                    <strong className="text-brand-black/90">USPS</strong>{" "}
+                    delivers the orders we ship. When we buy a shipping label
+                    through Shopify, USPS gets your name and shipping address.
                   </li>
                 </ul>
               </div>
