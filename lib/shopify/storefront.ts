@@ -16,7 +16,7 @@ export async function getAllProducts(first = 50): Promise<Product[]> {
   const data = await shopifyFetch<{ products: { nodes: Product[] } }>({
     query: GET_ALL_PRODUCTS_QUERY,
     variables: { first },
-    revalidate: 300,
+    revalidate: 60,
   });
   return data.products.nodes;
 }
@@ -27,7 +27,7 @@ export async function getProductByHandle(
   const data = await shopifyFetch<{ product: Product | null }>({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
-    revalidate: 300,
+    revalidate: 60,
   });
   return data.product;
 }
@@ -41,7 +41,7 @@ export async function getProductRecommendations(
   }>({
     query: GET_PRODUCT_RECOMMENDATIONS_QUERY,
     variables: { productId },
-    revalidate: 300,
+    revalidate: 60,
   });
   return (data.productRecommendations ?? []).slice(0, count);
 }
@@ -73,7 +73,7 @@ export async function getCollectionByHandle(
   const data = await shopifyFetch<{ collection: Collection | null }>({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
     variables: { handle, productsFirst },
-    revalidate: 3600,
+    revalidate: 60,
   });
   return data.collection;
 }
