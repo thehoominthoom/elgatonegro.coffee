@@ -10,7 +10,7 @@ function digitsOnly(value: string): string {
 }
 
 /** Format a digit string as (XXX) XXX-XXXX for display. */
-function formatUS(digits: string): string {
+export function formatUS(digits: string): string {
   if (digits.length === 0) return "";
   if (digits.length <= 3) return `(${digits}`;
   if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
