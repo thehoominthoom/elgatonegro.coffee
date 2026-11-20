@@ -11,9 +11,21 @@ import {
   REMOVE_CART_LINE_MUTATION,
   GET_CART_QUERY,
 } from "./queries";
-import type { Cart } from "./types";
+import type { Cart, CartUpdate } from "./types";
 
 const CART_COOKIE = "egn-cart-id";
+
+interface CartLinesPayload {
+  cart: Cart | null;
+  userErrors: Array<{ message: string }>;
+  warnings: Array<{ message: string }>;
+}
+
+// Shopify reports a stock limit as a userError (change refused) or a warning (change capped).
+// Its message goes back as data: a server action's thrown message is hidden in production.
+function toUpdate({ cart, userErrors, warnings }: CartLinesPayload): CartUpdate {
+  return { cart, notice: userErrors[0]?.message ?? warnings[0]?.message ?? null };
+}
 
 async function getEncryptionKey(): Promise<Uint8Array> {
   return deriveEncryptionKey("egn-cart-encryption");
@@ -93,7 +105,7 @@ export async function getCart(): Promise<Cart | null> {
 export async function addToCart(
   variantId: string,
   quantity: number
-): Promise<Cart> {
+): Promise<CartUpdate> {
   let cartId = await getCartCookie();
 
   // Create cart on first add
@@ -102,9 +114,7 @@ export async function addToCart(
     cartId = newCart.id;
   }
 
-  const data = await shopifyFetch<{
-    cartLinesAdd: { cart: Cart; userErrors: Array<{ message: string }> };
-  }>({
+  const data = await shopifyFetch<{ cartLinesAdd: CartLinesPayload }>({
     query: ADD_TO_CART_MUTATION,
     variables: {
       cartId,
@@ -113,23 +123,17 @@ export async function addToCart(
     cache: "no-store",
   });
 
-  if (data.cartLinesAdd.userErrors.length) {
-    throw new Error(data.cartLinesAdd.userErrors[0].message);
-  }
-
-  return data.cartLinesAdd.cart;
+  return toUpdate(data.cartLinesAdd);
 }
 
 export async function updateCartLine(
   lineId: string,
   quantity: number
-): Promise<Cart> {
+): Promise<CartUpdate> {
   const cartId = await getCartCookie();
   if (!cartId) throw new Error("No cart found");
 
-  const data = await shopifyFetch<{
-    cartLinesUpdate: { cart: Cart; userErrors: Array<{ message: string }> };
-  }>({
+  const data = await shopifyFetch<{ cartLinesUpdate: CartLinesPayload }>({
     query: UPDATE_CART_LINE_MUTATION,
     variables: {
       cartId,
@@ -138,28 +142,18 @@ export async function updateCartLine(
     cache: "no-store",
   });
 
-  if (data.cartLinesUpdate.userErrors.length) {
-    throw new Error(data.cartLinesUpdate.userErrors[0].message);
-  }
-
-  return data.cartLinesUpdate.cart;
+  return toUpdate(data.cartLinesUpdate);
 }
 
-export async function removeCartLine(lineId: string): Promise<Cart> {
+export async function removeCartLine(lineId: string): Promise<CartUpdate> {
   const cartId = await getCartCookie();
   if (!cartId) throw new Error("No cart found");
 
-  const data = await shopifyFetch<{
-    cartLinesRemove: { cart: Cart; userErrors: Array<{ message: string }> };
-  }>({
+  const data = await shopifyFetch<{ cartLinesRemove: CartLinesPayload }>({
     query: REMOVE_CART_LINE_MUTATION,
     variables: { cartId, lineIds: [lineId] },
     cache: "no-store",
   });
 
-  if (data.cartLinesRemove.userErrors.length) {
-    throw new Error(data.cartLinesRemove.userErrors[0].message);
-  }
-
-  return data.cartLinesRemove.cart;
+  return toUpdate(data.cartLinesRemove);
 }

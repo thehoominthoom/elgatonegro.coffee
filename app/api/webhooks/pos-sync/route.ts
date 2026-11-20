@@ -186,17 +186,22 @@ async function lookupVariantBySku(
 async function decrementInventory(
   inventoryItemId: string,
   quantity: number,
-  sku: string
+  sku: string,
+  idempotencyKey: string
 ): Promise<void> {
   const data = await adminFetch<InventoryAdjustResponse>({
     query: ADMIN_INVENTORY_ADJUST_MUTATION,
     variables: {
+      idempotencyKey,
       input: {
         reason: "correction",
         name: "available",
         changes: [
           {
             delta: -quantity,
+            // null skips Shopify's compare-and-swap: a sale removes its quantity whatever the
+            // stock is, and a value read first would go stale whenever an online order lands.
+            changeFromQuantity: null,
             inventoryItemId,
             locationId: SHOPIFY_LOCATION_ID,
           },
@@ -331,7 +336,7 @@ export async function POST(request: NextRequest) {
     );
 
     // ── Process each line item ────────────────────────────────────────
-    for (const item of lineItems) {
+    for (const [lineIndex, item] of lineItems.entries()) {
       const sku = item.sku?.trim();
       if (!sku) {
         console.log(
@@ -370,10 +375,13 @@ export async function POST(request: NextRequest) {
           `[helcim-webhook] Syncing SKU: ${sku}, quantity: ${item.quantity}, inventoryItemId: ${variant.inventoryItemId}`
         );
 
+        // One key per sale line: every delivery of the same sale sends the same key, so Shopify
+        // applies it once even after the 10-minute Redis dedupe has expired (it keeps keys 24h).
         await decrementInventory(
           variant.inventoryItemId,
           item.quantity,
-          sku
+          sku,
+          `helcim-${payload.id}-${lineIndex}`
         );
 
         console.log(
@@ -391,6 +399,14 @@ export async function POST(request: NextRequest) {
     console.error(
       `[helcim-webhook] Error processing transaction ${payload.id}:`,
       error instanceof Error ? error.message : error
+    );
+    // Free the dedupe key so Helcim's retry is processed. A repeat is safe: each line's
+    // idempotency key makes Shopify apply it once.
+    await redis.del(dedupKey).catch((delError) =>
+      console.error(
+        `[helcim-webhook] Could not clear dedupe key ${dedupKey}:`,
+        delError instanceof Error ? delError.message : delError
+      )
     );
     return NextResponse.json(
       { error: "Internal processing error" },

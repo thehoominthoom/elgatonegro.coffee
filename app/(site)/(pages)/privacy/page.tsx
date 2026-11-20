@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="font-sans text-sm text-brand-black/50 mt-4">
-            Last Updated: November 17, 2026
+            Last Updated: November 19, 2026
           </p>
         </div>
       </section>
@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
               >
                 elgatonegro.coffee
               </Link>{" "}
-              and a mobile espresso bar. This policy covers the website, our
+              and a mobile coffee cart. This policy covers the website, our
               online shop, customer accounts, our booking and job application
               forms, and purchases at the cart. It explains what we collect,
               where it goes, how long we keep it and what you can do about it.

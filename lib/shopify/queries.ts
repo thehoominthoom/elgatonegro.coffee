@@ -49,6 +49,10 @@ const PRODUCT_FRAGMENT = `
     availableForSale
     description
     descriptionHtml
+    seo {
+      title
+      description
+    }
     featuredImage {
       ...ImageFragment
     }
@@ -197,7 +201,7 @@ export const GET_ALL_PRODUCTS_QUERY = `
 
 export const GET_PRODUCT_BY_HANDLE_QUERY = `
   query GetProductByHandle($handle: String!) {
-    productByHandle(handle: $handle) {
+    product(handle: $handle) {
       ...ProductFragment
     }
   }
@@ -240,11 +244,15 @@ export const GET_ALL_COLLECTIONS_QUERY = `
 
 export const GET_COLLECTION_BY_HANDLE_QUERY = `
   query GetCollectionByHandle($handle: String!, $productsFirst: Int!) {
-    collectionByHandle(handle: $handle) {
+    collection(handle: $handle) {
       id
       handle
       title
       description
+      seo {
+        title
+        description
+      }
       image {
         ...ImageFragment
       }
@@ -291,6 +299,9 @@ export const ADD_TO_CART_MUTATION = `
         field
         message
       }
+      warnings {
+        message
+      }
     }
   }
   ${CART_FRAGMENT}
@@ -309,6 +320,9 @@ export const UPDATE_CART_LINE_MUTATION = `
         field
         message
       }
+      warnings {
+        message
+      }
     }
   }
   ${CART_FRAGMENT}
@@ -325,6 +339,9 @@ export const REMOVE_CART_LINE_MUTATION = `
       }
       userErrors {
         field
+        message
+      }
+      warnings {
         message
       }
     }

@@ -54,12 +54,9 @@ export default async function CollectionPage({
 }) {
   const { handle } = await params;
 
-  let collection: Awaited<ReturnType<typeof getCollectionByHandle>> = null;
-  try {
-    collection = await getCollectionByHandle(handle, 50);
-  } catch {
-    notFound();
-  }
+  // A Shopify error throws to the shop error boundary: a failed re-render keeps the last good
+  // page, and a failed first render is not cached. Only a collection Shopify says is missing 404s.
+  const collection = await getCollectionByHandle(handle, 50);
 
   if (!collection) notFound();
 

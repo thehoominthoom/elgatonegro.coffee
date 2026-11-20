@@ -12,7 +12,7 @@ import {
 import { refreshAccessToken } from "./customer-auth";
 
 const SHOP_ID = process.env.SHOPIFY_SHOP_ID!;
-const CUSTOMER_API_VERSION = process.env.SHOPIFY_API_VERSION ?? "2025-01";
+const CUSTOMER_API_VERSION = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 const CUSTOMER_API_URL = `https://shopify.com/${SHOP_ID}/account/customer/api/${CUSTOMER_API_VERSION}/graphql`;
 
 // ─── Session readers ────────────────────────────────────────────────────────

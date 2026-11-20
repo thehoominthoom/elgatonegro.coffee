@@ -21,7 +21,7 @@ export default function TermsOfServicePage() {
             Terms of Service
           </h1>
           <p className="font-sans text-sm text-brand-black/50 mt-4">
-            Last Updated: March 2026
+            Last Updated: November 19, 2026
           </p>
         </div>
       </section>
@@ -41,7 +41,7 @@ export default function TermsOfServicePage() {
                 elgatonegro.coffee
               </Link>{" "}
               (&quot;Site&quot;) and all related services, including our online
-              shop, customer accounts, booking inquiries, and mobile espresso bar
+              shop, customer accounts, booking inquiries, and mobile coffee cart
               services (collectively, the &quot;Services&quot;), operated by El
               Gato Negro Coffee (&quot;we,&quot; &quot;us,&quot; or
               &quot;our&quot;).

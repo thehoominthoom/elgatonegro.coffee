@@ -14,7 +14,7 @@ export interface Testimonial {
 export const SERVICE_TESTIMONIALS: Partial<Record<ServiceSlug, Testimonial>> = {
   "weddings-celebrations": {
     quote:
-      "Our niece hit the espresso bar three times before dinner. She's eight. We're still hearing about it.",
+      "Our niece hit the coffee cart three times before dinner. She's eight. We're still hearing about it.",
     attribution: "Jesse & Ashton",
     isPlaceholder: true,
   },

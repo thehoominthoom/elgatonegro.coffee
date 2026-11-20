@@ -31,13 +31,17 @@ export async function generateMetadata({
   try {
     const product = await getProductByHandle(handle);
     if (!product) return {};
+    // Shopify's "Search engine listing" fields win; || so an empty string also falls back.
+    const title = product.seo.title || product.title;
+    const description =
+      product.seo.description || product.description || `${product.title} from El Gato Negro Coffee.`;
     return {
-      title: product.title,
+      title,
       alternates: { canonical: `/shop/products/${handle}` },
-      description: product.description || `${product.title} from El Gato Negro Coffee.`,
+      description,
       openGraph: {
-        title: `${product.title} — El Gato Negro Shop`,
-        description: product.description,
+        title: `${title} — El Gato Negro Shop`,
+        description,
         images: product.featuredImage
           ? [
               {
@@ -51,8 +55,8 @@ export async function generateMetadata({
       },
       twitter: {
         card: "summary_large_image",
-        title: `${product.title} — El Gato Negro Shop`,
-        description: product.description || `${product.title} from El Gato Negro Coffee.`,
+        title: `${title} — El Gato Negro Shop`,
+        description,
         images: product.featuredImage ? [product.featuredImage.url] : [],
       },
     };
@@ -68,13 +72,9 @@ export default async function ProductPage({
 }) {
   const { handle } = await params;
 
-  let product: Awaited<ReturnType<typeof getProductByHandle>> = null;
-  try {
-    product = await getProductByHandle(handle);
-  } catch {
-    notFound();
-  }
-
+  // A Shopify error throws to the shop error boundary: a failed re-render keeps the last good
+  // page, and a failed first render is not cached. Only a product Shopify says is missing 404s.
+  const product = await getProductByHandle(handle);
   if (!product) notFound();
 
   let recommendations: Awaited<ReturnType<typeof getProductRecommendations>> = [];
