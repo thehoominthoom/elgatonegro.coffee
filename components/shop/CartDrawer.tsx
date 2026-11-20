@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X, ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { useCart } from "./CartProvider";
 import { formatMoney, rewriteCheckoutUrl } from "@/lib/shopify/utils";
 import type { CartLine } from "@/lib/shopify/types";
@@ -130,6 +131,7 @@ export function CartDrawer() {
             </p>
             <a
               href={rewriteCheckoutUrl(cart.checkoutUrl)}
+              onClick={() => track("Checkout")}
               className={[
                 "block w-full bg-brand-orange text-brand-grey text-center rounded-sm",
                 "font-display font-bold text-sm uppercase tracking-[0.1em]",

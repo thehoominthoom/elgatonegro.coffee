@@ -1,14 +1,17 @@
 "use client";
 
 import { ShoppingBag } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { useCart } from "./CartProvider";
 
 interface AddToCartButtonProps {
+  productHandle: string;
   variantId: string | null;
   availableForSale: boolean;
 }
 
 export function AddToCartButton({
+  productHandle,
   variantId,
   availableForSale,
 }: AddToCartButtonProps) {
@@ -18,6 +21,8 @@ export function AddToCartButton({
 
   async function handleAdd() {
     if (!variantId || !availableForSale) return;
+    // Counts the press: a Shopify refusal (stock) still counts once
+    track("Add to cart", { product: productHandle });
     await addItem(variantId, 1);
   }
 
