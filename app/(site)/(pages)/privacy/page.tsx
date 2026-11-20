@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
               >
                 elgatonegro.coffee
               </Link>{" "}
-              and a mobile espresso bar. This policy covers the website, our
+              and a mobile coffee cart. This policy covers the website, our
               online shop, customer accounts, our booking and job application
               forms, and purchases at the cart. It explains what we collect,
               where it goes, how long we keep it and what you can do about it.

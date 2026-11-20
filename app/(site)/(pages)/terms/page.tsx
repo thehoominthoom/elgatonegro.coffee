@@ -41,7 +41,7 @@ export default function TermsOfServicePage() {
                 elgatonegro.coffee
               </Link>{" "}
               (&quot;Site&quot;) and all related services, including our online
-              shop, customer accounts, booking inquiries, and mobile espresso bar
+              shop, customer accounts, booking inquiries, and mobile coffee cart
               services (collectively, the &quot;Services&quot;), operated by El
               Gato Negro Coffee (&quot;we,&quot; &quot;us,&quot; or
               &quot;our&quot;).
