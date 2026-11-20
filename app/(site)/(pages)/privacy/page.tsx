@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="font-sans text-sm text-brand-black/50 mt-4">
-            Last Updated: November 19, 2026
+            Last Updated: November 24, 2026
           </p>
         </div>
       </section>
@@ -129,9 +129,16 @@ export default function PrivacyPolicyPage() {
                 three cookies that keep you signed in and keep your cart. See
                 section 4.
               </li>
+              <li>
+                <strong className="text-brand-black/90">Analytics:</strong>{" "}
+                the page you view and when, the site that sent you, your
+                country, region and city, your device type, operating system and
+                browser, your connection speed, how fast the page loads, and
+                four actions such as adding to cart. See Analytics in section 3.
+              </li>
             </ul>
             <p className="font-sans text-sm leading-relaxed text-brand-black/70 mt-3">
-              This site runs no analytics and no advertising pixels.
+              This site runs no advertising pixels.
             </p>
           </div>
 
@@ -168,6 +175,11 @@ export default function PrivacyPolicyPage() {
                 sending marketing email, only if you&apos;ve opted in. You can
                 opt out at any time in your account profile. Any marketing email
                 we send will include an unsubscribe link.
+              </li>
+              <li>
+                <strong className="text-brand-black/90">Improving the site:</strong>{" "}
+                counting visits and a few actions, and measuring page speed, so
+                we know what to fix. See Analytics in section 3.
               </li>
               <li>
                 <strong className="text-brand-black/90">Store admin:</strong>{" "}
@@ -264,7 +276,51 @@ export default function PrivacyPolicyPage() {
                     hosts our website. It receives every request, including your
                     IP address, your browser&apos;s user agent and the page
                     address. When we block a form submission, our code also
-                    writes your IP address to Vercel&apos;s logs.
+                    writes your IP address to Vercel&apos;s logs. Vercel also
+                    runs our analytics. See Analytics below.
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-display font-bold text-lg uppercase tracking-tight text-brand-black mb-1">
+                  Analytics
+                </h3>
+                <ul className="font-sans text-sm leading-relaxed text-brand-black/70 list-disc pl-5 space-y-1">
+                  <li>
+                    <strong className="text-brand-black/90">Vercel Web Analytics</strong>{" "}
+                    counts visits to our website. For each page view, it records
+                    the page, the site that sent you, your country, region and
+                    city, your device type (phone, tablet or computer),
+                    operating system and browser. It sets no cookies. To count
+                    visitors without cookies, Vercel makes a one-way code (a
+                    hash) from your request and drops it after 24 hours. Vercel
+                    says the data it records isn&apos;t tied to any person or IP
+                    address.
+                  </li>
+                  <li>
+                    <strong className="text-brand-black/90">Four actions</strong>{" "}
+                    are counted too, with no personal details:
+                    <ul className="list-disc pl-5 mt-1 space-y-1">
+                      <li>Adding to cart. We record which product.</li>
+                      <li>Clicking Checkout.</li>
+                      <li>Sending a booking inquiry. We record the service type only.</li>
+                      <li>Sending a job application.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <strong className="text-brand-black/90">Vercel Speed Insights</strong>{" "}
+                    measures how fast our pages load, how quickly they respond
+                    when you tap or click, and how much the layout shifts as
+                    they load. With each measurement, it records the page, your
+                    connection speed (a grade such as &quot;3g&quot; or
+                    &quot;4g&quot;), device type, operating system, browser and
+                    country. It sets no cookies.
+                  </li>
+                  <li>
+                    <strong className="text-brand-black/90">Not measured:</strong>{" "}
+                    our staff admin site. Checkout runs on Shopify, and our
+                    analytics don&apos;t measure it.
                   </li>
                 </ul>
               </div>
@@ -320,7 +376,8 @@ export default function PrivacyPolicyPage() {
                   account, profile, saved addresses and online orders. Helcim
                   holds in-person sales. Booking inquiries and job applications
                   exist only as emails: in our inboxes, in Resend&apos;s log
-                  and, for your booking confirmation, in your own inbox.
+                  and, for your booking confirmation, in your own inbox. Vercel
+                  holds our analytics reports.
                 </p>
               </div>
 
@@ -417,7 +474,9 @@ export default function PrivacyPolicyPage() {
             <p className="font-sans text-sm leading-relaxed text-brand-black/70 mt-4">
               All three are HttpOnly and Secure. Scripts on the page can&apos;t
               read them, and your browser sends them only over HTTPS. We set no
-              other cookies and use no other browser storage.
+              other cookies and use no other browser storage. Vercel Web
+              Analytics and Speed Insights use none either. See Analytics in
+              section 3.
             </p>
             <p className="font-sans text-sm leading-relaxed text-brand-black/70 mt-3">
               Cloudflare Turnstile (on our forms), Google Maps (on the inquiry
@@ -460,6 +519,12 @@ export default function PrivacyPolicyPage() {
               <li>
                 <strong className="text-brand-black/90">IP addresses</strong>{" "}
                 we use to limit form submissions expire after about 2 hours.
+              </li>
+              <li>
+                <strong className="text-brand-black/90">Analytics:</strong>{" "}
+                Vercel drops the visit code after 24 hours. It keeps Web
+                Analytics data for at least 12 months and may keep it longer.
+                It keeps Speed Insights data for the period it sets.
               </li>
               <li>
                 <strong className="text-brand-black/90">
